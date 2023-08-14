@@ -19,7 +19,7 @@ public class AuthenticateController {
 	@GET
 	@Path("/get")
     @Produces({ MediaType.APPLICATION_JSON })
-	public Response hello() {
+	public Response sample() {
 		List<Map<String, Object>> sample = new ArrayList<Map<String, Object>>();
 		GenericEntity<List<Map<String, Object>>> listDep = null;
 		try {
