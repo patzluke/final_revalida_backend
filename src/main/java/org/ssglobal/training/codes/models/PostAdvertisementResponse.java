@@ -17,6 +17,8 @@ import lombok.ToString;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -32,6 +34,10 @@ public class PostAdvertisementResponse implements Serializable {
 	@Id
 	@Column(name="post_response_id")
 	private Integer postResponseId;
+	
+	private Double price;
+	
+	private Double quantity;
 
 	@Column(name="date_created")
 	private LocalDateTime dateCreated;
@@ -50,10 +56,12 @@ public class PostAdvertisementResponse implements Serializable {
 	//bi-directional many-to-one association to Farmer
 	@ManyToOne
 	@JoinColumn(name="farmer_id")
+	@JsonManagedReference
 	private Farmer farmer;
 
 	//bi-directional many-to-one association to PostAdvertisement
 	@ManyToOne
 	@JoinColumn(name="post_id")
+	@JsonManagedReference
 	private PostAdvertisement postAdvertisement;
 }

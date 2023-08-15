@@ -11,6 +11,8 @@ import lombok.ToString;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -47,10 +49,12 @@ public class CourseEnrolled implements Serializable {
 	//bi-directional many-to-one association to Course
 	@ManyToOne
 	@JoinColumn(name="course_id")
+	@JsonManagedReference
 	private Course course;
 
 	//bi-directional many-to-one association to Farmer
 	@ManyToOne
 	@JoinColumn(name="farmer_id")
+	@JsonManagedReference
 	private Farmer farmer;
 }

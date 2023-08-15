@@ -3,6 +3,9 @@ package org.ssglobal.training.codes.models;
 import java.io.Serializable;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -39,22 +42,27 @@ public class Farmer implements Serializable {
 
 	//bi-directional many-to-one association to CourseEnrolled
 	@OneToMany(mappedBy="farmer", fetch=FetchType.EAGER)
+	@JsonBackReference
 	private List<CourseEnrolled> courseEnrolleds;
 
 	//bi-directional many-to-one association to CropDetail
 	@OneToMany(mappedBy="farmer", fetch=FetchType.EAGER)
+	@JsonBackReference
 	private List<CropDetail> cropDetails;
 
 	//bi-directional many-to-one association to User
 	@ManyToOne
 	@JoinColumn(name="user_id")
+	@JsonManagedReference
 	private Users user;
 
 	//bi-directional many-to-one association to FarmerComplaint
 	@OneToMany(mappedBy="farmer", fetch=FetchType.EAGER)
+	@JsonBackReference
 	private List<FarmerComplaint> farmerComplaints;
 
 	//bi-directional many-to-one association to PostAdvertisementRespons
 	@OneToMany(mappedBy="farmer", fetch=FetchType.EAGER)
+	@JsonBackReference
 	private List<PostAdvertisementResponse> postAdvertisementResponses;
 }

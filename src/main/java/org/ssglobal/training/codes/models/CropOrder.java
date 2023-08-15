@@ -19,6 +19,8 @@ import lombok.ToString;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -53,5 +55,6 @@ public class CropOrder implements Serializable {
 
 	//bi-directional many-to-one association to CropPayment
 	@OneToMany(mappedBy="cropOrder", fetch=FetchType.EAGER)
+	@JsonBackReference
 	private List<CropPayment> cropPayments;
 }

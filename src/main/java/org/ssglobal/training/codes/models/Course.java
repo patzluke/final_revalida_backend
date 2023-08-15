@@ -12,6 +12,8 @@ import lombok.ToString;
 import java.util.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -48,5 +50,6 @@ public class Course implements Serializable {
 
 	//bi-directional many-to-one association to CourseEnrolled
 	@OneToMany(mappedBy="course", fetch=FetchType.EAGER)
+	@JsonBackReference
 	private List<CourseEnrolled> courseEnrolleds;
 }

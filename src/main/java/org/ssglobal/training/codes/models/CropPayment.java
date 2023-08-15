@@ -15,7 +15,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -36,7 +38,7 @@ public class CropPayment implements Serializable {
 	private String paidBy;
 
 	@Column(name="pay_date")
-	private Timestamp payDate;
+	private LocalDateTime payDate;
 
 	@Column(name="payment_mode")
 	private String paymentMode;
@@ -46,5 +48,6 @@ public class CropPayment implements Serializable {
 	//bi-directional many-to-one association to CropOrder
 	@ManyToOne
 	@JoinColumn(name="order_id_ref")
+	@JsonManagedReference
 	private CropOrder cropOrder;
 }

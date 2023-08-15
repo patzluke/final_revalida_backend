@@ -11,7 +11,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import org.ssglobal.training.codes.repository.UserTokenRepository;
+import org.ssglobal.training.codes.repository.AuthenticateRepository;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -55,10 +55,10 @@ public class MyJwtTokenValidator extends OncePerRequestFilter {
 		filterChain.doFilter(request, response);
 	}
 
-//	@Override
-//	protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-//		return request.getRequestURI().equals("/api/admin/get");
-//	}
+	@Override
+	protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+		return request.getRequestURI().matches("/api/auth/login");
+	}
 
 //	@SuppressWarnings("unchecked")
 //	private boolean validateToken(String token) {
