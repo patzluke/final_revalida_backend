@@ -2,18 +2,13 @@ package org.ssglobal.training.codes.security;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.function.Supplier;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authorization.AuthorizationDecision;
-import org.springframework.security.authorization.AuthorizationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
@@ -48,7 +43,7 @@ public class RestServiceCorsApplication {
 				   });
 			   })
 			   .csrf(t -> t.disable())
-			   	.addFilterBefore(myJwtTokenValidator, BasicAuthenticationFilter.class)
+			   .addFilterBefore(myJwtTokenValidator, BasicAuthenticationFilter.class)
 			   .authorizeHttpRequests(t -> t.requestMatchers(AntPathRequestMatcher.antMatcher("/api/admin/**")).permitAll())
 			   .authorizeHttpRequests(t -> t.requestMatchers(AntPathRequestMatcher.antMatcher("/api/auth/login")).permitAll())
 			   .getOrBuild();
