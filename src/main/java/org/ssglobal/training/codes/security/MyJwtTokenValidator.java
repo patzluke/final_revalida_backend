@@ -8,7 +8,6 @@ import java.util.Base64.Decoder;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.ssglobal.training.codes.service.AuthenticateService;
@@ -21,6 +20,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.ws.rs.core.Response.Status;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -39,20 +39,19 @@ public class MyJwtTokenValidator extends OncePerRequestFilter {
 			String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
 			String token = authorizationHeader.substring("Bearer".length()).trim();
 			if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer")) {
-				response.sendError(HttpStatus.UNAUTHORIZED.value(), "not ok");
+				response.sendError(Status.FORBIDDEN.getStatusCode(), "not ok");
 			}
 			if (!validateToken(token)) {
-				response.sendError(HttpStatus.UNAUTHORIZED.value(), "not ok");
+				response.sendError(Status.FORBIDDEN.getStatusCode(), "not ok");
 			}
 			
 			filterChain.doFilter(request, response);
 		} catch (NullPointerException e) {
-			response.sendError(HttpStatus.UNAUTHORIZED.value(), "not ok");
+			response.sendError(Status.FORBIDDEN.getStatusCode(), "not ok");
 		} catch (Exception e) {
 			e.printStackTrace();
-			response.sendError(HttpStatus.INTERNAL_SERVER_ERROR.value());
+			response.sendError(Status.INTERNAL_SERVER_ERROR.getStatusCode());
 		}
-		filterChain.doFilter(request, response);
 	}
 
 	@Override
