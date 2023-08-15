@@ -7,8 +7,7 @@ import org.ssglobal.training.codes.models.Users;
 public interface AuthenticateService {
 
 	Map<String, Object> searchUserByUsernameAndPassword(String username, String password);
-	boolean createToken(Integer employeeId, String token);
-	boolean updateUserToken(Integer employeeId, String token);
+	boolean createToken(Integer userId, String token);
 	boolean deleteUserToken(Integer userId);
 	boolean isUserTokenIdExists(Integer userId);
 	boolean isUserTokenExists(Integer userId, String token);
