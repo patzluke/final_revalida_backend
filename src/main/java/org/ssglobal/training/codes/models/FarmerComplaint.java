@@ -15,7 +15,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -45,10 +47,11 @@ public class FarmerComplaint implements Serializable {
 	private Boolean isResolved;
 
 	@Column(name="read_date")
-	private Timestamp readDate;
+	private LocalDateTime readDate;
 
 	//bi-directional many-to-one association to Farmer
 	@ManyToOne
 	@JoinColumn(name="farmer_id")
+	@JsonManagedReference
 	private Farmer farmer;
 }

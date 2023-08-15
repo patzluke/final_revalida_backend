@@ -154,6 +154,8 @@ create table post_advertisement_responses (
     post_id int,
     farmer_id int,
     message text,
+    price float,
+    quantity int,
     is_accepted boolean,
     preferred_payment_mode varchar(50),
     date_created timestamp,

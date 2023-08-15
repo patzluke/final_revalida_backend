@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.ssglobal.training.codes.models.Administrator;
-import org.ssglobal.training.codes.service.impl.AdministratorServiceImpl;
+import org.ssglobal.training.codes.service.AdministratorService;
 
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
@@ -21,7 +21,7 @@ import lombok.RequiredArgsConstructor;
 public class AdministratorController {
 	
 	@Autowired
-	private AdministratorServiceImpl service;
+	private AdministratorService service;
 	
 	
 	@GET

@@ -44,7 +44,8 @@ public class RestServiceCorsApplication {
 			   })
 			   .csrf(t -> t.disable())
 			   	.addFilterBefore(myJwtTokenValidator, BasicAuthenticationFilter.class)
-			   .authorizeHttpRequests(t -> t.requestMatchers(AntPathRequestMatcher.antMatcher("/api/**")).permitAll())
+			   .authorizeHttpRequests(t -> {t.requestMatchers(AntPathRequestMatcher.antMatcher("/api/admin/**")).permitAll(); })
+			   .authorizeHttpRequests(t -> {t.anyRequest().permitAll();})
 			   .getOrBuild();
 	}
 }

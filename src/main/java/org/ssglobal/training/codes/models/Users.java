@@ -86,16 +86,18 @@ public class Users implements Serializable {
 	private String username;
 
 	// bi-directional many-to-one association to Administrator
-	@OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
 	@JsonBackReference
 	private List<Administrator> administrators;
 
 	// bi-directional many-to-one association to Farmer
 	@OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+	@JsonBackReference
 	private List<Farmer> farmers;
 
 	// bi-directional many-to-one association to Supplier
 	@OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+	@JsonBackReference
 	private List<Supplier> suppliers;
 
 	// bi-directional one-to-one association to UserToken
