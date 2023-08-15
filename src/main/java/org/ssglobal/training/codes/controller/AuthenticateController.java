@@ -29,19 +29,28 @@ public class AuthenticateController {
 	@Produces(value = { MediaType.APPLICATION_JSON })
 	@Consumes(value = { MediaType.APPLICATION_JSON })
 	public Response searchUserByUsernameAndPassword(Map<String, Object> payload) {
-		Map<String, Object> user = service.searchUserByUsernameAndPassword(payload.get("username").toString(), payload.get("password").toString());
-		GenericEntity<Map<String, Object>> userEntity = null;
+		Map<String, Object> authenticatedUser = service.searchUserByUsernameAndPassword(payload.get("username").toString(), payload.get("password").toString());
+		GenericEntity<List<Object>> userEntity = null;
 		try {
-			if (user != null) {
+			if (authenticatedUser != null) {
+				System.out.println(authenticatedUser);
 				List<Object> usertoken = new ArrayList<>();
-				
-				userEntity = new GenericEntity<>(user) {};
+				String token = service
+						.generateToken(Integer.valueOf(authenticatedUser.get("userId").toString()),
+									   Integer.valueOf(authenticatedUser.get("userNo").toString()),
+									   authenticatedUser.get("username").toString(), 
+									   authenticatedUser.get("userType").toString(),
+									   Boolean.valueOf(authenticatedUser.get("activeStatus").toString())
+									  );
+				usertoken.add(token);
+				userEntity = new GenericEntity<>(usertoken) {};
 				return Response.ok(userEntity).build();
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
 		}
-		return Response.status(Status.BAD_REQUEST).build();
+		return Response.status(Status.UNAUTHORIZED).build();
 
 	}
 	

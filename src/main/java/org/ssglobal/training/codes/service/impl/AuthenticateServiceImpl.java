@@ -17,9 +17,16 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.ssglobal.training.codes.models.Administrator;
+import org.ssglobal.training.codes.models.Farmer;
+import org.ssglobal.training.codes.models.Supplier;
+import org.ssglobal.training.codes.models.UserToken;
+import org.ssglobal.training.codes.models.UserToken.UserTokenBuilder;
 import org.ssglobal.training.codes.models.Users;
 import org.ssglobal.training.codes.repository.AdministratorRepository;
 import org.ssglobal.training.codes.repository.AuthenticateRepository;
+import org.ssglobal.training.codes.repository.FarmerRepository;
+import org.ssglobal.training.codes.repository.SupplierRepository;
+import org.ssglobal.training.codes.repository.UserTokenRepository;
 import org.ssglobal.training.codes.service.AuthenticateService;
 
 import io.jsonwebtoken.Jwts;
@@ -35,6 +42,15 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 	
 	@Autowired
 	private AdministratorRepository administratorRepository;
+	
+	@Autowired
+	private FarmerRepository farmerRepository;
+	
+	@Autowired
+	private SupplierRepository supplierRepository;
+	
+	@Autowired
+	private UserTokenRepository userTokenRepository;
 
 	@Override
 	public Map<String, Object> searchUserByUsernameAndPassword(String username, String password) {
@@ -44,10 +60,19 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 			user.put("userId", userOptional.get().getUserId());
 			user.put("username", userOptional.get().getUsername());
 			user.put("userType", userOptional.get().getUserType());
-			user.put("isActive", userOptional.get().getActiveStatus());
+			user.put("activeStatus", userOptional.get().getActiveStatus());
+			
 			if (userOptional.get().getUserType().equalsIgnoreCase("Administrator")) {
 				Administrator administrator = administratorRepository.findOneByUserId(userOptional.get().getUserId()).orElse(null);
 				user.put("userNo", administrator.getAdministratorId());
+			}
+			if (userOptional.get().getUserType().equalsIgnoreCase("Farmer")) {
+				Farmer farmer = farmerRepository.findOneByUserId(userOptional.get().getUserId()).orElse(null);
+				user.put("userNo", farmer.getFarmerId());
+			}
+			if (userOptional.get().getUserType().equalsIgnoreCase("Supplier")) {
+				Supplier supplier = supplierRepository.findOneByUserId(userOptional.get().getUserId()).orElse(null);
+				user.put("userNo", supplier.getSupplierId());
 			}
 			return user;
 		}
@@ -55,32 +80,31 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 	}
 
 	@Override
-	public boolean createToken(Integer employeeId, String token) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean updateUserToken(Integer employeeId, String token) {
-		// TODO Auto-generated method stub
+	public boolean createToken(Integer userId, String token) {
+		UserTokenBuilder userToken = UserToken.builder();
+		userToken.userId(userId);
+		userToken.token(token);
+		if (userTokenRepository.saveAndFlush(userToken.build()) != null) {
+			return true;
+		}
 		return false;
 	}
 
 	@Override
 	public boolean deleteUserToken(Integer userId) {
-		// TODO Auto-generated method stub
+		Optional<UserToken> userTokenOptional = userTokenRepository.findOneByUserId(userId);
+		if (userTokenOptional.isPresent()) {
+			userTokenRepository.deleteById(userTokenOptional.get().getUserId());
+			return true;
+		}
 		return false;
 	}
 
 	@Override
 	public boolean isUserTokenIdExists(Integer userId) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean isUserTokenExists(Integer userId, String token) {
-		// TODO Auto-generated method stub
+		if (userTokenRepository.findOneByUserId(userId).isPresent()) {
+			return true;
+		}
 		return false;
 	}
 	
