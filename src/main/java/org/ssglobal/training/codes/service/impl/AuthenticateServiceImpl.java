@@ -109,6 +109,15 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 	}
 	
 	@Override
+	public boolean isUserTokenExists(Integer userId, String token) {
+		Optional<UserToken> userTokenOptional = userTokenRepository.findOneByUserIdAndToken(userId, token);
+		if (userTokenOptional.isPresent()) {
+			return true;
+		}
+		return false;
+	}
+	
+	@Override
 	public String generateToken(Integer userId, Integer userNo, String username, String userType, Boolean isActive) {
 		KeyGenerator keyGenerator = null;
 		try {

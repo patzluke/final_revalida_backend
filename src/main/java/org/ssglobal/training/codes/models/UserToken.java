@@ -2,6 +2,8 @@ package org.ssglobal.training.codes.models;
 
 import java.io.Serializable;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -35,5 +37,6 @@ public class UserToken implements Serializable {
 	//bi-directional many-to-one association to User
 	@OneToOne
 	@JoinColumn(name="user_id")
+	@JsonManagedReference
 	private Users user;
 }

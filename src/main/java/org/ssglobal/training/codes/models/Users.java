@@ -102,5 +102,6 @@ public class Users implements Serializable {
 
 	// bi-directional one-to-one association to UserToken
 	@OneToOne(mappedBy = "user")
+	@JsonBackReference
 	private UserToken userToken;
 }
