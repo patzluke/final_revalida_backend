@@ -2,13 +2,49 @@ package org.ssglobal.training.codes.repository;
 
 import java.util.Optional;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.query.Query;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import org.ssglobal.training.codes.models.Users;
 
-public interface AuthenticateRepository extends JpaRepository<Users, Integer> {
+@Repository
+public class AuthenticateRepository {
 	
-	@Query(value = "SELECT * FROM users WHERE username = :username", nativeQuery = true)
-	Optional<Users> findOneByUsername(@Param(value = "username") String username);
+	@Autowired(required = false)
+    private SessionFactory sf;
+	
+	public Optional<Users> findOneByUsername(String username) {
+		// Named Parameter
+		String sql = "SELECT * FROM users WHERE username = :username";
+
+		try (Session sess = sf.openSession()) {
+			Query<Users> query = sess.createNativeQuery(sql, Users.class);
+			query.setParameter("username", username);
+			Users record = query.getSingleResultOrNull();
+
+			return Optional.of(record);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return null;
+	}
+	
+	public Users updatePassword(Users user) {
+		Transaction tx = null;
+		try (Session sess = sf.openSession()) {
+			tx = sess.beginTransaction();
+
+			Users updatedUser = sess.get(Users.class, user.getUserId());
+			updatedUser.setPassword(user.getPassword());
+			updatedUser = sess.merge(updatedUser);
+			tx.commit();
+			return updatedUser;
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return null;
+	}
 }

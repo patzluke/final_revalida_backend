@@ -35,28 +35,30 @@ public class MyJwtTokenValidator extends OncePerRequestFilter {
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
-		try {
-			String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-			String token = authorizationHeader.substring("Bearer".length()).trim();
-			if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer")) {
-				response.sendError(Status.FORBIDDEN.getStatusCode(), "not ok");
-			}
-			if (!validateToken(token)) {
-				response.sendError(Status.FORBIDDEN.getStatusCode(), "not ok");
-			}
-			
-			filterChain.doFilter(request, response);
-		} catch (NullPointerException e) {
-			response.sendError(Status.FORBIDDEN.getStatusCode(), "not ok");
-		} catch (Exception e) {
-			e.printStackTrace();
-			response.sendError(Status.INTERNAL_SERVER_ERROR.getStatusCode());
-		}
+//		try {
+//			String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+//			String token = authorizationHeader.substring("Bearer".length()).trim();
+//			if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer")) {
+//				response.sendError(Status.UNAUTHORIZED.getStatusCode(), "not ok");
+//			}
+//			if (!validateToken(token)) {
+//				response.sendError(Status.UNAUTHORIZED.getStatusCode(), "not ok");
+//			}
+//			
+//			filterChain.doFilter(request, response);
+//		} catch (NullPointerException e) {
+//			response.sendError(Status.UNAUTHORIZED.getStatusCode(), "not ok");
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			response.sendError(Status.INTERNAL_SERVER_ERROR.getStatusCode());
+//		}
+		filterChain.doFilter(request, response);
 	}
 
 	@Override
 	protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
 		return request.getRequestURI().matches("/api/auth/login");
+	
 	}
 
 	@SuppressWarnings("unchecked")
@@ -66,7 +68,7 @@ public class MyJwtTokenValidator extends OncePerRequestFilter {
 			Decoder decoder = Base64.getUrlDecoder();
 			String payload = new String(decoder.decode(chunks[1]));
 			HashMap<String, Object> result = new ObjectMapper().readValue(payload, HashMap.class);
-
+			
 			Date tokenExpiresAt = new Date(Long.parseLong(result.get("exp").toString()) * 1000L);
 			int userId = Integer.parseInt(result.get("userId").toString());
 
