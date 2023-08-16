@@ -84,7 +84,7 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 		UserTokenBuilder userToken = UserToken.builder();
 		userToken.userId(userId);
 		userToken.token(token);
-		if (userTokenRepository.saveAndFlush(userToken.build()) != null) {
+		if (userTokenRepository.createToken(userToken.build())) {
 			return true;
 		}
 		return false;
@@ -148,7 +148,7 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 	public Users changePassword(String password, String username) {
 		Users users  = authenticateRepository.findOneByUsername(username).orElse(null);
 		users.setPassword(encoder().encode(password));
-		users = authenticateRepository.saveAndFlush(users);
+		users = authenticateRepository.updatePassword(users);
 		return users;
 	}
 	

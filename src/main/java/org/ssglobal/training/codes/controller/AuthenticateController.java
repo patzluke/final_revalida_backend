@@ -33,7 +33,6 @@ public class AuthenticateController {
 		GenericEntity<List<Object>> userEntity = null;
 		try {
 			if (authenticatedUser != null) {
-				System.out.println(authenticatedUser);
 				List<Object> usertoken = new ArrayList<>();
 				String token = service
 						.generateToken(Integer.valueOf(authenticatedUser.get("userId").toString()),
@@ -42,6 +41,7 @@ public class AuthenticateController {
 									   authenticatedUser.get("userType").toString(),
 									   Boolean.valueOf(authenticatedUser.get("activeStatus").toString())
 									  );
+				
 				usertoken.add(token);
 				userEntity = new GenericEntity<>(usertoken) {};
 				return Response.ok(userEntity).build();

@@ -2,13 +2,32 @@ package org.ssglobal.training.codes.repository;
 
 import java.util.Optional;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import org.ssglobal.training.codes.models.Farmer;
 
-public interface FarmerRepository extends JpaRepository<Farmer, Integer> {
+@Repository
+public class FarmerRepository {
 	
-	@Query(value = "SELECT * FROM farmer WHERE user_id = :user_id", nativeQuery = true)
-	Optional<Farmer> findOneByUserId(@Param(value = "user_id") Integer userId);
+	@Autowired
+    private SessionFactory sf;
+	
+	public Optional<Farmer> findOneByUserId(Integer userId) {
+		// Named Parameter
+		String sql = "SELECT * FROM farmer WHERE user_id = :user_id";
+
+		try (Session sess = sf.openSession()) {
+			Query<Farmer> query = sess.createNativeQuery(sql, Farmer.class);
+			query.setParameter("user_id", userId);
+			Farmer record = query.getSingleResultOrNull();
+
+			return Optional.of(record);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return null;
+	}
 }
