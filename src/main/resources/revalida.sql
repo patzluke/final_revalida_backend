@@ -43,7 +43,8 @@ drop table if exists farming_tip cascade;
 create table farming_tip (
 	farming_tip_id serial primary key,
    	tip_message text,
-   	date_created timestamp
+   	date_created timestamp,
+   	date_modified timestamp
 );
 
 --SUPPLIERS MODULE
@@ -86,9 +87,10 @@ create table farmer_complaint (
     farmer_id int,
     complaint_message text,
     admin_reply_message text,
-    is_read boolean,
-   	is_resolved boolean,
+    is_read boolean default 'f',
+   	is_resolved boolean default 'f',
    	read_date timestamp,
+   	date_submitted timestamp,
     foreign key(farmer_id) references farmer(farmer_id) on delete cascade
 );
 
@@ -171,7 +173,19 @@ create table user_tokens (
 	foreign key(user_id) references users(user_id) on delete cascade
 );
 
+--Insert into users and administrator
 insert into users(username, password, email, contact_no, socials, first_name, middle_name, last_name, user_type, birth_date, address, gender, nationality, active_status, active_deactive, date_created) 
-values('pastrero', '123456', 'patzluke12@gmail.com', '9055261296', array['https://www.facebook.com/megalodon218'], 'Patrick', 'Artuz', 'Astrero', 'Admin', '1999-07-08', 'Vista Verde, Cainta', 'Male', 'Filipino', 'true', 'true', '2023-08-15 9:55:00');
-
+values('pastrero', '123456', 'patzluke12@gmail.com', '9055261296', array['https://www.facebook.com/megalodon218'], 'Patrick', 'Artuz', 'Astrero', 'Administrator', '1999-07-08', 'Vista Verde, Cainta', 'Male', 'Filipino', 'true', 'true', '2023-08-15 9:55:00');
 insert into administrator(user_id) values (1);
+
+--Insert into users and farmer
+insert into users(username, password, email, contact_no, socials, first_name, middle_name, last_name, user_type, birth_date, address, gender, nationality, active_status, active_deactive, date_created) 
+values('nika', '123456', 'nika@gmail.com', '9055261296', array['https://www.facebook.com/megalodon218'], 'Nika', 'Artuz', 'Astrero', 'Farmer', '1999-07-08', 'Vista Verde, Cainta', 'Male', 'Filipino', 'true', 'true', '2023-08-15 9:55:00');
+insert into farmer(user_id) values (2);
+
+--insert into farmer complaints
+insert into farmer_complaint(farmer_id, complaint_message, date_submitted) 
+values (1, 'ang pangit ng bigas', '2023-08-17 12:55:00'),
+(1, 'ang pangit ng mais', '2023-08-17 12:55:00'),
+(1, 'ang pangit ng siomai', '2023-08-17 12:55:00'),
+(1, 'ang pangit ng carrots', '2023-08-17 12:55:00');

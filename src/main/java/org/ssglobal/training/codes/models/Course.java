@@ -53,6 +53,6 @@ public class Course implements Serializable {
 
 	//bi-directional many-to-one association to CourseEnrolled
 	@OneToMany(mappedBy="course", fetch=FetchType.EAGER)
-	@JsonBackReference
+	@JsonBackReference(value = "CourseEnrolled")
 	private List<CourseEnrolled> courseEnrolleds;
 }

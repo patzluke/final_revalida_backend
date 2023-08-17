@@ -12,6 +12,7 @@ import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.ssglobal.training.codes.models.Administrator;
+import org.ssglobal.training.codes.models.FarmerComplaint;
 import org.ssglobal.training.codes.models.FarmingTip;
 
 @Repository
@@ -58,7 +59,7 @@ public class AdministratorRepository {
 		List<FarmingTip> records = new ArrayList<>();
 		// this is HQL so make supervisor to Supervisor and with ref var
 		// if you make Supervisor lower case, it will throw an error
-		String sql = "select * from farming_tip";
+		String sql = "select * from farming_tip order by farming_tip_id desc";
 
 		try (Session sess = sf.openSession()) {
 			Query<FarmingTip> query = sess.createNativeQuery(sql, FarmingTip.class);
@@ -90,6 +91,7 @@ public class AdministratorRepository {
 			tx = sess.beginTransaction();
 			FarmingTip updatedTip = sess.get(FarmingTip.class, farmingTip.getFarmingTipId());
 			updatedTip.setTipMessage(farmingTip.getTipMessage());
+			updatedTip.setDateModified(farmingTip.getDateModified());
 			sess.merge(updatedTip);
 			tx.commit();
 			return updatedTip;
@@ -107,6 +109,43 @@ public class AdministratorRepository {
 			sess.remove(tip);
 			tx.commit();
 			return tip;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	//Farmer Complaints
+	public List<FarmerComplaint> selectAllFarmerComplaints() {
+		List<FarmerComplaint> records = new ArrayList<>();
+		// this is HQL so make supervisor to Supervisor and with ref var
+		// if you make Supervisor lower case, it will throw an error
+		String sql = "select * from farmer_complaint order by farmer_complaint_id";
+
+		try (Session sess = sf.openSession()) {
+			Query<FarmerComplaint> query = sess.createNativeQuery(sql, FarmerComplaint.class);
+			records = query.getResultList();
+
+			return Collections.unmodifiableList(records);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return Collections.unmodifiableList(records);
+	}
+
+	public FarmerComplaint updateIntoFarmerComplaint(FarmerComplaint farmerComplaint) {
+		Transaction tx = null;
+		try (Session sess = sf.openSession()) {
+			tx = sess.beginTransaction();
+			FarmerComplaint updatedComplaint = sess.get(FarmerComplaint.class, farmerComplaint.getFarmerComplaintId());
+			updatedComplaint.setAdminReplyMessage(farmerComplaint.getAdminReplyMessage());
+			if (farmerComplaint.getIsRead() == null) {
+				updatedComplaint.setReadDate(farmerComplaint.getReadDate());
+			}
+			updatedComplaint.setIsRead(farmerComplaint.getIsRead());
+			sess.merge(updatedComplaint);
+			tx.commit();
+			return updatedComplaint;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

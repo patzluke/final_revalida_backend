@@ -51,6 +51,9 @@ public class FarmerComplaint implements Serializable {
 
 	@Column(name="read_date")
 	private LocalDateTime readDate;
+	
+	@Column(name="date_submitted")
+	private LocalDateTime dateSubmitted;
 
 	//bi-directional many-to-one association to Farmer
 	@ManyToOne

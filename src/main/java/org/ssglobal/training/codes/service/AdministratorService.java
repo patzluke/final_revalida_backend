@@ -3,6 +3,7 @@ package org.ssglobal.training.codes.service;
 import java.util.List;
 
 import org.ssglobal.training.codes.models.Administrator;
+import org.ssglobal.training.codes.models.FarmerComplaint;
 import org.ssglobal.training.codes.models.FarmingTip;
 
 public interface AdministratorService {
@@ -14,4 +15,8 @@ public interface AdministratorService {
 	FarmingTip insertIntoFarmingTip(FarmingTip farmingTip);
 	FarmingTip updateIntoFarmingTip(FarmingTip farmingTip);
 	FarmingTip deleteFarmingTip(Integer farmingTipId);
+	
+	//Farmer Complaints
+	List<FarmerComplaint> selectAllFarmerComplaints();
+	FarmerComplaint updateIntoFarmerComplaint(FarmerComplaint farmerComplaint);
 }

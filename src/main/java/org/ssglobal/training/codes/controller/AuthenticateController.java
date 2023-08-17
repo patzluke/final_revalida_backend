@@ -33,6 +33,7 @@ public class AuthenticateController {
 		GenericEntity<List<Object>> userEntity = null;
 		try {
 			if (authenticatedUser != null) {
+				System.out.println(authenticatedUser);
 				List<Object> usertoken = new ArrayList<>();
 				String token = service
 						.generateToken(Integer.valueOf(authenticatedUser.get("userId").toString()),

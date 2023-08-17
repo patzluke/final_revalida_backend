@@ -43,6 +43,6 @@ public class CropSpecialization implements Serializable {
 
 	//bi-directional many-to-one association to PostAdvertisement
 	@OneToMany(mappedBy="cropSpecialization", fetch=FetchType.EAGER)
-	@JsonBackReference
+	@JsonBackReference(value = "PostAdvertisement")
 	private List<PostAdvertisement> postAdvertisements;
 }
