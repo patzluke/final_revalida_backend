@@ -45,12 +45,12 @@ public class Farmer implements Serializable {
 
 	//bi-directional many-to-one association to CourseEnrolled
 	@OneToMany(mappedBy="farmer", fetch=FetchType.EAGER)
-	@JsonBackReference
+	@JsonBackReference(value = "CourseEnrolled")
 	private List<CourseEnrolled> courseEnrolleds;
 
 	//bi-directional many-to-one association to CropDetail
 	@OneToMany(mappedBy="farmer", fetch=FetchType.EAGER)
-	@JsonBackReference
+	@JsonBackReference(value = "CropDetail")
 	private List<CropDetail> cropDetails;
 
 	//bi-directional many-to-one association to User
@@ -61,11 +61,11 @@ public class Farmer implements Serializable {
 
 	//bi-directional many-to-one association to FarmerComplaint
 	@OneToMany(mappedBy="farmer", fetch=FetchType.EAGER)
-	@JsonBackReference
+	@JsonBackReference(value = "farmerComplaintToFarmer")
 	private List<FarmerComplaint> farmerComplaints;
 
 	//bi-directional many-to-one association to PostAdvertisementRespons
 	@OneToMany(mappedBy="farmer", fetch=FetchType.EAGER)
-	@JsonBackReference
+	@JsonBackReference(value = "PostAdvertisementResponse")
 	private List<PostAdvertisementResponse> postAdvertisementResponses;
 }

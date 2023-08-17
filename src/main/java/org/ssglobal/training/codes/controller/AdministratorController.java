@@ -2,8 +2,11 @@ package org.ssglobal.training.codes.controller;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.ssglobal.training.codes.models.Farmer;
+import org.ssglobal.training.codes.models.FarmerComplaint;
 import org.ssglobal.training.codes.models.FarmingTip;
 import org.ssglobal.training.codes.service.AdministratorService;
 
@@ -26,6 +29,7 @@ public class AdministratorController {
 	@Autowired
 	private AdministratorService service;
 
+	//FarmingTips
 	@GET
 	@Path("/get/farmingtips")
     @Produces({ MediaType.APPLICATION_JSON })
@@ -37,10 +41,10 @@ public class AdministratorController {
 				farmingTipsEntity = new GenericEntity<>(farmingTips) {};
 				return Response.ok(farmingTipsEntity).build();
 			}
-			return Response.status(Status.NO_CONTENT).build();
 		} catch (Exception e) {
+			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
 		}
-		return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+		return Response.status(Status.BAD_REQUEST).build();
 	}
 	
 	@POST
@@ -48,9 +52,6 @@ public class AdministratorController {
     @Produces({ MediaType.APPLICATION_JSON })
 	@Consumes({ MediaType.APPLICATION_JSON })
 	public Response insertIntoFarmingTip(FarmingTip payload) {
-		payload.setFarmingTipId(null);
-		payload.setDateCreated(LocalDateTime.now());
-		System.out.println(payload);
 		FarmingTip farmingTip = service.insertIntoFarmingTip(payload);
 		GenericEntity<FarmingTip> farmingTipEntity = null;
 		
@@ -71,6 +72,7 @@ public class AdministratorController {
     @Produces({ MediaType.APPLICATION_JSON })
 	@Consumes({ MediaType.APPLICATION_JSON })
 	public Response updateIntoFarmingTip(FarmingTip payload) {
+		System.out.println(payload);
 		FarmingTip farmingTip = service.updateIntoFarmingTip(payload);
 		GenericEntity<FarmingTip> farmingTipEntity = null;
 		
@@ -97,6 +99,49 @@ public class AdministratorController {
 		try {
 			if (farmingTip != null) {
 				farmingTipEntity = new GenericEntity<>(farmingTip) {};
+				return Response.ok(farmingTipEntity).build();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+		}
+		return Response.status(Status.BAD_REQUEST).build();
+	}
+	
+	//Farmer Complaints
+	@GET
+	@Path("/get/farmercomplaints")
+    @Produces({ MediaType.APPLICATION_JSON })
+	public Response selectAllFarmerComplaints() {
+		List<FarmerComplaint> farmerComplaints = service.selectAllFarmerComplaints();
+		GenericEntity<List<FarmerComplaint>> farmingComplaintEntity = null;
+		try {
+			if (!farmerComplaints.isEmpty()) {
+				farmingComplaintEntity = new GenericEntity<>(farmerComplaints) {};
+				return Response.ok(farmingComplaintEntity).build();
+			}
+		} catch (Exception e) {
+			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+		}
+		return Response.status(Status.BAD_REQUEST).build();
+	}
+	
+	@PUT
+	@Path("/update/farmercomplaints")
+    @Produces({ MediaType.APPLICATION_JSON })
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public Response updateIntoFarmerComplaint(Map<String, Object> payload) {
+		FarmerComplaint updatedComplaint = new FarmerComplaint();
+		updatedComplaint.setFarmerComplaintId(Integer.valueOf(payload.get("farmerComplaintId").toString()));
+		updatedComplaint.setAdminReplyMessage(payload.get("adminReplyMessage").toString());
+		updatedComplaint.setReadDate(LocalDateTime.now());
+		updatedComplaint.setIsRead(Boolean.valueOf(payload.get("isRead").toString()));
+		FarmerComplaint farmingComplaint = service.updateIntoFarmerComplaint(updatedComplaint);
+		GenericEntity<FarmerComplaint> farmingTipEntity = null;
+		
+		try {
+			if (farmingComplaint != null) {
+				farmingTipEntity = new GenericEntity<>(farmingComplaint) {};
 				return Response.ok(farmingTipEntity).build();
 			}
 		} catch (Exception e) {

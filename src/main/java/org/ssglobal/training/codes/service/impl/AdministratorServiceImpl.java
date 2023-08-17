@@ -1,10 +1,12 @@
 package org.ssglobal.training.codes.service.impl;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.ssglobal.training.codes.models.Administrator;
+import org.ssglobal.training.codes.models.FarmerComplaint;
 import org.ssglobal.training.codes.models.FarmingTip;
 import org.ssglobal.training.codes.repository.AdministratorRepository;
 import org.ssglobal.training.codes.service.AdministratorService;
@@ -23,6 +25,7 @@ public class AdministratorServiceImpl implements AdministratorService {
 		return repository.findAllAdministrators();
 	}
 	
+	//FarmingTips
 	@Override
 	public List<FarmingTip> selectAllFarmingTip() {
 		return repository.selectAllFarmingTip();
@@ -30,16 +33,30 @@ public class AdministratorServiceImpl implements AdministratorService {
 	
 	@Override
 	public FarmingTip insertIntoFarmingTip(FarmingTip farmingTip) {
+		farmingTip.setFarmingTipId(null);
+		farmingTip.setDateCreated(LocalDateTime.now());
 		return repository.insertIntoFarmingTip(farmingTip);
 	}
 	
 	@Override
 	public FarmingTip updateIntoFarmingTip(FarmingTip farmingTip) {
+		farmingTip.setDateModified(LocalDateTime.now());
 		return repository.updateIntoFarmingTip(farmingTip);
 	}
 	
 	@Override
 	public FarmingTip deleteFarmingTip(Integer farmingTipId) {
 		return repository.deleteFarmingTip(farmingTipId);
+	}
+
+	//Farmer Complaints
+	@Override
+	public List<FarmerComplaint> selectAllFarmerComplaints() {
+		return repository.selectAllFarmerComplaints();
+	}
+
+	@Override
+	public FarmerComplaint updateIntoFarmerComplaint(FarmerComplaint farmerComplaint) {
+		return repository.updateIntoFarmerComplaint(farmerComplaint);
 	}
 }

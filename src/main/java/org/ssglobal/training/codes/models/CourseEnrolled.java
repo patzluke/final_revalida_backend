@@ -52,7 +52,7 @@ public class CourseEnrolled implements Serializable {
 	//bi-directional many-to-one association to Course
 	@ManyToOne
 	@JoinColumn(name="course_id")
-	@JsonManagedReference
+	@JsonManagedReference(value = "CourseEnrolled")
 	private Course course;
 
 	//bi-directional many-to-one association to Farmer
