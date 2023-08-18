@@ -89,7 +89,7 @@ public class Users implements Serializable {
 	private String username;
 
 	// bi-directional many-to-one association to Administrator
-	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
 	@JsonBackReference
 	private List<Administrator> administrators;
 
