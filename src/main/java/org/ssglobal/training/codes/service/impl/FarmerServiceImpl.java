@@ -24,4 +24,14 @@ public class FarmerServiceImpl implements FarmerService {
 	public FarmerComplaint insertIntoFarmerComplaint(Map<String, Object> payload) {
 		return repository.insertIntoFarmerComplaint(payload);
 	}
+	
+	@Override
+	public FarmerComplaint updateIntoFarmerComplaint(FarmerComplaint farmerComplaint) {
+		return repository.updateIntoFarmerComplaint(farmerComplaint);
+	}
+	
+	@Override
+	public FarmerComplaint softDeleteFarmerComplaint(Integer farmingTipId) {
+		return repository.softDeleteFarmerComplaint(farmingTipId);
+	}
 }

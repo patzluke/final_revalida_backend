@@ -57,6 +57,9 @@ public class FarmerComplaint implements Serializable {
 	
 	@Column(name="date_submitted")
 	private LocalDateTime dateSubmitted;
+	
+	@Column(name="active_deactive")
+	private Boolean activeDeactive;
 
 	//bi-directional many-to-one association to Farmer
 	@ManyToOne

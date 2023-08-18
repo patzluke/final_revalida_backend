@@ -59,6 +59,7 @@ public class FarmerRepository {
 	
 	public FarmerComplaint insertIntoFarmerComplaint(Map<String, Object> payload) {		
 		FarmerComplaint complaint = new FarmerComplaint();
+		complaint.setActiveDeactive(true);
 		complaint.setComplaintTitle(payload.get("complaintTitle").toString());
 		complaint.setComplaintMessage(payload.get("complaintMessage").toString());
 		complaint.setFarmer(findOneByUserId(Integer.valueOf(payload.get("farmerId").toString())).get());
@@ -71,6 +72,38 @@ public class FarmerRepository {
 			sess.persist(complaint);
 			tx.commit();
 			return complaint;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public FarmerComplaint updateIntoFarmerComplaint(FarmerComplaint farmerComplaint) {
+		Transaction tx = null;
+		try (Session sess = sf.openSession()) {
+			tx = sess.beginTransaction();
+		
+			FarmerComplaint updatedComplaint = sess.get(FarmerComplaint.class, farmerComplaint.getFarmerComplaintId());
+			updatedComplaint.setComplaintTitle(farmerComplaint.getComplaintTitle());
+			updatedComplaint.setComplaintMessage(farmerComplaint.getComplaintMessage());
+			sess.merge(updatedComplaint);
+			tx.commit();
+			return updatedComplaint;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public FarmerComplaint softDeleteFarmerComplaint(Integer farmingTipId) {
+		Transaction tx = null;
+		try (Session sess = sf.openSession()) {
+			tx = sess.beginTransaction();
+			FarmerComplaint updatedComplaint = sess.get(FarmerComplaint.class, farmingTipId);
+			updatedComplaint.setActiveDeactive(false);
+			sess.merge(updatedComplaint);
+			tx.commit();
+			return updatedComplaint;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

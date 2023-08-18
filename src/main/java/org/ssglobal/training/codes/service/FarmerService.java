@@ -9,4 +9,6 @@ public interface FarmerService {
 	
 	List<FarmerComplaint> selectFarmerComplaints(Integer farmerId);
 	FarmerComplaint insertIntoFarmerComplaint(Map<String, Object> payload);
+	FarmerComplaint updateIntoFarmerComplaint(FarmerComplaint farmerComplaint);
+	FarmerComplaint softDeleteFarmerComplaint(Integer farmingTipId);
 }
