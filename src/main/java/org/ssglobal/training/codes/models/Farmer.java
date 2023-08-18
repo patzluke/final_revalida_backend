@@ -68,4 +68,6 @@ public class Farmer implements Serializable {
 	@OneToMany(mappedBy="farmer", fetch=FetchType.EAGER)
 	@JsonBackReference
 	private List<PostAdvertisementResponse> postAdvertisementResponses;
+	
+	
 }

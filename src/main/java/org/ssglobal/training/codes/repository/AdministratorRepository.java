@@ -120,7 +120,7 @@ public class AdministratorRepository {
 		List<FarmerComplaint> records = new ArrayList<>();
 		// this is HQL so make supervisor to Supervisor and with ref var
 		// if you make Supervisor lower case, it will throw an error
-		String sql = "select * from farmer_complaint order by farmer_complaint_id";
+		String sql = "select * from farmer_complaint where active_deactive = 't' order by farmer_complaint_id";
 
 		try (Session sess = sf.openSession()) {
 			Query<FarmerComplaint> query = sess.createNativeQuery(sql, FarmerComplaint.class);
