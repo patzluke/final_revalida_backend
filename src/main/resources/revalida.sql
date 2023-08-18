@@ -85,6 +85,7 @@ drop table if exists farmer_complaint cascade;
 create table farmer_complaint (
 	farmer_complaint_id serial primary key,
     farmer_id int,
+    complaint_title varchar(255),
     complaint_message text,
     admin_reply_message text,
     is_read boolean default 'f',
@@ -184,8 +185,8 @@ values('nika', '123456', 'nika@gmail.com', '9055261296', array['https://www.face
 insert into farmer(user_id) values (2);
 
 --insert into farmer complaints
-insert into farmer_complaint(farmer_id, complaint_message, date_submitted) 
-values (1, 'ang pangit ng bigas', '2023-08-17 12:55:00'),
-(1, 'ang pangit ng mais', '2023-08-17 12:55:00'),
-(1, 'ang pangit ng siomai', '2023-08-17 12:55:00'),
-(1, 'ang pangit ng carrots', '2023-08-17 12:55:00');
+insert into farmer_complaint(farmer_id, complaint_title, complaint_message, date_submitted) 
+values (1, 'The Bigas', 'ang pangit ng bigas', '2023-08-17 12:55:00'),
+(1, 'The Mais', 'ang pangit ng mais', '2023-08-17 12:55:00'),
+(1, 'The Siomai', 'ang pangit ng siomai', '2023-08-17 12:55:00'),
+(1, 'The Carrots', 'ang pangit ng carrots', '2023-08-17 12:55:00');

@@ -59,6 +59,6 @@ public class PostAdvertisement implements Serializable {
 
 	//bi-directional many-to-one association to PostAdvertisementRespons
 	@OneToMany(mappedBy="postAdvertisement", fetch=FetchType.EAGER)
-	@JsonBackReference(value = "PostAdvertisementResponse")
+	@JsonBackReference
 	private List<PostAdvertisementResponse> postAdvertisementResponses;
 }
