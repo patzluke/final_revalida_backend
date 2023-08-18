@@ -40,6 +40,9 @@ public class FarmerComplaint implements Serializable {
 	@Column(name="admin_reply_message")
 	private String adminReplyMessage;
 
+	@Column(name="complaint_title")
+	private String complaintTitle;
+	
 	@Column(name="complaint_message")
 	private String complaintMessage;
 

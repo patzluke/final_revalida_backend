@@ -42,6 +42,6 @@ public class Administrator implements Serializable {
 	//bi-directional many-to-one association to User
 	@ManyToOne
 	@JoinColumn(name="user_id")
-	@JsonManagedReference(value = "Administrator")
+	@JsonManagedReference
 	private Users user;
 }

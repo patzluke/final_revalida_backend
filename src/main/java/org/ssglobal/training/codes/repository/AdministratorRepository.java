@@ -137,11 +137,13 @@ public class AdministratorRepository {
 		Transaction tx = null;
 		try (Session sess = sf.openSession()) {
 			tx = sess.beginTransaction();
+		
 			FarmerComplaint updatedComplaint = sess.get(FarmerComplaint.class, farmerComplaint.getFarmerComplaintId());
 			updatedComplaint.setAdminReplyMessage(farmerComplaint.getAdminReplyMessage());
-			if (farmerComplaint.getIsRead() == null) {
-				updatedComplaint.setReadDate(farmerComplaint.getReadDate());
+			if (updatedComplaint.getReadDate() == null) {
+				updatedComplaint.setReadDate(farmerComplaint.getReadDate());				
 			}
+			
 			updatedComplaint.setIsRead(farmerComplaint.getIsRead());
 			sess.merge(updatedComplaint);
 			tx.commit();
