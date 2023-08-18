@@ -1,6 +1,7 @@
 package org.ssglobal.training.codes.service.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,5 +18,10 @@ public class FarmerServiceImpl implements FarmerService {
 	@Override
 	public List<FarmerComplaint> selectFarmerComplaints(Integer farmerId) {
 		return repository.selectFarmerComplaints(farmerId);
+	}
+	
+	@Override
+	public FarmerComplaint insertIntoFarmerComplaint(Map<String, Object> payload) {
+		return repository.insertIntoFarmerComplaint(payload);
 	}
 }

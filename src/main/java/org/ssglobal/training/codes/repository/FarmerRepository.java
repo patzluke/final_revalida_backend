@@ -1,12 +1,15 @@
 package org.ssglobal.training.codes.repository;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -19,13 +22,13 @@ public class FarmerRepository {
 	@Autowired
     private SessionFactory sf;
 	
-	public Optional<Farmer> findOneByUserId(Integer userId) {
+	public Optional<Farmer> findOneByUserId(Integer farmerId) {
 		// Named Parameter
-		String sql = "SELECT * FROM farmer WHERE user_id = :user_id";
+		String sql = "SELECT * FROM farmer WHERE farmer_id = :farmer_id";
 
 		try (Session sess = sf.openSession()) {
 			Query<Farmer> query = sess.createNativeQuery(sql, Farmer.class);
-			query.setParameter("user_id", userId);
+			query.setParameter("farmer_id", farmerId);
 			Farmer record = query.getSingleResultOrNull();
 
 			return Optional.of(record);
@@ -52,5 +55,25 @@ public class FarmerRepository {
 			System.out.println(e.getMessage());
 		}
 		return Collections.unmodifiableList(records);
+	}
+	
+	public FarmerComplaint insertIntoFarmerComplaint(Map<String, Object> payload) {		
+		FarmerComplaint complaint = new FarmerComplaint();
+		complaint.setComplaintTitle(payload.get("complaintTitle").toString());
+		complaint.setComplaintMessage(payload.get("complaintMessage").toString());
+		complaint.setFarmer(findOneByUserId(Integer.valueOf(payload.get("farmerId").toString())).get());
+		complaint.setDateSubmitted(LocalDateTime.now());
+		
+		Transaction tx = null;
+		try (Session sess = sf.openSession()) {
+			tx = sess.beginTransaction();
+			
+			sess.persist(complaint);
+			tx.commit();
+			return complaint;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 }
