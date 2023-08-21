@@ -137,7 +137,6 @@ public class AdministratorController {
 		updatedComplaint.setIsRead(Boolean.valueOf(payload.get("isRead").toString()));
 		FarmerComplaint farmingComplaint = service.updateIntoFarmerComplaint(updatedComplaint);
 		GenericEntity<FarmerComplaint> farmingTipEntity = null;
-		
 		try {
 			if (farmingComplaint != null) {
 				farmingTipEntity = new GenericEntity<>(farmingComplaint) {};
