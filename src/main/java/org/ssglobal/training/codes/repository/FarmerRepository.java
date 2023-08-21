@@ -22,7 +22,23 @@ public class FarmerRepository {
 	@Autowired
     private SessionFactory sf;
 	
-	public Optional<Farmer> findOneByUserId(Integer farmerId) {
+	public Optional<Farmer> findOneByUserId(Integer userId) {
+		// Named Parameter
+		String sql = "SELECT * FROM farmer WHERE user_id = :user_id";
+
+		try (Session sess = sf.openSession()) {
+			Query<Farmer> query = sess.createNativeQuery(sql, Farmer.class);
+			query.setParameter("user_id", userId);
+			Farmer record = query.getSingleResultOrNull();
+
+			return Optional.of(record);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return null;
+	}
+	
+	public Optional<Farmer> findOneByFarmerId(Integer farmerId) {
 		// Named Parameter
 		String sql = "SELECT * FROM farmer WHERE farmer_id = :farmer_id";
 
@@ -62,7 +78,7 @@ public class FarmerRepository {
 		complaint.setActiveDeactive(true);
 		complaint.setComplaintTitle(payload.get("complaintTitle").toString());
 		complaint.setComplaintMessage(payload.get("complaintMessage").toString());
-		complaint.setFarmer(findOneByUserId(Integer.valueOf(payload.get("farmerId").toString())).get());
+		complaint.setFarmer(findOneByFarmerId(Integer.valueOf(payload.get("farmerId").toString())).get());
 		complaint.setDateSubmitted(LocalDateTime.now());
 		
 		Transaction tx = null;
