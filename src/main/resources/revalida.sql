@@ -69,6 +69,9 @@ create table post_advertisement (
     description text,
     crop_image varchar(255),
     quantity int,
+    price float,
+    date_posted timestamp,
+    date_modified timestamp,
     foreign key(crop_specialization_id) references crop_specialization(crop_specialization_id) on delete cascade
 );
 
@@ -184,6 +187,10 @@ insert into administrator(user_id) values (1);
 insert into users(username, password, email, contact_no, socials, first_name, middle_name, last_name, user_type, birth_date, address, gender, nationality, active_status, active_deactive, date_created) 
 values('nika', '123456', 'nika@gmail.com', '9055261296', array['https://www.facebook.com/megalodon218'], 'Nika', 'Artuz', 'Astrero', 'Farmer', '1999-07-08', 'Vista Verde, Cainta', 'Male', 'Filipino', 'true', 'true', '2023-08-15 9:55:00');
 insert into farmer(user_id) values (2);
+
+insert into users(username, password, email, contact_no, socials, first_name, middle_name, last_name, user_type, birth_date, address, gender, nationality, active_status, active_deactive, date_created) 
+values('norbz', '123456', 'norbz@gmail.com', '9055261296', array['https://www.facebook.com/norbz'], 'Norbz', 'Artuz', 'Astrero', 'Supplier', '1999-07-08', 'Vista Verde, Cainta', 'Male', 'Filipino', 'true', 'true', '2023-08-15 9:55:00');
+insert into supplier(user_id) values (3);
 
 --insert into farmer complaints
 insert into farmer_complaint(farmer_id, complaint_title, complaint_message, date_submitted, active_deactive) 

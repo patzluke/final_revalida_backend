@@ -35,29 +35,30 @@ public class MyJwtTokenValidator extends OncePerRequestFilter {
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
-//		try {
-//			String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-//			String token = authorizationHeader.substring("Bearer".length()).trim();
-//			if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer")) {
-//				response.sendError(Status.UNAUTHORIZED.getStatusCode(), "not ok");
-//			}
-//			if (!validateToken(token)) {
-//				response.sendError(Status.UNAUTHORIZED.getStatusCode(), "not ok");
-//			}
-//			
-//			filterChain.doFilter(request, response);
-//		} catch (NullPointerException e) {
-//			response.sendError(Status.UNAUTHORIZED.getStatusCode(), "not ok");
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			response.sendError(Status.INTERNAL_SERVER_ERROR.getStatusCode());
-//		}
-		filterChain.doFilter(request, response);
+		try {
+			String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+			String token = authorizationHeader.substring("Bearer".length()).trim();
+			if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer")) {
+				response.sendError(Status.UNAUTHORIZED.getStatusCode(), "not ok");
+			}
+			if (!validateToken(token)) {
+				response.sendError(Status.UNAUTHORIZED.getStatusCode(), "not ok");
+			}
+			
+			filterChain.doFilter(request, response);
+		} catch (NullPointerException e) {
+			response.sendError(Status.UNAUTHORIZED.getStatusCode(), "not ok");
+		} catch (Exception e) {
+			e.printStackTrace();
+			response.sendError(Status.INTERNAL_SERVER_ERROR.getStatusCode());
+		}
 	}
 
 	@Override
 	protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-		return request.getRequestURI().matches("/api/auth/login");
+		return request.getRequestURI().matches("/api/auth/login") ||
+			   request.getRequestURI().matches("/api/auth/update/password") ||
+			   request.getRequestURI().matches("/api/file/.*");
 	
 	}
 
