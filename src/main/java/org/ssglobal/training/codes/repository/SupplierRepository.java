@@ -93,10 +93,10 @@ public class SupplierRepository {
 		advertisement.setCropName(payload.get("cropName").toString());
 		advertisement.setDescription(payload.get("description").toString());
 		advertisement.setCropImage(payload.get("cropImage").toString());
+		advertisement.setQuantity(Integer.valueOf(payload.get("quantity").toString()));
 		advertisement.setPrice(Double.valueOf(payload.get("price").toString()));
 		advertisement.setDatePosted(LocalDateTime.now());
 		advertisement.setActiveDeactive(true);
-		
 		Transaction tx = null;
 		try (Session sess = sf.openSession()) {
 			tx = sess.beginTransaction();
