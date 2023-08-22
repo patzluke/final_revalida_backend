@@ -46,6 +46,10 @@ public class Supplier implements Serializable {
 	@OneToMany(mappedBy="supplier", fetch=FetchType.EAGER)
 	@JsonBackReference
 	private List<CropOrder> cropOrders;
+	
+	@OneToMany(mappedBy = "supplier", fetch = FetchType.EAGER)
+	@JsonBackReference
+	private List<PostAdvertisement> postAdvertisements;
 
 	//bi-directional many-to-one association to User
 	@ManyToOne

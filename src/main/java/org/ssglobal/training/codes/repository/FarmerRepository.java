@@ -78,7 +78,7 @@ public class FarmerRepository {
 		complaint.setActiveDeactive(true);
 		complaint.setComplaintTitle(payload.get("complaintTitle").toString());
 		complaint.setComplaintMessage(payload.get("complaintMessage").toString());
-		complaint.setFarmer(findOneByFarmerId(Integer.valueOf(payload.get("farmerId").toString())).get());
+		complaint.setFarmer(findOneByFarmerId(Integer.valueOf(payload.get("farmerId").toString())).orElse(null));
 		complaint.setDateSubmitted(LocalDateTime.now());
 		
 		Transaction tx = null;

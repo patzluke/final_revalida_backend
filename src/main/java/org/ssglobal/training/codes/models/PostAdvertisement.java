@@ -1,6 +1,7 @@
 package org.ssglobal.training.codes.models;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -50,12 +51,29 @@ public class PostAdvertisement implements Serializable {
 	private String description;
 
 	private Integer quantity;
+	
+	private Double price;
+	
+	@Column(name="date_posted")
+	private LocalDateTime datePosted;
+	
+	@Column(name="date_modified")
+	private LocalDateTime dateModified;
+	
+	@Column(name="active_deactive")
+	private Boolean activeDeactive;
 
 	//bi-directional many-to-one association to CropSpecialization
 	@ManyToOne
 	@JoinColumn(name="crop_specialization_id")
 	@JsonManagedReference
 	private CropSpecialization cropSpecialization;
+	
+	// bi-directional many-to-one association to User
+	@ManyToOne
+	@JoinColumn(name = "supplier_id")
+	@JsonManagedReference
+	private Supplier supplier;
 
 	//bi-directional many-to-one association to PostAdvertisementRespons
 	@OneToMany(mappedBy="postAdvertisement", fetch=FetchType.EAGER)

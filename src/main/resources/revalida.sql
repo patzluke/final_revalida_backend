@@ -64,6 +64,7 @@ create table crop_specialization (
 drop table if exists post_advertisement cascade;
 create table post_advertisement (
 	post_id serial primary key,
+	supplier_id int,
     crop_specialization_id int,
     crop_name varchar(100),
     description text,
@@ -72,6 +73,8 @@ create table post_advertisement (
     price float,
     date_posted timestamp,
     date_modified timestamp,
+    active_deactive boolean,
+    foreign key(supplier_id) references supplier(supplier_id) on delete cascade,
     foreign key(crop_specialization_id) references crop_specialization(crop_specialization_id) on delete cascade
 );
 
@@ -194,7 +197,14 @@ insert into supplier(user_id) values (3);
 
 --insert into farmer complaints
 insert into farmer_complaint(farmer_id, complaint_title, complaint_message, date_submitted, active_deactive) 
-values (1, 'The Bigas', 'ang pangit ng bigas', '2023-08-17 12:55:00', 't'),
+values 
+(1, 'The Bigas', 'ang pangit ng bigas', '2023-08-17 12:55:00', 't'),
 (1, 'The Mais', 'ang pangit ng mais', '2023-08-17 12:55:00', 't'),
 (1, 'The Siomai', 'ang pangit ng siomai', '2023-08-17 12:55:00', 't'),
 (1, 'The Carrots', 'ang pangit ng carrots', '2023-08-17 12:55:00', 't');
+
+insert into crop_specialization(specialization_name) 
+values
+('Feed Crops'),
+('Fiber Crops'),
+('Oil Crops');
