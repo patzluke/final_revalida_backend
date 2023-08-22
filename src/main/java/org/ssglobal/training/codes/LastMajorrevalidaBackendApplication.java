@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.system.JavaVersion;
 import org.springframework.core.SpringVersion;
 
+
 @SpringBootApplication
 public class LastMajorrevalidaBackendApplication {
 
@@ -17,5 +18,4 @@ public class LastMajorrevalidaBackendApplication {
 		System.out.println("Hibernate Version: " + Version.getVersionString());
 		System.out.println(SpringBootVersion.getVersion());
 	}
-
 }
