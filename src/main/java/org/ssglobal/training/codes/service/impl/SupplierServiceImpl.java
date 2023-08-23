@@ -49,4 +49,9 @@ public class SupplierServiceImpl implements SupplierService {
 	public List<PostAdvertisementResponse> selectAllPostAdvertisementResponsesByPostId(Integer postId) {
 		return repository.selectAllPostAdvertisementResponsesByPostId(postId);
 	}
+	
+	@Override
+	public PostAdvertisementResponse updatePostAdvertisementResponsesIsAcceptedStatus(Map<String, Object> payload) {
+		return repository.updatePostAdvertisementResponsesIsAcceptedStatus(payload);
+	}
 }

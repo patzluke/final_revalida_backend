@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.ssglobal.training.codes.models.FarmerComplaint;
+import org.ssglobal.training.codes.models.PostAdvertisement;
 import org.ssglobal.training.codes.repository.FarmerRepository;
 import org.ssglobal.training.codes.service.FarmerService;
 
@@ -33,5 +34,10 @@ public class FarmerServiceImpl implements FarmerService {
 	@Override
 	public FarmerComplaint softDeleteFarmerComplaint(Integer farmingTipId) {
 		return repository.softDeleteFarmerComplaint(farmingTipId);
+	}
+	
+	@Override
+	public List<PostAdvertisement> selectAllPostAdvertisements() {
+		return repository.selectAllPostAdvertisements();
 	}
 }
