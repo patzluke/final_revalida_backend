@@ -179,4 +179,20 @@ public class SupplierRepository {
 		}
 		return Collections.unmodifiableList(records);
 	}
+	
+	public PostAdvertisementResponse updatePostAdvertisementResponsesIsAcceptedStatus(Map<String, Object> payload) {
+		Transaction tx = null;
+		try (Session sess = sf.openSession()) {
+			tx = sess.beginTransaction();
+		
+			PostAdvertisementResponse advertisementResponse = sess.get(PostAdvertisementResponse.class, Integer.valueOf(payload.get("postResponseId").toString()));
+			advertisementResponse.setIsAccepted(Boolean.valueOf(payload.get("isAccepted").toString()));
+			sess.merge(advertisementResponse);
+			tx.commit();
+			return advertisementResponse;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 }

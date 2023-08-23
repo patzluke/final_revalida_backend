@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.ssglobal.training.codes.models.Farmer;
 import org.ssglobal.training.codes.models.FarmerComplaint;
+import org.ssglobal.training.codes.models.PostAdvertisement;
 
 @Repository
 public class FarmerRepository {
@@ -124,5 +125,21 @@ public class FarmerRepository {
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	// Post Advertisement
+	public List<PostAdvertisement> selectAllPostAdvertisements() {
+		List<PostAdvertisement> records = new ArrayList<>();
+		String sql = "select * from post_advertisement order by post_id desc";
+
+		try (Session sess = sf.openSession()) {
+			Query<PostAdvertisement> query = sess.createNativeQuery(sql, PostAdvertisement.class);
+			records = query.getResultList();
+
+			return Collections.unmodifiableList(records);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return Collections.unmodifiableList(records);
 	}
 }

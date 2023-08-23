@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.ssglobal.training.codes.models.FarmerComplaint;
+import org.ssglobal.training.codes.models.PostAdvertisement;
 import org.ssglobal.training.codes.service.FarmerService;
 
 import jakarta.ws.rs.Consumes;
@@ -101,6 +102,24 @@ public class FarmerController {
 				farmerComplaintsEntity = new GenericEntity<>(farmerComplaints) {
 				};
 				return Response.ok(farmerComplaintsEntity).build();
+			}
+		} catch (Exception e) {
+			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+		}
+		return Response.status(Status.BAD_REQUEST).build();
+	}
+	
+	@GET
+	@Path("/get/postadvertisements")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public Response selectAllPostAdvertisements() {
+		List<PostAdvertisement> postAdvertisements = service.selectAllPostAdvertisements();
+		GenericEntity<List<PostAdvertisement>> postAdvertisementsEntity = null;
+		try {
+			if (!postAdvertisements.isEmpty()) {
+				postAdvertisementsEntity = new GenericEntity<>(postAdvertisements) {
+				};
+				return Response.ok(postAdvertisementsEntity).build();
 			}
 		} catch (Exception e) {
 			return Response.status(Status.INTERNAL_SERVER_ERROR).build();

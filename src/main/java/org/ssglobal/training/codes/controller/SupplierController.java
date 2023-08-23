@@ -130,13 +130,11 @@ public class SupplierController {
 	@Path("/get/postadvertisementresponse/{postId}")
 	@Produces({ MediaType.APPLICATION_JSON })
 	public Response selectAllPostAdvertisementResponsesByPostId(@PathParam(value = "postId") Integer postId) {
-		System.out.println("whyyy");
 		List<PostAdvertisementResponse> postAdvertisementResponses = service
 				.selectAllPostAdvertisementResponsesByPostId(postId);
 		GenericEntity<List<PostAdvertisementResponse>> postAdvertisementResponsesEntity = null;
 		try {
 			if (!postAdvertisementResponses.isEmpty()) {
-				System.out.println("hey");
 				postAdvertisementResponsesEntity = new GenericEntity<>(postAdvertisementResponses) {
 				};
 				return Response.ok(postAdvertisementResponsesEntity).build();
@@ -147,5 +145,25 @@ public class SupplierController {
 		}
 		return Response.status(Status.BAD_REQUEST).build();
 	}
-
+	
+	@PUT
+	@Path("/update/postadvertisementresponse")
+	@Produces({ MediaType.APPLICATION_JSON })
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public Response updatePostAdvertisementResponsesIsAcceptedStatus(Map<String, Object> payload) {
+		System.out.println(payload);
+		PostAdvertisementResponse advertisementResponse = service.updatePostAdvertisementResponsesIsAcceptedStatus(payload);
+		GenericEntity<PostAdvertisementResponse> advertisementResponsetEntity = null;
+		try {
+			if (advertisementResponse != null) {
+				advertisementResponsetEntity = new GenericEntity<>(advertisementResponse) {
+				};
+				return Response.ok(advertisementResponsetEntity).build();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+		}
+		return Response.status(Status.BAD_REQUEST).build();
+	}
 }
