@@ -40,7 +40,7 @@ public class PostAdvertisementResponse implements Serializable {
 	
 	private Double price;
 	
-	private Double quantity;
+	private String quantity;
 
 	@Column(name="date_created")
 	private LocalDateTime dateCreated;

@@ -69,11 +69,12 @@ create table post_advertisement (
     crop_name varchar(100),
     description text,
     crop_image varchar(255),
-    quantity int,
+    quantity varchar(100),
     price float,
     date_posted timestamp,
     date_modified timestamp,
     active_deactive boolean,
+    is_completed boolean,
     foreign key(supplier_id) references supplier(supplier_id) on delete cascade,
     foreign key(crop_specialization_id) references crop_specialization(crop_specialization_id) on delete cascade
 );
@@ -165,7 +166,7 @@ create table post_advertisement_responses (
     farmer_id int,
     message text,
     price float,
-    quantity int,
+    quantity varchar(100),
     is_accepted boolean,
     preferred_payment_mode varchar(50),
     date_created timestamp,
@@ -181,6 +182,13 @@ create table user_tokens (
 	foreign key(user_id) references users(user_id) on delete cascade
 );
 
+insert into crop_specialization(specialization_name) 
+values
+('Feed Crops'),
+('Fiber Crops'),
+('Oil Crops');
+
+
 --Insert into users and administrator
 insert into users(username, password, email, contact_no, socials, first_name, middle_name, last_name, user_type, birth_date, address, gender, nationality, active_status, active_deactive, date_created) 
 values('pastrero', '123456', 'patzluke12@gmail.com', '9055261296', array['https://www.facebook.com/megalodon218'], 'Patrick', 'Artuz', 'Astrero', 'Administrator', '1999-07-08', 'Vista Verde, Cainta', 'Male', 'Filipino', 'true', 'true', '2023-08-15 9:55:00');
@@ -192,8 +200,25 @@ values('nika', '123456', 'nika@gmail.com', '9055261296', array['https://www.face
 insert into farmer(user_id) values (2);
 
 insert into users(username, password, email, contact_no, socials, first_name, middle_name, last_name, user_type, birth_date, address, gender, nationality, active_status, active_deactive, date_created) 
+values('vanlester', '123456', 'van@gmail.com', '9055261296', array['https://www.facebook.com/megalodon218'], 'Van', 'Artuz', 'Astrero', 'Farmer', '1999-07-08', 'Vista Verde, Cainta', 'Male', 'Filipino', 'true', 'true', '2023-08-15 9:55:00');
+insert into farmer(user_id) values (3);
+
+insert into users(username, password, email, contact_no, socials, first_name, middle_name, last_name, user_type, birth_date, address, gender, nationality, active_status, active_deactive, date_created) 
+values('vanessa', '123456', 'vanessa@gmail.com', '9055261296', array['https://www.facebook.com/megalodon218'], 'Vanessa', 'Artuz', 'Astrero', 'Farmer', '1999-07-08', 'Vista Verde, Cainta', 'Male', 'Filipino', 'true', 'true', '2023-08-15 9:55:00');
+insert into farmer(user_id) values (4);
+
+insert into users(username, password, email, contact_no, socials, first_name, middle_name, last_name, user_type, birth_date, address, gender, nationality, active_status, active_deactive, date_created) 
+values('linda', '123456', 'linda@gmail.com', '9055261296', array['https://www.facebook.com/megalodon218'], 'Linda', 'Artuz', 'Astrero', 'Farmer', '1999-07-08', 'Vista Verde, Cainta', 'Male', 'Filipino', 'true', 'true', '2023-08-15 9:55:00');
+insert into farmer(user_id) values (5);
+
+insert into users(username, password, email, contact_no, socials, first_name, middle_name, last_name, user_type, birth_date, address, gender, nationality, active_status, active_deactive, date_created) 
+values('robgerson', '123456', 'robgerson@gmail.com', '9055261296', array['https://www.facebook.com/megalodon218'], 'Robgerson', 'Artuz', 'Astrero', 'Farmer', '1999-07-08', 'Vista Verde, Cainta', 'Male', 'Filipino', 'true', 'true', '2023-08-15 9:55:00');
+insert into farmer(user_id) values (6);
+
+--Insert into users and Supplier
+insert into users(username, password, email, contact_no, socials, first_name, middle_name, last_name, user_type, birth_date, address, gender, nationality, active_status, active_deactive, date_created) 
 values('norbz', '123456', 'norbz@gmail.com', '9055261296', array['https://www.facebook.com/norbz'], 'Norbz', 'Artuz', 'Astrero', 'Supplier', '1999-07-08', 'Vista Verde, Cainta', 'Male', 'Filipino', 'true', 'true', '2023-08-15 9:55:00');
-insert into supplier(user_id) values (3);
+insert into supplier(user_id) values (7);
 
 --insert into farmer complaints
 insert into farmer_complaint(farmer_id, complaint_title, complaint_message, date_submitted, active_deactive) 
@@ -203,8 +228,16 @@ values
 (1, 'The Siomai', 'ang pangit ng siomai', '2023-08-17 12:55:00', 't'),
 (1, 'The Carrots', 'ang pangit ng carrots', '2023-08-17 12:55:00', 't');
 
-insert into crop_specialization(specialization_name) 
-values
-('Feed Crops'),
-('Fiber Crops'),
-('Oil Crops');
+insert into post_advertisement(supplier_id, crop_specialization_id, crop_name, description, crop_image, quantity, price, date_posted, active_deactive) 
+values 
+(1, 1, 'Princess Jasmin (Rice)', 'Must be brand new harvest and no tiny bugs that will be found', 'http://localhost:8080/api/file/display/image/WIN_20230220_16_25_22_Pro.jpg', '100 kg', 100000.00, '2023-08-23 15:47:00', 't');
+
+insert into post_advertisement_responses(post_id, farmer_id, message, price, quantity, is_accepted, preferred_payment_mode, date_created) 
+values 
+(1, 1, 'Hi there I have a message for you. Hope we can come to an agreement', 95000, '100 kg', 'f', 'Gcash', '2023-08-23 15:55:00'),
+(1, 2, 'Hi there I have a message for you. Hope we can come to an agreement', 96000, '100 kg', 'f', 'Gcash', '2023-08-23 16:55:00'),
+(1, 3, 'Hi there I have a message for you. Hope we can come to an agreement', 97000, '100 kg', 'f', 'Gcash', '2023-08-23 17:55:00'),
+(1, 4, 'Hi there I have a message for you. Hope we can come to an agreement', 98000, '95 kg', 'f', 'Gcash', '2023-08-23 18:55:00'),
+(1, 5, 'Hi there I have a message for you. Hope we can come to an agreement', 99000, '105 kg', 'f', 'Gcash', '2023-08-23 19:55:00');
+
+

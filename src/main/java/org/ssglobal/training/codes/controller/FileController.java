@@ -38,6 +38,7 @@ public class FileController {
 			Map<String, String> result = new HashMap<>();
 			result.put("fileUri", "http://localhost:8080/api/file/display/image/");
 			result.put("fileName", fileDetails.getFileName());
+			
 			return Response.ok(result).build();
 		}
 		return Response.status(Status.BAD_REQUEST).build();
