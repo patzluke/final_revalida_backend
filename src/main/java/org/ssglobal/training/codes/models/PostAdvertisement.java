@@ -50,7 +50,7 @@ public class PostAdvertisement implements Serializable {
 
 	private String description;
 
-	private Integer quantity;
+	private String quantity;
 	
 	private Double price;
 	
@@ -62,6 +62,9 @@ public class PostAdvertisement implements Serializable {
 	
 	@Column(name="active_deactive")
 	private Boolean activeDeactive;
+	
+	@Column(name="is_completed")
+	private Boolean isCompleted;
 
 	//bi-directional many-to-one association to CropSpecialization
 	@ManyToOne

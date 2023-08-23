@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.ssglobal.training.codes.models.CropSpecialization;
 import org.ssglobal.training.codes.models.PostAdvertisement;
+import org.ssglobal.training.codes.models.PostAdvertisementResponse;
 import org.ssglobal.training.codes.models.Supplier;
 
 @Repository
@@ -88,12 +89,11 @@ public class SupplierRepository {
 	public PostAdvertisement insertIntoPostAdvertisement(Map<String, Object> payload) {		
 		PostAdvertisement advertisement = new PostAdvertisement();
 		advertisement.setSupplier(findOneBySupplierId(Integer.valueOf(payload.get("supplierId").toString())).orElse(null));
-		advertisement.setCropSpecialization(findOneCropSpecializationById(1).orElse(null));
-		//advertisement.setCropSpecialization(findOneCropSpecializationById(Integer.valueOf(payload.get("cropSpecializationId").toString())).orElse(null));
+		advertisement.setCropSpecialization(findOneCropSpecializationById(Integer.valueOf(payload.get("cropSpecializationId").toString())).orElse(null));
 		advertisement.setCropName(payload.get("cropName").toString());
 		advertisement.setDescription(payload.get("description").toString());
 		advertisement.setCropImage(payload.get("cropImage").toString());
-		advertisement.setQuantity(Integer.valueOf(payload.get("quantity").toString()));
+		advertisement.setQuantity(payload.get("quantity").toString());
 		advertisement.setPrice(Double.valueOf(payload.get("price").toString()));
 		advertisement.setDatePosted(LocalDateTime.now());
 		advertisement.setActiveDeactive(true);
@@ -120,7 +120,9 @@ public class SupplierRepository {
 			advertisement.setCropName(payload.get("cropName").toString());
 			advertisement.setDescription(payload.get("description").toString());
 			advertisement.setCropImage(payload.get("cropImage").toString());
+			advertisement.setQuantity(payload.get("quantity").toString());
 			advertisement.setPrice(Double.valueOf(payload.get("price").toString()));
+			advertisement.setDateModified(LocalDateTime.now());
 			sess.merge(advertisement);
 			tx.commit();
 			return advertisement;
@@ -143,5 +145,38 @@ public class SupplierRepository {
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	//Crop Specialization
+	public List<CropSpecialization> selectAllCropSpecialization() {
+		List<CropSpecialization> records = new ArrayList<>();
+		String sql = "select * from crop_specialization order by crop_specialization_id";
+
+		try (Session sess = sf.openSession()) {
+			Query<CropSpecialization> query = sess.createNativeQuery(sql, CropSpecialization.class);
+			records = query.getResultList();
+
+			return Collections.unmodifiableList(records);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return Collections.unmodifiableList(records);
+	}
+	
+	// Post Advertisement Respones
+	public List<PostAdvertisementResponse> selectAllPostAdvertisementResponsesByPostId(Integer postId) {
+		List<PostAdvertisementResponse> records = new ArrayList<>();
+		String sql = "select * from post_advertisement_responses where post_id = :post_id order by date_created";
+
+		try (Session sess = sf.openSession()) {
+			Query<PostAdvertisementResponse> query = sess.createNativeQuery(sql, PostAdvertisementResponse.class);
+			query.setParameter("post_id", postId);
+			records = query.getResultList();
+
+			return Collections.unmodifiableList(records);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return Collections.unmodifiableList(records);
 	}
 }
