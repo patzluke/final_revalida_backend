@@ -25,7 +25,6 @@ public class RegistrationController {
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Consumes({ MediaType.APPLICATION_JSON })
 	public Response registerUser(Map<String, Object> payload) {
-		System.out.println("payload");
 		Object user = service.registerUser(payload);
 		GenericEntity<Object> userEntity = null;
 		try {

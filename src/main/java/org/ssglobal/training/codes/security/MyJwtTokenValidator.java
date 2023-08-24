@@ -58,7 +58,7 @@ public class MyJwtTokenValidator extends OncePerRequestFilter {
 	protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
 		return request.getRequestURI().matches("/api/auth/login") ||
 			   request.getRequestURI().matches("/api/auth/update/password") ||
-			   request.getRequestURI().matches("/api/register/user") ||
+			   request.getRequestURI().matches("/api/registration/user") ||
 			   request.getRequestURI().matches("/api/file/.*");
 	
 	}

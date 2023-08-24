@@ -2,12 +2,15 @@ package org.ssglobal.training.codes.repository;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Map;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 import org.ssglobal.training.codes.models.Farmer;
 import org.ssglobal.training.codes.models.Supplier;
@@ -18,32 +21,37 @@ public class RegistrationRepository {
 	
 	@Autowired
     private SessionFactory sf;
+	
+	@Autowired
+	private PasswordEncoder encoder;
 
+	@SuppressWarnings("unchecked")
 	public Object registerUser(Map<String, Object> payload) {
+		Users user = new Users();
+		user.setUsername(payload.get("username").toString());
+		user.setPassword(encoder.encode(payload.get("password").toString()));
+		user.setEmail(payload.get("email").toString());
+		user.setContactNo(payload.get("contactNo").toString());
+		user.setSocials(((List<String>) payload.get("socials")).toArray(new String[] {}));
+		user.setFirstName(payload.get("firstName").toString());
+		user.setMiddleName(payload.get("middleName").toString());
+		user.setLastName(payload.get("lastName").toString());
+		user.setUserType(payload.get("userType").toString());
+		user.setBirthDate(LocalDate.parse(payload.get("birthDate").toString(), DateTimeFormatter.ISO_DATE_TIME));
+		user.setAddress(payload.get("address").toString());
+		user.setGender(payload.get("gender").toString());
+		user.setNationality(payload.get("nationality").toString());
+		user.setActiveStatus(true);
+		user.setActiveDeactive(true);
+		user.setDateCreated(LocalDateTime.now());
+		
+		System.out.println("nasa repo ako");
+		System.out.println("inner inamo");
+		System.out.println(user);
 		Transaction tx = null;
 		try (Session sess = sf.openSession()) {
 			tx = sess.beginTransaction();
-			Users user = new Users();
-			user.setUsername(payload.get("userName").toString());
-			user.setPassword(payload.get("password").toString());
-			user.setEmail(payload.get("email").toString());
-			user.setContactNo(payload.get("contactNo").toString());
-			user.setSocials((String[]) payload.get("socials"));
-			user.setFirstName(payload.get("firstName").toString());
-			user.setMiddleName(payload.get("middleName").toString());
-			user.setLastName(payload.get("lastName").toString());
-			user.setUserType(payload.get("userType").toString());
-			user.setBirthDate(LocalDate.parse(payload.get("birthDate").toString()));
-			user.setAddress(payload.get("address").toString());
-			user.setCivilStatus(payload.get("civilStatus").toString());
-			user.setGender(payload.get("gender").toString());
-			user.setNationality(payload.get("nationality").toString());
-			user.setActiveDeactive(true);
-			user.setActiveDeactive(true);
-			user.setDateCreated(LocalDateTime.now());
-			
 			sess.persist(user);
-			sess.flush();
 			
 			if (user.getUserType().equalsIgnoreCase("Farmer")) {
 				Farmer farmer = new Farmer();
