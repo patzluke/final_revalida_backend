@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.ssglobal.training.codes.models.FarmerComplaint;
 import org.ssglobal.training.codes.models.PostAdvertisement;
+import org.ssglobal.training.codes.models.PostAdvertisementResponse;
 import org.ssglobal.training.codes.repository.FarmerRepository;
 import org.ssglobal.training.codes.service.FarmerService;
 
@@ -39,5 +40,10 @@ public class FarmerServiceImpl implements FarmerService {
 	@Override
 	public List<PostAdvertisement> selectAllPostAdvertisements() {
 		return repository.selectAllPostAdvertisements();
+	}
+	
+	@Override
+	public PostAdvertisementResponse insertIntoPostAdvertisementResponse(Map<String, Object> payload) {
+		return repository.insertIntoPostAdvertisementResponse(payload);
 	}
 }

@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.ssglobal.training.codes.models.FarmerComplaint;
 import org.ssglobal.training.codes.models.PostAdvertisement;
+import org.ssglobal.training.codes.models.PostAdvertisementResponse;
 
 public interface FarmerService {
 	
@@ -15,4 +16,7 @@ public interface FarmerService {
 	
 	//Post Advertisement
 	List<PostAdvertisement> selectAllPostAdvertisements();
+	
+	//Post Advertisemet Response
+	PostAdvertisementResponse insertIntoPostAdvertisementResponse(Map<String, Object> payload);
 }

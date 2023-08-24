@@ -1,8 +1,8 @@
 package org.ssglobal.training.codes.models;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -16,8 +16,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -49,9 +47,8 @@ public class Users implements Serializable {
 
 	private String address;
 
-	@Temporal(TemporalType.DATE)
 	@Column(name="birth_date")
-	private Date birthDate;
+	private LocalDate birthDate;
 
 	@Column(name="civil_status")
 	private String civilStatus;
