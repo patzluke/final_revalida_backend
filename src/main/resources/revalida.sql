@@ -230,7 +230,8 @@ values
 
 insert into post_advertisement(supplier_id, crop_specialization_id, crop_name, description, crop_image, quantity, price, date_posted, active_deactive) 
 values 
-(1, 1, 'Princess Jasmin (Rice)', 'Must be brand new harvest and no tiny bugs that will be found', 'http://localhost:8080/api/file/display/image/WIN_20230220_16_25_22_Pro.jpg', '100 kg', 100000.00, '2023-08-23 15:47:00', 't');
+(1, 1, 'Princess Jasmin (Rice)', 'Must be brand new harvest and no tiny bugs that will be found', 'http://localhost:8080/api/file/display/image/WIN_20230220_16_25_22_Pro.jpg', '100 kg', 100000.00, '2023-08-23 15:47:00', 't'),
+(1, 1, 'NFA (Rice)', 'Must be brand new harvest and no tiny bugs that will be found', 'http://localhost:8080/api/file/display/image/WIN_20230220_16_25_22_Pro.jpg', '100 kg', 100000.00, '2023-08-23 15:47:00', 't');
 
 insert into post_advertisement_responses(post_id, farmer_id, message, price, quantity, is_accepted, preferred_payment_mode, date_created) 
 values 

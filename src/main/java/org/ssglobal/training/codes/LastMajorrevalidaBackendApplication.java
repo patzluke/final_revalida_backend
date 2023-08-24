@@ -17,5 +17,7 @@ public class LastMajorrevalidaBackendApplication {
 		System.out.println(JavaVersion.getJavaVersion());
 		System.out.println("Hibernate Version: " + Version.getVersionString());
 		System.out.println(SpringBootVersion.getVersion());
+		
+		
 	}
 }
