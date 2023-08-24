@@ -16,6 +16,8 @@ import org.springframework.stereotype.Repository;
 import org.ssglobal.training.codes.models.Farmer;
 import org.ssglobal.training.codes.models.FarmerComplaint;
 import org.ssglobal.training.codes.models.PostAdvertisement;
+import org.ssglobal.training.codes.models.PostAdvertisementResponse;
+import org.ssglobal.training.codes.models.PostAdvertisementResponse.PostAdvertisementResponseBuilder;
 
 @Repository
 public class FarmerRepository {
@@ -47,6 +49,22 @@ public class FarmerRepository {
 			Query<Farmer> query = sess.createNativeQuery(sql, Farmer.class);
 			query.setParameter("farmer_id", farmerId);
 			Farmer record = query.getSingleResultOrNull();
+
+			return Optional.of(record);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return null;
+	}
+	
+	public Optional<PostAdvertisement> findOneByAdvertisementById(Integer postId) {
+		// Named Parameter
+		String sql = "SELECT * FROM post_advertisement WHERE post_id = :post_id";
+
+		try (Session sess = sf.openSession()) {
+			Query<PostAdvertisement> query = sess.createNativeQuery(sql, PostAdvertisement.class);
+			query.setParameter("post_id", postId);
+			PostAdvertisement record = query.getSingleResultOrNull();
 
 			return Optional.of(record);
 		} catch (Exception e) {
@@ -141,5 +159,30 @@ public class FarmerRepository {
 			System.out.println(e.getMessage());
 		}
 		return Collections.unmodifiableList(records);
+	}
+	
+	//Post Advertisement Responses
+	public PostAdvertisementResponse insertIntoPostAdvertisementResponse(Map<String, Object> payload) {
+		Transaction tx = null;
+		try (Session sess = sf.openSession()) {
+			PostAdvertisementResponseBuilder response = PostAdvertisementResponse.builder();
+			response.price(Double.valueOf(payload.get("price").toString()));
+			response.quantity(payload.get("quantity").toString());
+			response.dateCreated(LocalDateTime.now());
+			response.message(payload.get("message").toString());
+			response.preferredPaymentMode(payload.get("preferredPaymentMode").toString());
+			response.farmer(findOneByFarmerId(Integer.valueOf(payload.get("farmerId").toString())).orElse(null));
+			response.postAdvertisement(findOneByAdvertisementById(Integer.valueOf(payload.get("postId").toString())).orElse(null));
+			tx = sess.beginTransaction();
+		
+			sess.persist(response.build());
+			tx.commit();
+			return response.build();
+		} catch (NullPointerException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 }

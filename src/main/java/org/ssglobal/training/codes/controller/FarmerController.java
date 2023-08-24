@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.ssglobal.training.codes.models.FarmerComplaint;
 import org.ssglobal.training.codes.models.PostAdvertisement;
+import org.ssglobal.training.codes.models.PostAdvertisementResponse;
 import org.ssglobal.training.codes.service.FarmerService;
 
 import jakarta.ws.rs.Consumes;
@@ -122,6 +123,26 @@ public class FarmerController {
 				return Response.ok(postAdvertisementsEntity).build();
 			}
 		} catch (Exception e) {
+			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+		}
+		return Response.status(Status.BAD_REQUEST).build();
+	}
+	
+	@POST
+	@Path("/insert/postadvertisementresponse")
+    @Produces({ MediaType.APPLICATION_JSON })
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public Response insertIntoPostAdvertisementResponse(Map<String, Object> payload) {
+		PostAdvertisementResponse response = service.insertIntoPostAdvertisementResponse(payload);
+		GenericEntity<PostAdvertisementResponse> responseEntity = null;
+		
+		try {
+			if (response != null) {
+				responseEntity = new GenericEntity<>(response) {};
+				return Response.ok(responseEntity).build();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
 		}
 		return Response.status(Status.BAD_REQUEST).build();
