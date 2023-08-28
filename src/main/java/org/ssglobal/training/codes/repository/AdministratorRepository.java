@@ -3,6 +3,7 @@ package org.ssglobal.training.codes.repository;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.hibernate.Session;
@@ -16,6 +17,8 @@ import org.ssglobal.training.codes.models.Farmer;
 import org.ssglobal.training.codes.models.FarmerComplaint;
 import org.ssglobal.training.codes.models.FarmingTip;
 import org.ssglobal.training.codes.models.Supplier;
+import org.ssglobal.training.codes.models.UserApplicants;
+import org.ssglobal.training.codes.models.Users;
 
 @Repository
 public class AdministratorRepository {
@@ -52,6 +55,76 @@ public class AdministratorRepository {
 			return Optional.of(record);
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
+		}
+		return null;
+	}
+	
+	public Optional<Supplier> findSupplierByUserId(Integer userId) {
+		// Named Parameter
+		String sql = "SELECT * FROM supplier WHERE user_id = :user_id";
+		try (Session sess = sf.openSession()) {
+			Query<Supplier> query = sess.createNativeQuery(sql, Supplier.class);
+			query.setParameter("user_id", userId);
+			Supplier record = query.getSingleResultOrNull();
+
+			return Optional.of(record);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return null;
+	}
+	
+	public Optional<Farmer> findFarmerByUserId(Integer userId) {
+		// Named Parameter
+		String sql = "SELECT * FROM farmer WHERE user_id = :user_id";
+
+		try (Session sess = sf.openSession()) {
+			Query<Farmer> query = sess.createNativeQuery(sql, Farmer.class);
+			query.setParameter("user_id", userId);
+			Farmer record = query.getSingleResultOrNull();
+
+			return Optional.of(record);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return null;
+	}
+	
+	//User Applicants
+	public List<UserApplicants> selectAllUserApplicants() {
+		List<UserApplicants> records = new ArrayList<>();
+		// this is HQL so make supervisor to Supervisor and with ref var
+		// if you make Supervisor lower case, it will throw an error
+		String sql = "SELECT * FROM user_applicants order by applicant_id";
+
+		try (Session sess = sf.openSession()) {
+			Query<UserApplicants> query = sess.createNativeQuery(sql, UserApplicants.class);
+			records = query.getResultList();
+			return Collections.unmodifiableList(records);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return Collections.unmodifiableList(records);
+	}
+	
+	public Object validateUserAccount(Map<String, Object> payload) {
+		Transaction tx = null;
+		try (Session sess = sf.openSession()) {
+			tx = sess.beginTransaction();
+			Users updatedUser = sess.get(Users.class, Integer.valueOf(payload.get("userId").toString()));
+			updatedUser.setValidIdPicture(payload.get("validIdPicture").toString());
+			updatedUser.setIsValidated(Boolean.valueOf(payload.get("isValidated").toString()));
+			sess.merge(updatedUser);
+			tx.commit();
+			if (updatedUser.getUserType().equalsIgnoreCase("Farmer")) {
+				return findFarmerByUserId(updatedUser.getUserId()).get();
+			}
+			if (updatedUser.getUserType().equalsIgnoreCase("Supplier")) {
+				return findSupplierByUserId(updatedUser.getUserId()).get();
+			}
+			return updatedUser;
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		return null;
 	}

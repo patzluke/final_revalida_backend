@@ -9,6 +9,7 @@ import org.ssglobal.training.codes.models.Farmer;
 import org.ssglobal.training.codes.models.FarmerComplaint;
 import org.ssglobal.training.codes.models.FarmingTip;
 import org.ssglobal.training.codes.models.Supplier;
+import org.ssglobal.training.codes.models.UserApplicants;
 import org.ssglobal.training.codes.service.AdministratorService;
 
 import jakarta.ws.rs.Consumes;
@@ -29,6 +30,25 @@ public class AdministratorController {
 	
 	@Autowired
 	private AdministratorService service;
+	
+	//User Applicants
+	@GET
+	@Path("/get/userapplicants")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public Response selectAllUserApplicants() {
+		List<UserApplicants> userApplicants = service.selectAllUserApplicants();
+		GenericEntity<List<UserApplicants>> userApplicantsEntity = null;
+		try {
+			if (!userApplicants.isEmpty()) {
+				userApplicantsEntity = new GenericEntity<>(userApplicants) {
+				};
+				return Response.ok(userApplicantsEntity).build();
+			}
+		} catch (Exception e) {
+			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+		}
+		return Response.status(Status.BAD_REQUEST).build();
+	}
 	
 	// Farmers
 	@GET
@@ -180,6 +200,27 @@ public class AdministratorController {
 			if (farmingComplaint != null) {
 				farmingTipEntity = new GenericEntity<>(farmingComplaint) {};
 				return Response.ok(farmingTipEntity).build();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+		}
+		return Response.status(Status.BAD_REQUEST).build();
+	}
+	
+	@SuppressWarnings("unchecked")
+	@PUT
+	@Path("/verify/account")
+    @Produces({ MediaType.APPLICATION_JSON })
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public Response validateUserAccount(Map<String, Object> payload) {
+		Object user = service.validateUserAccount((Map<String, Object>) payload.get("user"));
+		GenericEntity<Object> userEntity = null;
+		
+		try {
+			if (user != null) {
+				userEntity = new GenericEntity<>(user) {};
+				return Response.ok(userEntity).build();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

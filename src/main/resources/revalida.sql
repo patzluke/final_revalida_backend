@@ -8,13 +8,36 @@ create database last_majorrevalida;
 
 \c last_majorrevalida
 
+drop table if exists user_applicants cascade;
+create table user_applicants (
+	applicant_id serial primary key,
+    username varchar(100) unique,
+    password varchar(150),
+ 	email varchar(50) unique,
+    contact_no varchar(50) unique,
+    socials varchar(100)[],
+    first_name varchar(70),
+    middle_name varchar(70),
+    last_name varchar(70),
+    user_type varchar(30),
+    birth_date date,
+    address text,
+    civil_status varchar(20),
+    gender varchar(15),
+    nationality varchar(30),
+    valid_id_picture varchar(255),
+    is_validated boolean,
+    is_activated boolean,
+    date_registered timestamp
+);
+
 drop table if exists users cascade;
 create table users (
 	user_id serial primary key,
     username varchar(100) unique,
     password varchar(150),
  	email varchar(50) unique,
-    contact_no varchar(50),
+    contact_no varchar(50) unique,
     socials varchar(100)[],
     first_name varchar(70),
     middle_name varchar(70),
@@ -27,7 +50,9 @@ create table users (
     nationality varchar(30),
     active_status boolean,
     active_deactive boolean, --soft delete
+    is_validated boolean,    
     image varchar(255),
+    valid_id_picture varchar(255),
     date_created timestamp
 );
 
@@ -190,34 +215,34 @@ values
 
 
 --Insert into users and administrator
-insert into users(username, password, email, contact_no, socials, first_name, middle_name, last_name, user_type, birth_date, address, gender, nationality, active_status, active_deactive, date_created) 
-values('pastrero', '123456', 'patzluke12@gmail.com', '9055261296', array['https://www.facebook.com/megalodon218'], 'Patrick', 'Artuz', 'Astrero', 'Administrator', '1999-07-08', 'Vista Verde, Cainta', 'Male', 'Filipino', 'true', 'true', '2023-08-15 9:55:00');
+insert into users(username, password, email, contact_no, socials, first_name, middle_name, last_name, user_type, birth_date, address, gender, nationality, active_status, active_deactive, date_created, is_validated) 
+values('pastrero', '123456', 'patzluke12@gmail.com', '9055261297', array['https://www.facebook.com/megalodon218'], 'Patrick', 'Artuz', 'Astrero', 'Administrator', '1999-07-08', 'Vista Verde, Cainta', 'Male', 'Filipino', 'true', 'true', '2023-08-15 9:55:00', 't');
 insert into administrator(user_id) values (1);
 
 --Insert into users and farmer
-insert into users(username, password, email, contact_no, socials, first_name, middle_name, last_name, user_type, birth_date, address, gender, nationality, active_status, active_deactive, date_created) 
-values('nika', '123456', 'nika@gmail.com', '9055261296', array['https://www.facebook.com/megalodon218'], 'Nika', 'Artuz', 'Astrero', 'Farmer', '1999-07-08', 'Vista Verde, Cainta', 'Male', 'Filipino', 'true', 'true', '2023-08-15 9:55:00');
+insert into users(username, password, email, contact_no, socials, first_name, middle_name, last_name, user_type, birth_date, address, gender, nationality, active_status, active_deactive, date_created, is_validated) 
+values('nika', '123456', 'nika@gmail.com', '9055261296', array['https://www.facebook.com/megalodon218'], 'Nika', 'Artuz', 'Astrero', 'Farmer', '1999-07-08', 'Vista Verde, Cainta', 'Male', 'Filipino', 'true', 'true', '2023-08-15 9:55:00', 't');
 insert into farmer(user_id) values (2);
 
-insert into users(username, password, email, contact_no, socials, first_name, middle_name, last_name, user_type, birth_date, address, gender, nationality, active_status, active_deactive, date_created) 
-values('vanlester', '123456', 'van@gmail.com', '9055261296', array['https://www.facebook.com/megalodon218'], 'Van', 'Artuz', 'Astrero', 'Farmer', '1999-07-08', 'Vista Verde, Cainta', 'Male', 'Filipino', 'true', 'true', '2023-08-15 9:55:00');
+insert into users(username, password, email, contact_no, socials, first_name, middle_name, last_name, user_type, birth_date, address, gender, nationality, active_status, active_deactive, date_created, is_validated) 
+values('vanlester', '123456', 'van@gmail.com', '9055261295', array['https://www.facebook.com/megalodon218'], 'Van', 'Artuz', 'Astrero', 'Farmer', '1999-07-08', 'Vista Verde, Cainta', 'Male', 'Filipino', 'true', 'true', '2023-08-15 9:55:00', 't');
 insert into farmer(user_id) values (3);
 
-insert into users(username, password, email, contact_no, socials, first_name, middle_name, last_name, user_type, birth_date, address, gender, nationality, active_status, active_deactive, date_created) 
-values('vanessa', '123456', 'vanessa@gmail.com', '9055261296', array['https://www.facebook.com/megalodon218'], 'Vanessa', 'Artuz', 'Astrero', 'Farmer', '1999-07-08', 'Vista Verde, Cainta', 'Male', 'Filipino', 'true', 'true', '2023-08-15 9:55:00');
+insert into users(username, password, email, contact_no, socials, first_name, middle_name, last_name, user_type, birth_date, address, gender, nationality, active_status, active_deactive, date_created, is_validated) 
+values('vanessa', '123456', 'vanessa@gmail.com', '9055261294', array['https://www.facebook.com/megalodon218'], 'Vanessa', 'Artuz', 'Astrero', 'Farmer', '1999-07-08', 'Vista Verde, Cainta', 'Male', 'Filipino', 'true', 'true', '2023-08-15 9:55:00', 't');
 insert into farmer(user_id) values (4);
 
-insert into users(username, password, email, contact_no, socials, first_name, middle_name, last_name, user_type, birth_date, address, gender, nationality, active_status, active_deactive, date_created) 
-values('linda', '123456', 'linda@gmail.com', '9055261296', array['https://www.facebook.com/megalodon218'], 'Linda', 'Artuz', 'Astrero', 'Farmer', '1999-07-08', 'Vista Verde, Cainta', 'Male', 'Filipino', 'true', 'true', '2023-08-15 9:55:00');
+insert into users(username, password, email, contact_no, socials, first_name, middle_name, last_name, user_type, birth_date, address, gender, nationality, active_status, active_deactive, date_created, is_validated) 
+values('linda', '123456', 'linda@gmail.com', '9055261293', array['https://www.facebook.com/megalodon218'], 'Linda', 'Artuz', 'Astrero', 'Farmer', '1999-07-08', 'Vista Verde, Cainta', 'Male', 'Filipino', 'true', 'true', '2023-08-15 9:55:00', 't');
 insert into farmer(user_id) values (5);
 
-insert into users(username, password, email, contact_no, socials, first_name, middle_name, last_name, user_type, birth_date, address, gender, nationality, active_status, active_deactive, date_created) 
-values('robgerson', '123456', 'robgerson@gmail.com', '9055261296', array['https://www.facebook.com/megalodon218'], 'Robgerson', 'Artuz', 'Astrero', 'Farmer', '1999-07-08', 'Vista Verde, Cainta', 'Male', 'Filipino', 'true', 'true', '2023-08-15 9:55:00');
+insert into users(username, password, email, contact_no, socials, first_name, middle_name, last_name, user_type, birth_date, address, gender, nationality, active_status, active_deactive, date_created, is_validated) 
+values('robgerson', '123456', 'robgerson@gmail.com', '9055261292', array['https://www.facebook.com/megalodon218'], 'Robgerson', 'Artuz', 'Astrero', 'Farmer', '1999-07-08', 'Vista Verde, Cainta', 'Male', 'Filipino', 'true', 'true', '2023-08-15 9:55:00', 't');
 insert into farmer(user_id) values (6);
 
 --Insert into users and Supplier
-insert into users(username, password, email, contact_no, socials, first_name, middle_name, last_name, user_type, birth_date, address, gender, nationality, active_status, active_deactive, date_created) 
-values('norbz', '123456', 'norbz@gmail.com', '9055261296', array['https://www.facebook.com/norbz'], 'Norbz', 'Artuz', 'Astrero', 'Supplier', '1999-07-08', 'Vista Verde, Cainta', 'Male', 'Filipino', 'true', 'true', '2023-08-15 9:55:00');
+insert into users(username, password, email, contact_no, socials, first_name, middle_name, last_name, user_type, birth_date, address, gender, nationality, active_status, active_deactive, date_created, is_validated) 
+values('norbz', '123456', 'norbz@gmail.com', '9055261291', array['https://www.facebook.com/norbz'], 'Norbz', 'Artuz', 'Astrero', 'Supplier', '1999-07-08', 'Vista Verde, Cainta', 'Male', 'Filipino', 'true', 'true', '2023-08-15 9:55:00', 't');
 insert into supplier(user_id) values (7);
 
 --insert into farmer complaints
