@@ -1,6 +1,7 @@
 package org.ssglobal.training.codes.controller;
 
 import java.io.File;
+
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,6 +31,7 @@ public class FileController {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response uploadImage(@FormDataParam("file") InputStream uploadedInputStream,
 			@FormDataParam("file") FormDataContentDisposition fileDetails) {
+		
 		String uploadedFileLocation = "src/main/resources/static/images/" + fileDetails.getFileName();
 
 		if (fileDetails.getFileName() != null) {

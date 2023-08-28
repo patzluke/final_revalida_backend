@@ -33,7 +33,6 @@ public class AuthenticateController {
 		GenericEntity<List<Object>> userEntity = null;
 		try {
 			if (authenticatedUser != null) {
-				System.out.println(authenticatedUser);
 				List<Object> usertoken = new ArrayList<>();
 				String token = service
 						.generateToken(Integer.valueOf(authenticatedUser.get("userId").toString()),
@@ -60,7 +59,6 @@ public class AuthenticateController {
 	@Produces(value = { MediaType.APPLICATION_JSON })
 	@Consumes(value = { MediaType.APPLICATION_JSON })
 	public Response changePassword(Map<String, Object> payload) {
-		System.out.println(payload);
 		Users user = service.changePassword(payload.get("password").toString(), payload.get("username").toString());
 		GenericEntity<Users> userEntity = null;
 		try {

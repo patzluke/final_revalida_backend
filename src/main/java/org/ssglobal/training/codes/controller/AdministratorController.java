@@ -5,8 +5,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.ssglobal.training.codes.models.Farmer;
 import org.ssglobal.training.codes.models.FarmerComplaint;
 import org.ssglobal.training.codes.models.FarmingTip;
+import org.ssglobal.training.codes.models.Supplier;
 import org.ssglobal.training.codes.service.AdministratorService;
 
 import jakarta.ws.rs.Consumes;
@@ -27,6 +29,44 @@ public class AdministratorController {
 	
 	@Autowired
 	private AdministratorService service;
+	
+	// Farmers
+	@GET
+	@Path("/get/farmers")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public Response selectAllFarmers() {
+		List<Farmer> farmers = service.selectAllFarmers();
+		GenericEntity<List<Farmer>> farmersEntity = null;
+		try {
+			if (!farmers.isEmpty()) {
+				farmersEntity = new GenericEntity<>(farmers) {
+				};
+				return Response.ok(farmersEntity).build();
+			}
+		} catch (Exception e) {
+			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+		}
+		return Response.status(Status.BAD_REQUEST).build();
+	}
+
+	// Suppliers
+	@GET
+	@Path("/get/suppliers")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public Response selectAllSuppliers() {
+		List<Supplier> suppliers = service.selectAllSuppliers();
+		GenericEntity<List<Supplier>> suppliersEntity = null;
+		try {
+			if (!suppliers.isEmpty()) {
+				suppliersEntity = new GenericEntity<>(suppliers) {
+				};
+				return Response.ok(suppliersEntity).build();
+			}
+		} catch (Exception e) {
+			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+		}
+		return Response.status(Status.BAD_REQUEST).build();
+	}
 
 	//FarmingTips
 	@GET
@@ -71,7 +111,6 @@ public class AdministratorController {
     @Produces({ MediaType.APPLICATION_JSON })
 	@Consumes({ MediaType.APPLICATION_JSON })
 	public Response updateIntoFarmingTip(FarmingTip payload) {
-		System.out.println(payload);
 		FarmingTip farmingTip = service.updateIntoFarmingTip(payload);
 		GenericEntity<FarmingTip> farmingTipEntity = null;
 		

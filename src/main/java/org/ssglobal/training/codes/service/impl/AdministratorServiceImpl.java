@@ -6,8 +6,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.ssglobal.training.codes.models.Administrator;
+import org.ssglobal.training.codes.models.Farmer;
 import org.ssglobal.training.codes.models.FarmerComplaint;
 import org.ssglobal.training.codes.models.FarmingTip;
+import org.ssglobal.training.codes.models.Supplier;
 import org.ssglobal.training.codes.repository.AdministratorRepository;
 import org.ssglobal.training.codes.service.AdministratorService;
 
@@ -23,6 +25,18 @@ public class AdministratorServiceImpl implements AdministratorService {
 	@Override
 	public List<Administrator> selectAllAdministrators() {
 		return repository.findAllAdministrators();
+	}
+	
+	//Farmers
+	@Override
+	public List<Farmer> selectAllFarmers() {
+		return repository.selectAllFarmers();
+	}
+	
+	//Suppliers
+	@Override
+	public List<Supplier> selectAllSuppliers() {
+		return repository.selectAllSuppliers();
 	}
 	
 	//FarmingTips

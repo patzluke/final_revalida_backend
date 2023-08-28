@@ -2,6 +2,7 @@ package org.ssglobal.training.codes.controller;
 
 import java.util.Map;
 
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.ssglobal.training.codes.service.RegistrationService;
 
@@ -25,14 +26,16 @@ public class RegistrationController {
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Consumes({ MediaType.APPLICATION_JSON })
 	public Response registerUser(Map<String, Object> payload) {
-		Object user = service.registerUser(payload);
 		GenericEntity<Object> userEntity = null;
 		try {
+			Object user = service.registerUser(payload);
 			if (user != null) {
 				userEntity = new GenericEntity<>(user) {
 				};
 				return Response.ok(userEntity).build();
 			}
+		} catch (ConstraintViolationException e) {
+			return Response.status(Status.BAD_REQUEST.getStatusCode(), e.getMessage()).build();
 		} catch (Exception e) {
 			e.printStackTrace();
 			return Response.status(Status.INTERNAL_SERVER_ERROR).build();

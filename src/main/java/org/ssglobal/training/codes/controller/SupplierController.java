@@ -140,7 +140,6 @@ public class SupplierController {
 				return Response.ok(postAdvertisementResponsesEntity).build();
 			}
 		} catch (Exception e) {
-			System.out.println(e);
 			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
 		}
 		return Response.status(Status.BAD_REQUEST).build();
@@ -151,7 +150,6 @@ public class SupplierController {
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Consumes({ MediaType.APPLICATION_JSON })
 	public Response updatePostAdvertisementResponsesIsAcceptedStatus(Map<String, Object> payload) {
-		System.out.println(payload);
 		PostAdvertisementResponse advertisementResponse = service.updatePostAdvertisementResponsesIsAcceptedStatus(payload);
 		GenericEntity<PostAdvertisementResponse> advertisementResponsetEntity = null;
 		try {

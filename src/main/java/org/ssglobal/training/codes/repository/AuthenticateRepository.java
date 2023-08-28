@@ -24,7 +24,7 @@ public class AuthenticateRepository {
 	
 	public Optional<List<Users>> findAllUsers() {
 		// Named Parameter
-		String sql = "SELECT * FROM users";
+		String sql = "SELECT * FROM users order by user_id";
 
 		try (Session sess = sf.openSession()) {
 			Query<Users> query = sess.createNativeQuery(sql, Users.class);
