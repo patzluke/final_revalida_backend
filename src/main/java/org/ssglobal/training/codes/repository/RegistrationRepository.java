@@ -9,6 +9,7 @@ import java.util.Map;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
@@ -26,31 +27,28 @@ public class RegistrationRepository {
 	private PasswordEncoder encoder;
 
 	@SuppressWarnings("unchecked")
-	public Object registerUser(Map<String, Object> payload) {
-		Users user = new Users();
-		user.setUsername(payload.get("username").toString());
-		user.setPassword(encoder.encode(payload.get("password").toString()));
-		user.setEmail(payload.get("email").toString());
-		user.setContactNo(payload.get("contactNo").toString());
-		user.setSocials(((List<String>) payload.get("socials")).toArray(new String[] {}));
-		user.setFirstName(payload.get("firstName").toString());
-		user.setMiddleName(payload.get("middleName").toString());
-		user.setLastName(payload.get("lastName").toString());
-		user.setUserType(payload.get("userType").toString());
-		user.setBirthDate(LocalDate.parse(payload.get("birthDate").toString(), DateTimeFormatter.ISO_DATE_TIME));
-		user.setAddress(payload.get("address").toString());
-		user.setGender(payload.get("gender").toString());
-		user.setNationality(payload.get("nationality").toString());
-		user.setActiveStatus(true);
-		user.setActiveDeactive(true);
-		user.setDateCreated(LocalDateTime.now());
-		
-		System.out.println("nasa repo ako");
-		System.out.println("inner inamo");
-		System.out.println(user);
+	public Object registerUser(Map<String, Object> payload) throws ConstraintViolationException, Exception {
 		Transaction tx = null;
 		try (Session sess = sf.openSession()) {
 			tx = sess.beginTransaction();
+			Users user = new Users();
+			user.setUsername(payload.get("username").toString());
+			user.setPassword(encoder.encode(payload.get("password").toString()));
+			user.setEmail(payload.get("email").toString());
+			user.setContactNo(payload.get("contactNo").toString());
+			user.setSocials(((List<String>) payload.get("socials")).toArray(new String[] {}));
+			user.setFirstName(payload.get("firstName").toString());
+			user.setMiddleName(payload.get("middleName").toString());
+			user.setLastName(payload.get("lastName").toString());
+			user.setUserType(payload.get("userType").toString());
+			user.setBirthDate(LocalDate.parse(payload.get("birthDate").toString(), DateTimeFormatter.ISO_DATE_TIME));
+			user.setAddress(payload.get("address").toString());
+			user.setGender(payload.get("gender").toString());
+			user.setNationality(payload.get("nationality").toString());
+			user.setActiveStatus(true);
+			user.setActiveDeactive(true);
+			user.setDateCreated(LocalDateTime.now());
+			
 			sess.persist(user);
 			
 			if (user.getUserType().equalsIgnoreCase("Farmer")) {
@@ -65,9 +63,16 @@ public class RegistrationRepository {
 				sess.persist(supplier);
 				tx.commit();
 				return supplier;
+				
+			}
+		} catch (ConstraintViolationException e) {
+			if (e.getConstraintName().equals("users_username_key")) {
+				throw new ConstraintViolationException("username already exists", e.getSQLException(), e.getConstraintName());
+			}
+			if (e.getConstraintName().equals("users_email_key")) {
+				throw new ConstraintViolationException("email already exists", e.getSQLException(), e.getConstraintName());
 			}
 		} catch (Exception e) {
-			tx.rollback();
 			e.printStackTrace();
 		}
 		return null;

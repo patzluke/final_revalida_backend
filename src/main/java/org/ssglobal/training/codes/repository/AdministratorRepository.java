@@ -12,8 +12,10 @@ import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.ssglobal.training.codes.models.Administrator;
+import org.ssglobal.training.codes.models.Farmer;
 import org.ssglobal.training.codes.models.FarmerComplaint;
 import org.ssglobal.training.codes.models.FarmingTip;
+import org.ssglobal.training.codes.models.Supplier;
 
 @Repository
 public class AdministratorRepository {
@@ -52,6 +54,40 @@ public class AdministratorRepository {
 			System.out.println(e.getMessage());
 		}
 		return null;
+	}
+	
+	//Farmer list
+	public List<Farmer> selectAllFarmers() {
+		List<Farmer> records = new ArrayList<>();
+		// this is HQL so make supervisor to Supervisor and with ref var
+		// if you make Supervisor lower case, it will throw an error
+		String sql = "SELECT * FROM farmer order by farmer_id";
+
+		try (Session sess = sf.openSession()) {
+			Query<Farmer> query = sess.createNativeQuery(sql, Farmer.class);
+			records = query.getResultList();
+			return Collections.unmodifiableList(records);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return Collections.unmodifiableList(records);
+	}
+	
+	// Farmer list
+	public List<Supplier> selectAllSuppliers() {
+		List<Supplier> records = new ArrayList<>();
+		// this is HQL so make supervisor to Supervisor and with ref var
+		// if you make Supervisor lower case, it will throw an error
+		String sql = "SELECT * FROM supplier order by supplier_id";
+
+		try (Session sess = sf.openSession()) {
+			Query<Supplier> query = sess.createNativeQuery(sql, Supplier.class);
+			records = query.getResultList();
+			return Collections.unmodifiableList(records);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return Collections.unmodifiableList(records);
 	}
 	
 	// Farming Tips
