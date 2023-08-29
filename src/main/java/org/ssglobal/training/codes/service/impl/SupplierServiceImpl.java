@@ -2,12 +2,14 @@ package org.ssglobal.training.codes.service.impl;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.ssglobal.training.codes.models.CropSpecialization;
 import org.ssglobal.training.codes.models.PostAdvertisement;
 import org.ssglobal.training.codes.models.PostAdvertisementResponse;
+import org.ssglobal.training.codes.models.Supplier;
 import org.ssglobal.training.codes.repository.SupplierRepository;
 import org.ssglobal.training.codes.service.SupplierService;
 
@@ -16,6 +18,16 @@ public class SupplierServiceImpl implements SupplierService {
 
 	@Autowired
 	private SupplierRepository repository;
+	
+	@Override
+	public Supplier updateSupplierInfo(Map<String, Object> payload) {
+		return repository.updateSupplierInfo(payload);
+	}
+	
+	@Override
+	public Optional<Supplier> findOneByUserId(Integer userId) {
+		return repository.findOneByUserId(userId);
+	}
 	
 	//Post Advertisement
 	@Override
