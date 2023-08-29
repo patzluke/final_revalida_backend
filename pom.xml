@@ -14,6 +14,7 @@
 	<name>last_majorrevalida_backend</name>
 	<description>springboottraining</description>
 	<properties>
+		<eclipse.refreshLocal resource="last_majorrevalida_backend/src/main/resources/static/images" depth="infinite"/>
 	</properties>
 	<dependencies>
 		<dependency>

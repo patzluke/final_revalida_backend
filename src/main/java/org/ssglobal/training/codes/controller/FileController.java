@@ -1,7 +1,8 @@
 package org.ssglobal.training.codes.controller;
 
 import java.io.File;
-
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,7 +33,7 @@ public class FileController {
 	public Response uploadImage(@FormDataParam("file") InputStream uploadedInputStream,
 			@FormDataParam("file") FormDataContentDisposition fileDetails) {
 		
-		String uploadedFileLocation = "src/main/resources/static/images/" + fileDetails.getFileName();
+		String uploadedFileLocation = "C:/Training/Demo/AllTracks/last_majorrevalida_backend/src/main/resources/static/images/" + fileDetails.getFileName();
 
 		if (fileDetails.getFileName() != null) {
 			writeToFile(uploadedInputStream, uploadedFileLocation);
@@ -60,15 +61,21 @@ public class FileController {
 		}
 	}
 
+	@SuppressWarnings("resource")
 	@GET
 	@Path("/display/image/{imageName:.+}")
 	@Produces(MediaType.APPLICATION_OCTET_STREAM)
 	public Response displayImage(@PathParam("imageName") String imageName) {
-		InputStream inputStream = getClass().getResourceAsStream("/static/images/" + imageName);
-		if (inputStream != null) {
-			return Response.ok(inputStream).build();
-		} else {
-			return Response.status(Response.Status.NOT_FOUND).build();
+		String uploadedFileLocation = "C:/Training/Demo/AllTracks/last_majorrevalida_backend/src/main/resources/static/images/";
+
+		try {
+			InputStream inputStream = new FileInputStream(uploadedFileLocation + imageName);
+			if (inputStream != null) {
+				return Response.ok(inputStream).build();
+			}
+		} catch (FileNotFoundException e1) {
+			e1.printStackTrace();
 		}
+		return Response.status(Response.Status.NOT_FOUND).build();
 	}
 }

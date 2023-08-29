@@ -12,8 +12,6 @@ import java.util.Optional;
 import javax.crypto.KeyGenerator;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.ssglobal.training.codes.models.Administrator;
@@ -51,12 +49,15 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 	
 	@Autowired
 	private UserTokenRepository userTokenRepository;
+	
+	@Autowired
+	private PasswordEncoder encoder;
 
 	@Override
 	public Map<String, Object> searchUserByUsernameAndPassword(String username, String password) {
 		Map<String, Object> user = new HashMap<>(); 
 		Optional<Users> userOptional = authenticateRepository.findOneByUsername(username);		
-		if (userOptional.isPresent() && encoder().matches(password, userOptional.get().getPassword())) {
+		if (userOptional.isPresent() && encoder.matches(password, userOptional.get().getPassword())) {
 			user.put("userId", userOptional.get().getUserId());
 			user.put("username", userOptional.get().getUsername());
 			user.put("userType", userOptional.get().getUserType());
@@ -147,13 +148,8 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 	@Override
 	public Users changePassword(String password, String username) {
 		Users users  = authenticateRepository.findOneByUsername(username).orElse(null);
-		users.setPassword(encoder().encode(password));
+		users.setPassword(encoder.encode(password));
 		users = authenticateRepository.updatePassword(users);
 		return users;
-	}
-	
-	@Bean
-	public PasswordEncoder encoder() {
-		return new BCryptPasswordEncoder();
 	}
 }

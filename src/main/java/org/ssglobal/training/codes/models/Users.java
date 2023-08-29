@@ -69,6 +69,7 @@ public class Users implements Serializable {
 
 	private String gender;
 
+	@Column(name="image")
 	private String image;
 	
 	@Column(name = "valid_id_picture")

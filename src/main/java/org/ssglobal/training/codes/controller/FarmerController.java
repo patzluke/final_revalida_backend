@@ -2,8 +2,10 @@ package org.ssglobal.training.codes.controller;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.ssglobal.training.codes.models.Farmer;
 import org.ssglobal.training.codes.models.FarmerComplaint;
 import org.ssglobal.training.codes.models.PostAdvertisement;
 import org.ssglobal.training.codes.models.PostAdvertisementResponse;
@@ -28,6 +30,44 @@ public class FarmerController {
 	@Autowired
 	private FarmerService service;
 
+	
+	@GET
+	@Path("/get/farmer/{userId}")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public Response findOneByUserId(@PathParam(value = "userId") Integer userId) {
+		Optional<Farmer> farmerOptional = service.findOneByUserId(userId);
+		GenericEntity<Farmer> farmerEntity = null;
+		try {
+			if (!farmerOptional.isEmpty()) {
+				farmerEntity = new GenericEntity<>(farmerOptional.orElse(null)) {
+				};
+				return Response.ok(farmerEntity).build();
+			}
+		} catch (Exception e) {
+			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+		}
+		return Response.status(Status.BAD_REQUEST).build();
+	}	
+	
+	@PUT
+	@Path("/update/farmer")
+    @Produces({ MediaType.APPLICATION_JSON })
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public Response updateIntoFarmingTip(Map<String, Object> payload) {
+		Farmer farmer = service.updateFarmerInfo(payload);
+		GenericEntity<Farmer> farmerEntity = null;
+		
+		try {
+			if (farmer != null) {
+				farmerEntity = new GenericEntity<>(farmer) {};
+				return Response.ok(farmerEntity).build();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+		}
+		return Response.status(Status.BAD_REQUEST).build();
+	}
 	
 	// FarmingTips
 	@GET

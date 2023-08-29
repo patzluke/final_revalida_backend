@@ -51,8 +51,8 @@ create table users (
     active_status boolean,
     active_deactive boolean, --soft delete
     is_validated boolean,    
-    image varchar(255),
-    valid_id_picture varchar(255),
+    image text,
+    valid_id_picture text,
     date_created timestamp
 );
 
