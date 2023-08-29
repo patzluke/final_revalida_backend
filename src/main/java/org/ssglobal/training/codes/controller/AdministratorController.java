@@ -3,8 +3,10 @@ package org.ssglobal.training.codes.controller;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.ssglobal.training.codes.models.Administrator;
 import org.ssglobal.training.codes.models.Farmer;
 import org.ssglobal.training.codes.models.FarmerComplaint;
 import org.ssglobal.training.codes.models.FarmingTip;
@@ -30,6 +32,44 @@ public class AdministratorController {
 	
 	@Autowired
 	private AdministratorService service;
+	
+	@GET
+	@Path("/get/admin/{userId}")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public Response findOneByUserId(@PathParam(value = "userId") Integer userId) {
+		Optional<Administrator> administrator = service.findOneByUserId(userId);
+		GenericEntity<Administrator> administratorEntity = null;
+		try {
+			if (!administrator.isEmpty()) {
+				administratorEntity = new GenericEntity<>(administrator.orElse(null)) {
+				};
+				return Response.ok(administratorEntity).build();
+			}
+		} catch (Exception e) {
+			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+		}
+		return Response.status(Status.BAD_REQUEST).build();
+	}
+	
+	@PUT
+	@Path("/update/admin")
+    @Produces({ MediaType.APPLICATION_JSON })
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public Response updateIntoFarmingTip(Map<String, Object> payload) {
+		Administrator administrator = service.updateAdminInfo(payload);
+		GenericEntity<Administrator> administratorEntity = null;
+		
+		try {
+			if (administrator != null) {
+				administratorEntity = new GenericEntity<>(administrator) {};
+				return Response.ok(administratorEntity).build();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+		}
+		return Response.status(Status.BAD_REQUEST).build();
+	}
 	
 	//User Applicants
 	@GET

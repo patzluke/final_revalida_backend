@@ -3,6 +3,7 @@ package org.ssglobal.training.codes.service.impl;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,16 @@ public class AdministratorServiceImpl implements AdministratorService {
 	@Override
 	public List<Administrator> selectAllAdministrators() {
 		return repository.findAllAdministrators();
+	}
+	
+	@Override
+	public Optional<Administrator> findOneByUserId(Integer userId) {
+		return repository.findOneByUserId(userId);
+	}
+	
+	@Override
+	public Administrator updateAdminInfo(Map<String, Object> payload) {
+		return repository.updateAdminInfo(payload);
 	}
 	
 	//User Applicants

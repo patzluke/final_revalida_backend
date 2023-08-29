@@ -2,9 +2,11 @@ package org.ssglobal.training.codes.service.impl;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.ssglobal.training.codes.models.Farmer;
 import org.ssglobal.training.codes.models.FarmerComplaint;
 import org.ssglobal.training.codes.models.PostAdvertisement;
 import org.ssglobal.training.codes.models.PostAdvertisementResponse;
@@ -16,6 +18,16 @@ public class FarmerServiceImpl implements FarmerService {
 	
 	@Autowired
 	private FarmerRepository repository;
+	
+	@Override
+	public Optional<Farmer> findOneByUserId(Integer userId) {
+		return repository.findOneByUserId(userId);
+	}
+	
+	@Override
+	public Farmer updateFarmerInfo(Map<String, Object> payload) {
+		return repository.updateFarmerInfo(payload);
+	}
 	
 	@Override
 	public List<FarmerComplaint> selectFarmerComplaints(Integer farmerId) {
