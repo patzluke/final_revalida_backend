@@ -59,7 +59,9 @@ public class MyJwtTokenValidator extends OncePerRequestFilter {
 		return request.getRequestURI().matches("/api/auth/login") ||
 			   request.getRequestURI().matches("/api/auth/update/password") ||
 			   request.getRequestURI().matches("/api/registration/user") ||
-			   request.getRequestURI().matches("/api/file/.*");
+			   request.getRequestURI().matches("/api/file/.*") || 
+			   request.getRequestURI().matches("/api/landing/get/postadvertisements") ||
+			   request.getRequestURI().matches("/api/landing/get/cropspecialization");
 	
 	}
 
