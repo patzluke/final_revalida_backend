@@ -53,7 +53,7 @@ public class FarmerController {
 	@Path("/update/farmer")
     @Produces({ MediaType.APPLICATION_JSON })
 	@Consumes({ MediaType.APPLICATION_JSON })
-	public Response updateIntoFarmingTip(Map<String, Object> payload) {
+	public Response updateFarmerInfo(Map<String, Object> payload) {
 		Farmer farmer = service.updateFarmerInfo(payload);
 		GenericEntity<Farmer> farmerEntity = null;
 		

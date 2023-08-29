@@ -12,17 +12,22 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 import org.ssglobal.training.codes.models.CropSpecialization;
 import org.ssglobal.training.codes.models.PostAdvertisement;
 import org.ssglobal.training.codes.models.PostAdvertisementResponse;
 import org.ssglobal.training.codes.models.Supplier;
+import org.ssglobal.training.codes.models.Users;
 
 @Repository
 public class SupplierRepository {
 	
-	@Autowired(required = false)
+	@Autowired
     private SessionFactory sf;
+	
+	@Autowired
+	private PasswordEncoder encoder;
 	
 	public Optional<Supplier> findOneByUserId(Integer userId) {
 		// Named Parameter
@@ -38,6 +43,31 @@ public class SupplierRepository {
 		}
 		return null;
 	}
+	
+	@SuppressWarnings("unchecked")
+	public Supplier updateSupplierInfo(Map<String, Object> payload) {
+		Transaction tx = null;
+		try (Session sess = sf.openSession()) {
+			tx = sess.beginTransaction();
+			Users user = sess.get(Users.class, Integer.valueOf(payload.get("userId").toString()));
+			try {
+				user.setPassword(encoder.encode(payload.get("password").toString()));
+			} catch (NullPointerException e) {	}
+			try {
+				user.setSocials(((List<String>) payload.get("socials")).toArray(new String[] {}));
+				user.setEmail(payload.get("email").toString());
+			} catch (NullPointerException e) {	}
+			try {
+				user.setImage(payload.get("image").toString());
+			} catch (NullPointerException e) {	}
+			sess.merge(user);
+			tx.commit();
+			return findOneByUserId(Integer.valueOf(payload.get("userId").toString())).orElse(null);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}	
 	
 	public Optional<Supplier> findOneBySupplierId(Integer supplierId) {
 		// Named Parameter
