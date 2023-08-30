@@ -67,7 +67,10 @@ create table administrator (
 drop table if exists farming_tip cascade;
 create table farming_tip (
 	farming_tip_id serial primary key,
-   	tip_message text,
+	title varchar(255),
+   	description text,
+   	link text,
+   	image text,
    	date_created timestamp,
    	date_modified timestamp
 );
@@ -125,6 +128,7 @@ create table farmer_complaint (
    	read_date timestamp,
    	date_submitted timestamp,
    	active_deactive boolean,
+   	image text,
     foreign key(farmer_id) references farmer(farmer_id) on delete cascade
 );
 

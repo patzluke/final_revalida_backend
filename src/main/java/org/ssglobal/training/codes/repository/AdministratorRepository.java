@@ -137,6 +137,7 @@ public class AdministratorRepository {
 	}
 	
 	public Object validateUserAccount(Map<String, Object> payload) {
+		
 		Transaction tx = null;
 		try (Session sess = sf.openSession()) {
 			tx = sess.beginTransaction();
@@ -228,7 +229,9 @@ public class AdministratorRepository {
 		try (Session sess = sf.openSession()) {
 			tx = sess.beginTransaction();
 			FarmingTip updatedTip = sess.get(FarmingTip.class, farmingTip.getFarmingTipId());
-			updatedTip.setTipMessage(farmingTip.getTipMessage());
+			updatedTip.setTitle(farmingTip.getTitle());
+			updatedTip.setDescription(farmingTip.getDescription());
+			updatedTip.setLink(farmingTip.getLink());
 			updatedTip.setDateModified(farmingTip.getDateModified());
 			sess.merge(updatedTip);
 			tx.commit();
