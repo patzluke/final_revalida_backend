@@ -172,7 +172,8 @@ create table course (
 	course_id serial primary key,
     course_name varchar(100),
     description text,
-    duration_in_days date
+    duration_in_days int,
+    active_deactive boolean
 );
 
 drop table if exists course_enrolled cascade;

@@ -8,6 +8,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.ssglobal.training.codes.models.Administrator;
+import org.ssglobal.training.codes.models.Course;
 import org.ssglobal.training.codes.models.Farmer;
 import org.ssglobal.training.codes.models.FarmerComplaint;
 import org.ssglobal.training.codes.models.FarmingTip;
@@ -97,4 +98,26 @@ public class AdministratorServiceImpl implements AdministratorService {
 	public Object validateUserAccount(Map<String, Object> payload) {
 		return repository.validateUserAccount(payload);
 	}
+
+	@Override
+	public List<Course> selectAllCourses() {
+		return repository.selectAllCourses();
+	}
+
+	@Override
+	public Course insertIntoCourses(Map<String, Object> payload) {
+		return repository.insertIntoCourses(payload);
+	}
+
+	@Override
+	public Course updateIntoCourses(Map<String, Object> payload) {
+		return repository.updateIntoCourses(payload);
+	}
+
+	@Override
+	public Course deleteCourse(Integer courseId) {
+		return repository.deleteCourse(courseId);
+	}
+	
+	
 }

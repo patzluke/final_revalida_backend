@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 import org.ssglobal.training.codes.models.Administrator;
+import org.ssglobal.training.codes.models.Course;
 import org.ssglobal.training.codes.models.Farmer;
 import org.ssglobal.training.codes.models.FarmerComplaint;
 import org.ssglobal.training.codes.models.FarmingTip;
@@ -289,6 +290,75 @@ public class AdministratorRepository {
 			sess.merge(updatedComplaint);
 			tx.commit();
 			return updatedComplaint;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	// Course
+	public List<Course> selectAllCourses() {
+		List<Course> records = new ArrayList<>();
+		// this is HQL so make supervisor to Supervisor and with ref var
+		// if you make Supervisor lower case, it will throw an error
+		String sql = "select * from course order by course_id";
+
+		try (Session sess = sf.openSession()) {
+			Query<Course> query = sess.createNativeQuery(sql, Course.class);
+			records = query.getResultList();
+
+			return Collections.unmodifiableList(records);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return Collections.unmodifiableList(records);
+	}
+
+	public Course insertIntoCourses(Map<String, Object> payload) {
+		Transaction tx = null;
+		try (Session sess = sf.openSession()) {
+			tx = sess.beginTransaction();
+			Course course = new Course();
+			course.setCourseName(payload.get("courseName").toString());
+			course.setDescription(payload.get("description").toString());
+			course.setDurationInDays(Integer.valueOf(payload.get("durationInDays").toString()));
+			course.setActiveDeactive(true);
+			sess.persist(course);
+			tx.commit();
+			return course;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public Course updateIntoCourses(Map<String, Object> payload) {
+		Transaction tx = null;
+		try (Session sess = sf.openSession()) {
+			tx = sess.beginTransaction();
+			Course updatedCourse = sess.get(Course.class, Integer.valueOf(payload.get("courseId").toString()));
+			updatedCourse.setCourseName(payload.get("courseName").toString());
+			updatedCourse.setDescription(payload.get("description").toString());
+			updatedCourse.setDurationInDays(Integer.valueOf(payload.get("durationInDays").toString()));
+			sess.merge(updatedCourse);
+			tx.commit();
+			return updatedCourse;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public Course deleteCourse(Integer courseId) {
+		Transaction tx = null;
+		try (Session sess = sf.openSession()) {
+			tx = sess.beginTransaction();
+			Course course = sess.get(Course.class, courseId);
+			course.setActiveDeactive(!course.isActiveDeactive());
+
+			sess.merge(course);
+			tx.commit();
+			return course;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
