@@ -39,6 +39,11 @@ public class FarmingTip implements Serializable {
 	@Column(name="date_modified")
 	private LocalDateTime dateModified;
 
-	@Column(name="tip_message")
-	private String tipMessage;
+	private String title;
+	
+	private String description;
+	
+	private String image;
+	
+	private String link;
 }

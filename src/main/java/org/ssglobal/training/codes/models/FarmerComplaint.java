@@ -60,6 +60,8 @@ public class FarmerComplaint implements Serializable {
 	
 	@Column(name="active_deactive")
 	private Boolean activeDeactive;
+	
+	private String image;
 
 	//bi-directional many-to-one association to Farmer
 	@ManyToOne
