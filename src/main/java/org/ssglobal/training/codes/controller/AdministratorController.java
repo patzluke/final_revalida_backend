@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.ssglobal.training.codes.models.Administrator;
+import org.ssglobal.training.codes.models.Course;
 import org.ssglobal.training.codes.models.Farmer;
 import org.ssglobal.training.codes.models.FarmerComplaint;
 import org.ssglobal.training.codes.models.FarmingTip;
@@ -261,6 +262,88 @@ public class AdministratorController {
 			if (user != null) {
 				userEntity = new GenericEntity<>(user) {};
 				return Response.ok(userEntity).build();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+		}
+		return Response.status(Status.BAD_REQUEST).build();
+	}
+	
+	// FarmingTips
+	@GET
+	@Path("/get/course")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public Response selectAllCourses() {
+		List<Course> courses = service.selectAllCourses();
+		GenericEntity<List<Course>> coursesEntity = null;
+		try {
+			if (!courses.isEmpty()) {
+				coursesEntity = new GenericEntity<>(courses) {
+				};
+				return Response.ok(coursesEntity).build();
+			}
+		} catch (Exception e) {
+			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+		}
+		return Response.status(Status.BAD_REQUEST).build();
+	}
+
+	@POST
+	@Path("/insert/course")
+	@Produces({ MediaType.APPLICATION_JSON })
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public Response insertIntoCourses(Map<String, Object> payload) {
+		Course course = service.insertIntoCourses(payload);
+		GenericEntity<Course> courseEntity = null;
+
+		try {
+			if (course != null) {
+				courseEntity = new GenericEntity<>(course) {
+				};
+				return Response.ok(courseEntity).build();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+		}
+		return Response.status(Status.BAD_REQUEST).build();
+	}
+
+	@PUT
+	@Path("/update/course")
+	@Produces({ MediaType.APPLICATION_JSON })
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public Response updateIntoCourses(Map<String, Object> payload) {
+		Course course = service.updateIntoCourses(payload);
+		GenericEntity<Course> courseEntity = null;
+
+		try {
+			if (course != null) {
+				courseEntity = new GenericEntity<>(course) {
+				};
+				return Response.ok(courseEntity).build();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+		}
+		return Response.status(Status.BAD_REQUEST).build();
+	}
+
+	@DELETE
+	@Path("/delete/course/{courseId}")
+	@Produces({ MediaType.APPLICATION_JSON })
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public Response deleteCourse(@PathParam(value = "courseId") Integer courseId) {
+		Course course = service.deleteCourse(courseId);
+		GenericEntity<Course> courseEntity = null;
+
+		try {
+			if (course != null) {
+				courseEntity = new GenericEntity<>(course) {
+				};
+				return Response.ok(courseEntity).build();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

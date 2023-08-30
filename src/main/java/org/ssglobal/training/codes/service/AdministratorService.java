@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.ssglobal.training.codes.models.Administrator;
+import org.ssglobal.training.codes.models.Course;
 import org.ssglobal.training.codes.models.Farmer;
 import org.ssglobal.training.codes.models.FarmerComplaint;
 import org.ssglobal.training.codes.models.FarmingTip;
@@ -37,4 +38,9 @@ public interface AdministratorService {
 	FarmerComplaint updateIntoFarmerComplaint(FarmerComplaint farmerComplaint);
 	
 	Object validateUserAccount(Map<String, Object> payload);
+	
+	List<Course> selectAllCourses();
+	Course insertIntoCourses(Map<String, Object> payload);
+	Course updateIntoCourses(Map<String, Object> payload);
+	Course deleteCourse(Integer courseId);
 }

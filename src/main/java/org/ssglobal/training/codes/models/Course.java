@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.util.Date;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -22,9 +21,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
-
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -47,9 +43,11 @@ public class Course implements Serializable {
 
 	private String description;
 
-	@Temporal(TemporalType.DATE)
 	@Column(name="duration_in_days")
-	private Date durationInDays;
+	private Integer durationInDays;
+	
+	@Column(name="active_deactive")
+	private boolean activeDeactive;
 
 	//bi-directional many-to-one association to CourseEnrolled
 	@OneToMany(mappedBy="course", fetch=FetchType.EAGER)
