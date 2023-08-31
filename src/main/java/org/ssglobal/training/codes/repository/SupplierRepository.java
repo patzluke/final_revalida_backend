@@ -60,6 +60,9 @@ public class SupplierRepository {
 			try {
 				user.setImage(payload.get("image").toString());
 			} catch (NullPointerException e) {	}
+			try {
+				user.setValidIdPicture(payload.get("validIdPicture").toString());
+			} catch (NullPointerException e) {	}
 			sess.merge(user);
 			tx.commit();
 			return findOneByUserId(Integer.valueOf(payload.get("userId").toString())).orElse(null);
