@@ -202,6 +202,7 @@ public class FarmerRepository {
 		Transaction tx = null;
 		try (Session sess = sf.openSession()) {
 			PostAdvertisementResponseBuilder response = PostAdvertisementResponse.builder();
+			response.isAccepted(false);
 			response.price(Double.valueOf(payload.get("price").toString()));
 			response.quantity(payload.get("quantity").toString());
 			response.dateCreated(LocalDateTime.now());
