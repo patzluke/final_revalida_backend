@@ -299,8 +299,6 @@ public class AdministratorRepository {
 	// Course
 	public List<Course> selectAllCourses() {
 		List<Course> records = new ArrayList<>();
-		// this is HQL so make supervisor to Supervisor and with ref var
-		// if you make Supervisor lower case, it will throw an error
 		String sql = "select * from course order by course_id";
 
 		try (Session sess = sf.openSession()) {

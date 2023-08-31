@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.ssglobal.training.codes.models.Course;
+import org.ssglobal.training.codes.models.CourseEnrolled;
 import org.ssglobal.training.codes.models.Farmer;
 import org.ssglobal.training.codes.models.FarmerComplaint;
 import org.ssglobal.training.codes.models.PostAdvertisement;
@@ -24,4 +26,13 @@ public interface FarmerService {
 	
 	//Post Advertisemet Response
 	PostAdvertisementResponse insertIntoPostAdvertisementResponse(Map<String, Object> payload);
+	
+	//course
+	List<Course> selectAllCourses();
+	
+	//course enrolled
+	List<CourseEnrolled> selectAllCoursesEnrolledByFarmer(Integer farmerId);
+	CourseEnrolled insertIntoCourseEnrolled(Map<String, Object> payload);
+	
+	List<PostAdvertisementResponse> selectAllPostAdvertisementResponsesByFarmerId(Integer farmerId);
 }

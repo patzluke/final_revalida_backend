@@ -5,6 +5,8 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.ssglobal.training.codes.models.Course;
+import org.ssglobal.training.codes.models.CourseEnrolled;
 import org.ssglobal.training.codes.models.Farmer;
 import org.ssglobal.training.codes.models.FarmerComplaint;
 import org.ssglobal.training.codes.models.PostAdvertisement;
@@ -183,6 +185,80 @@ public class FarmerController {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+		}
+		return Response.status(Status.BAD_REQUEST).build();
+	}
+	
+	@GET
+	@Path("/get/course")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public Response selectAllCourses() {
+		List<Course> courses = service.selectAllCourses();
+		GenericEntity<List<Course>> coursesEntity = null;
+		try {
+			if (!courses.isEmpty()) {
+				coursesEntity = new GenericEntity<>(courses) {
+				};
+				return Response.ok(coursesEntity).build();
+			}
+		} catch (Exception e) {
+			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+		}
+		return Response.status(Status.BAD_REQUEST).build();
+	}
+
+	@GET
+	@Path("/get/courseenrolled/{farmerId}")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public Response selectAllCoursesEnrolledByFarmer(@PathParam(value = "farmerId") Integer farmerId) {
+		List<CourseEnrolled> courseEnrolled = service.selectAllCoursesEnrolledByFarmer(farmerId);
+		GenericEntity<List<CourseEnrolled>> courseEnrolledEntity = null;
+		try {
+			if (!courseEnrolled.isEmpty()) {
+				courseEnrolledEntity = new GenericEntity<>(courseEnrolled) {
+				};
+				return Response.ok(courseEnrolledEntity).build();
+			}
+		} catch (Exception e) {
+			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+		}
+		return Response.status(Status.BAD_REQUEST).build();
+	}
+	
+	@POST
+	@Path("/insert/courseenrolled")
+    @Produces({ MediaType.APPLICATION_JSON })
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public Response insertIntoCourseEnrolled(Map<String, Object> payload) {
+		CourseEnrolled response = service.insertIntoCourseEnrolled(payload);
+		GenericEntity<CourseEnrolled> responseEntity = null;
+		
+		try {
+			if (response != null) {
+				responseEntity = new GenericEntity<>(response) {};
+				return Response.ok(responseEntity).build();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+		}
+		return Response.status(Status.BAD_REQUEST).build();
+	}
+	
+	@GET
+	@Path("/get/postadvertisementresponse/{farmerId}")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public Response selectAllPostAdvertisementResponsesByFarmerId(@PathParam(value = "farmerId") Integer farmerId) {
+		List<PostAdvertisementResponse> postAdvertisementResponses = service.selectAllPostAdvertisementResponsesByFarmerId(farmerId);
+		GenericEntity<List<PostAdvertisementResponse>> postAdvertisementResponsesEntity = null;
+		try {
+			if (!postAdvertisementResponses.isEmpty()) {
+				postAdvertisementResponsesEntity = new GenericEntity<>(postAdvertisementResponses) {
+				};
+				return Response.ok(postAdvertisementResponsesEntity).build();
+			}
+		} catch (Exception e) {
 			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
 		}
 		return Response.status(Status.BAD_REQUEST).build();
