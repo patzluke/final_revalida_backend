@@ -6,6 +6,8 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.ssglobal.training.codes.models.Course;
+import org.ssglobal.training.codes.models.CourseEnrolled;
 import org.ssglobal.training.codes.models.Farmer;
 import org.ssglobal.training.codes.models.FarmerComplaint;
 import org.ssglobal.training.codes.models.PostAdvertisement;
@@ -57,5 +59,25 @@ public class FarmerServiceImpl implements FarmerService {
 	@Override
 	public PostAdvertisementResponse insertIntoPostAdvertisementResponse(Map<String, Object> payload) {
 		return repository.insertIntoPostAdvertisementResponse(payload);
+	}
+	
+	@Override
+	public List<Course> selectAllCourses() {
+		return repository.selectAllCourses();
+	}
+
+	@Override
+	public List<CourseEnrolled> selectAllCoursesEnrolledByFarmer(Integer farmerId) {
+		return repository.selectAllCoursesEnrolledByFarmer(farmerId);
+	}
+
+	@Override
+	public CourseEnrolled insertIntoCourseEnrolled(Map<String, Object> payload) {
+		return repository.insertIntoCourseEnrolled(payload);
+	}
+	
+	@Override
+	public List<PostAdvertisementResponse> selectAllPostAdvertisementResponsesByFarmerId(Integer farmerId) {
+		return repository.selectAllPostAdvertisementResponsesByFarmerId(farmerId);
 	}
 }

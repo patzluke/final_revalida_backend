@@ -1,5 +1,6 @@
 package org.ssglobal.training.codes.repository;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -14,6 +15,8 @@ import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
+import org.ssglobal.training.codes.models.Course;
+import org.ssglobal.training.codes.models.CourseEnrolled;
 import org.ssglobal.training.codes.models.Farmer;
 import org.ssglobal.training.codes.models.FarmerComplaint;
 import org.ssglobal.training.codes.models.PostAdvertisement;
@@ -217,5 +220,91 @@ public class FarmerRepository {
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	// Course
+	public List<Course> selectAllCourses() {
+		List<Course> records = new ArrayList<>();
+		// this is HQL so make supervisor to Supervisor and with ref var
+		// if you make Supervisor lower case, it will throw an error
+		String sql = "select * from course order by course_id";
+
+		try (Session sess = sf.openSession()) {
+			Query<Course> query = sess.createNativeQuery(sql, Course.class);
+			records = query.getResultList();
+
+			return Collections.unmodifiableList(records);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return Collections.unmodifiableList(records);
+	}
+	
+	public Optional<Course> findCourseById(Integer courseId) {
+		// Named Parameter
+		String sql = "SELECT * FROM course WHERE course_id = :course_id";
+
+		try (Session sess = sf.openSession()) {
+			Query<Course> query = sess.createNativeQuery(sql, Course.class);
+			query.setParameter("course_id", courseId);
+			Course record = query.getSingleResultOrNull();
+
+			return Optional.of(record);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return null;
+	}
+	
+	// course enrolled
+	public List<CourseEnrolled> selectAllCoursesEnrolledByFarmer(Integer farmerId) {
+		List<CourseEnrolled> records = new ArrayList<>();
+		String sql = "select * from course_enrolled where farmer_id = :farmer_id order by enrollment_id";
+
+		try (Session sess = sf.openSession()) {
+			Query<CourseEnrolled> query = sess.createNativeQuery(sql, CourseEnrolled.class);
+			query.setParameter("farmer_id", farmerId);
+			records = query.getResultList();
+
+			return Collections.unmodifiableList(records);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return Collections.unmodifiableList(records);
+	}
+
+	public CourseEnrolled insertIntoCourseEnrolled(Map<String, Object> payload) {
+		Transaction tx = null;
+		try (Session sess = sf.openSession()) {
+			tx = sess.beginTransaction();
+			CourseEnrolled courseEnrolled = new CourseEnrolled();
+			courseEnrolled.setFarmer(findOneByFarmerId(Integer.valueOf(payload.get("farmerId").toString())).orElse(null));
+			courseEnrolled.setCourse(findCourseById(Integer.valueOf(payload.get("courseId").toString())).orElse(null));
+			courseEnrolled.setEnrollmentDate(LocalDate.now());
+			courseEnrolled.setEndOfEnrollment(LocalDate.now().plusDays(Long.valueOf(payload.get("durationInDays").toString())));
+			sess.persist(courseEnrolled);
+			tx.commit();
+			return courseEnrolled;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	// Post Advertisement Respones
+	public List<PostAdvertisementResponse> selectAllPostAdvertisementResponsesByFarmerId(Integer farmerId) {
+		List<PostAdvertisementResponse> records = new ArrayList<>();
+		String sql = "select * from post_advertisement_responses where farmer_id = :farmer_id order by date_created";
+
+		try (Session sess = sf.openSession()) {
+			Query<PostAdvertisementResponse> query = sess.createNativeQuery(sql, PostAdvertisementResponse.class);
+			query.setParameter("farmer_id", farmerId);
+			records = query.getResultList();
+
+			return Collections.unmodifiableList(records);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return Collections.unmodifiableList(records);
 	}
 }
