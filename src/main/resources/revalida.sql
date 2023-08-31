@@ -197,7 +197,7 @@ create table post_advertisement_responses (
     message text,
     price float,
     quantity varchar(100),
-    is_accepted boolean,
+    is_accepted boolean default false,
     preferred_payment_mode varchar(50),
     date_created timestamp,
     date_modified timestamp,
