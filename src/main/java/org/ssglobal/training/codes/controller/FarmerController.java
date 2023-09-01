@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.ssglobal.training.codes.models.Course;
 import org.ssglobal.training.codes.models.CourseEnrolled;
+import org.ssglobal.training.codes.models.CropPayment;
 import org.ssglobal.training.codes.models.Farmer;
 import org.ssglobal.training.codes.models.FarmerComplaint;
 import org.ssglobal.training.codes.models.PostAdvertisement;
@@ -259,6 +260,44 @@ public class FarmerController {
 				return Response.ok(postAdvertisementResponsesEntity).build();
 			}
 		} catch (Exception e) {
+			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+		}
+		return Response.status(Status.BAD_REQUEST).build();
+	}
+	
+	@GET
+	@Path("/get/croppayment/{farmerId}")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public Response selectAllCropPaymentByFarmer(@PathParam(value = "farmerId") Integer farmerId) {
+		List<CropPayment> cropPayments = service.selectAllCropPaymentByFarmer(farmerId);
+		GenericEntity<List<CropPayment>> cropPaymentsEntity = null;
+		try {
+			if (!cropPayments.isEmpty()) {
+				cropPaymentsEntity = new GenericEntity<>(cropPayments) {
+				};
+				return Response.ok(cropPaymentsEntity).build();
+			}
+		} catch (Exception e) {
+			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+		}
+		return Response.status(Status.BAD_REQUEST).build();
+	}
+	
+	@POST
+	@Path("/insert/croppayment")
+    @Produces({ MediaType.APPLICATION_JSON })
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public Response insertIntoSellCropDetailsAndCropOrdersAndPayment(Map<String, Object> payload) {
+		CropPayment cropPayment = service.insertIntoSellCropDetailsAndCropOrdersAndPayment(payload);
+		GenericEntity<CropPayment> cropPaymentEntity = null;
+		
+		try {
+			if (cropPayment != null) {
+				cropPaymentEntity = new GenericEntity<>(cropPayment) {};
+				return Response.ok(cropPaymentEntity).build();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
 		}
 		return Response.status(Status.BAD_REQUEST).build();

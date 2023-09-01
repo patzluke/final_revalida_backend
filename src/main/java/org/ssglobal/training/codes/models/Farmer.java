@@ -51,7 +51,7 @@ public class Farmer implements Serializable {
 	//bi-directional many-to-one association to CropDetail
 	@OneToMany(mappedBy="farmer", fetch=FetchType.EAGER)
 	@JsonBackReference
-	private List<CropDetail> cropDetails;
+	private List<SellCropDetail> cropDetails;
 
 	//bi-directional many-to-one association to User
 	@ManyToOne

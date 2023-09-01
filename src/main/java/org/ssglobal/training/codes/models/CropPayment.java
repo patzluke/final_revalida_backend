@@ -42,11 +42,9 @@ public class CropPayment implements Serializable {
 
 	@Column(name="pay_date")
 	private LocalDateTime payDate;
-
-	@Column(name="payment_mode")
-	private String paymentMode;
-
-	private String status;
+	
+	@Column(name = "proof_of_payment_image")
+	private String proofOfPaymentImage;
 
 	//bi-directional many-to-one association to CropOrder
 	@ManyToOne

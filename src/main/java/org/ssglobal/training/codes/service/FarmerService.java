@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import org.ssglobal.training.codes.models.Course;
 import org.ssglobal.training.codes.models.CourseEnrolled;
+import org.ssglobal.training.codes.models.CropPayment;
 import org.ssglobal.training.codes.models.Farmer;
 import org.ssglobal.training.codes.models.FarmerComplaint;
 import org.ssglobal.training.codes.models.PostAdvertisement;
@@ -35,4 +36,8 @@ public interface FarmerService {
 	CourseEnrolled insertIntoCourseEnrolled(Map<String, Object> payload);
 	
 	List<PostAdvertisementResponse> selectAllPostAdvertisementResponsesByFarmerId(Integer farmerId);
+	
+	//Sell Crop Payment
+	List<CropPayment> selectAllCropPaymentByFarmer(Integer farmerId);
+	CropPayment insertIntoSellCropDetailsAndCropOrdersAndPayment(Map<String, Object> payload);
 }
