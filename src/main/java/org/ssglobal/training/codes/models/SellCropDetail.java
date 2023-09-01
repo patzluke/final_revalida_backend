@@ -31,24 +31,27 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 @ToString
 @Builder
 @Entity
-@Table(name="crop_details")
-public class CropDetail implements Serializable {
-	private static final long serialVersionUID = 1L;
+@Table(name="sell_crop_details")
+public class SellCropDetail implements Serializable {
+	private static final long serialVersionUID = 6085444830924497523L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="crop_id")
-	private Integer cropId;
-
-	@Column(name="crop_image")
-	private String cropImage;
+	@Column(name="sell_id")
+	private Integer sellId;
 
 	@Column(name="crop_name")
 	private String cropName;
 
 	private double price;
 
-	private Integer quantity;
+	private String quantity;
+	
+	@Column(name = "mobilenum_banknumber")
+	private String mobilenumBanknumber;
+	
+	@Column(name = "payment_mode")
+	private String paymentMode;
 
 	//bi-directional many-to-one association to Farmer
 	@ManyToOne
@@ -56,7 +59,7 @@ public class CropDetail implements Serializable {
 	private Farmer farmer;
 
 	//bi-directional many-to-one association to CropOrder
-	@OneToMany(mappedBy="cropDetail", fetch=FetchType.EAGER)
+	@OneToMany(mappedBy="sellCropDetail", fetch=FetchType.EAGER)
 	@JsonBackReference
 	private List<CropOrder> cropOrders;
 }

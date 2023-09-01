@@ -97,7 +97,7 @@ create table post_advertisement (
     crop_name varchar(100),
     description text,
     crop_image varchar(255),
-    quantity varchar(100),
+    quantity varchar(200),
     price float,
     date_posted timestamp,
     date_modified timestamp,
@@ -134,26 +134,27 @@ create table farmer_complaint (
 );
 
 
-drop table if exists crop_details cascade;
-create table crop_details (
-	crop_id serial primary key,
+drop table if exists sell_crop_details cascade;
+create table sell_crop_details (
+	sell_id serial primary key,
     farmer_id int,
     crop_name varchar(100),
     price float,
-    quantity int,
-    crop_image varchar(255),
+    quantity varchar(200),
+    mobilenum_banknumber varchar(50),
+    payment_mode varchar(100),
     foreign key(farmer_id) references farmer(farmer_id) on delete cascade
 );
 
 drop table if exists crop_orders cascade;
 create table crop_orders (
 	order_id_ref serial primary key,
-    crop_id int,
+    sell_id int,
     supplier_id int,
-    quantity int,
-    price float,
     address text,
-    foreign key(crop_id) references crop_details(crop_id) on delete cascade,
+    is_received_by_supplier boolean,
+    order_status varchar(50),
+    foreign key(sell_id) references sell_crop_details(sell_id) on delete cascade,
     foreign key(supplier_id) references supplier(supplier_id) on delete cascade
 );
 
@@ -161,10 +162,9 @@ drop table if exists crop_payment cascade;
 create table crop_payment (
 	payment_id serial primary key,
     pay_date timestamp,
-    payment_mode varchar(50),
     paid_by varchar(100),
-    status varchar(20),
     order_id_ref int,
+    proof_of_payment_image text,
     foreign key(order_id_ref) references crop_orders(order_id_ref) on delete cascade
 );
 
@@ -197,7 +197,7 @@ create table post_advertisement_responses (
     farmer_id int,
     message text,
     price float,
-    quantity varchar(100),
+    quantity varchar(200),
     is_accepted boolean default false,
     preferred_payment_mode varchar(50),
     date_created timestamp,

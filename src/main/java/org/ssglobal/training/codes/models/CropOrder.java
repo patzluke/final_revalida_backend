@@ -41,15 +41,17 @@ public class CropOrder implements Serializable {
 	private Integer orderIdRef;
 
 	private String address;
-
-	private double price;
-
-	private Integer quantity;
+	
+	@Column(name="is_received_by_supplier")
+	private Boolean isReceivedBySupplier;
+	
+	@Column(name="order_status")
+	private String orderStatus;
 
 	//bi-directional many-to-one association to CropDetail
 	@ManyToOne
-	@JoinColumn(name="crop_id")
-	private CropDetail cropDetail;
+	@JoinColumn(name="sell_id")
+	private SellCropDetail sellCropDetail;
 
 	//bi-directional many-to-one association to Supplier
 	@ManyToOne

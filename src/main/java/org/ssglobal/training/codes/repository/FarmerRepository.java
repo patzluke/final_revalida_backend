@@ -17,10 +17,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 import org.ssglobal.training.codes.models.Course;
 import org.ssglobal.training.codes.models.CourseEnrolled;
+import org.ssglobal.training.codes.models.CropOrder;
+import org.ssglobal.training.codes.models.CropPayment;
 import org.ssglobal.training.codes.models.Farmer;
 import org.ssglobal.training.codes.models.FarmerComplaint;
 import org.ssglobal.training.codes.models.PostAdvertisement;
 import org.ssglobal.training.codes.models.PostAdvertisementResponse;
+import org.ssglobal.training.codes.models.SellCropDetail;
+import org.ssglobal.training.codes.models.Supplier;
 import org.ssglobal.training.codes.models.Users;
 import org.ssglobal.training.codes.models.PostAdvertisementResponse.PostAdvertisementResponseBuilder;
 
@@ -41,6 +45,21 @@ public class FarmerRepository {
 			Query<Farmer> query = sess.createNativeQuery(sql, Farmer.class);
 			query.setParameter("user_id", userId);
 			Farmer record = query.getSingleResultOrNull();
+
+			return Optional.of(record);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return null;
+	}
+	
+	public Optional<Supplier> findSupplierBySupplierId(Integer supplierId) {
+		// Named Parameter
+		String sql = "SELECT * FROM supplier WHERE supplier_id = :supplier_id";
+		try (Session sess = sf.openSession()) {
+			Query<Supplier> query = sess.createNativeQuery(sql, Supplier.class);
+			query.setParameter("supplier_id", supplierId);
+			Supplier record = query.getSingleResultOrNull();
 
 			return Optional.of(record);
 		} catch (Exception e) {
@@ -248,7 +267,7 @@ public class FarmerRepository {
 		try (Session sess = sf.openSession()) {
 			Query<Course> query = sess.createNativeQuery(sql, Course.class);
 			query.setParameter("course_id", courseId);
-			Course record = query.getSingleResultOrNull();
+			Course record = query.getSingleResult();
 
 			return Optional.of(record);
 		} catch (Exception e) {
@@ -307,5 +326,59 @@ public class FarmerRepository {
 			System.out.println(e.getMessage());
 		}
 		return Collections.unmodifiableList(records);
+	}
+	
+	// Post Advertisement
+	public List<CropPayment> selectAllCropPaymentByFarmer(Integer farmerId) {
+		List<CropPayment> records = new ArrayList<>();
+		String sql = "select cp.* from crop_payment cp \r\n"
+				+ "inner join crop_orders co on cp.order_id_ref = co.order_id_ref\r\n"
+				+ "inner join sell_crop_details scd on scd.sell_id = co.sell_id\r\n"
+				+ "where scd.farmer_id = :farmer_id order by pay_date";
+		
+		try (Session sess = sf.openSession()) {
+			Query<CropPayment> query = sess.createNativeQuery(sql, CropPayment.class);
+			query.setParameter("farmer_id", farmerId);
+			records = query.getResultList();
+			return Collections.unmodifiableList(records);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return Collections.unmodifiableList(records);
+	}
+
+	// Post Advertisement Responses
+	public CropPayment insertIntoSellCropDetailsAndCropOrdersAndPayment(Map<String, Object> payload) {
+		Transaction tx = null;
+		try (Session sess = sf.openSession()) {
+			tx = sess.beginTransaction();
+			SellCropDetail sellCropDetail = new SellCropDetail();
+			sellCropDetail.setFarmer(findOneByFarmerId(Integer.valueOf(payload.get("farmerId").toString())).orElse(null));
+			sellCropDetail.setCropName(payload.get("cropName").toString());
+			sellCropDetail.setPrice(Double.valueOf(payload.get("price").toString()));
+			sellCropDetail.setQuantity(payload.get("quantity").toString());
+			sellCropDetail.setMobilenumBanknumber(payload.get("mobilenumBanknumber").toString());
+			sellCropDetail.setPaymentMode(payload.get("paymentMode").toString());
+			sess.persist(sellCropDetail);
+			
+			CropOrder cropOrder = new CropOrder();
+			cropOrder.setSellCropDetail(sellCropDetail);
+			cropOrder.setSupplier(findSupplierBySupplierId(Integer.valueOf(payload.get("supplierId").toString())).orElse(null));
+			cropOrder.setAddress(payload.get("address").toString());
+			cropOrder.setIsReceivedBySupplier(false);
+			cropOrder.setOrderStatus("To Deliver");
+			sess.persist(cropOrder);
+			
+			CropPayment cropPayment = new CropPayment();
+			cropPayment.setCropOrder(cropOrder);
+			sess.persist(cropPayment);
+			tx.commit();
+			return cropPayment;
+		} catch (NullPointerException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 }
