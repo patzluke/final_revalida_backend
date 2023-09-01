@@ -103,6 +103,7 @@ create table post_advertisement (
     date_modified timestamp,
     active_deactive boolean,
     is_completed boolean,
+    measurement varchar(30),
     foreign key(supplier_id) references supplier(supplier_id) on delete cascade,
     foreign key(crop_specialization_id) references crop_specialization(crop_specialization_id) on delete cascade
 );
@@ -258,10 +259,10 @@ values
 (1, 'The Siomai', 'ang pangit ng siomai', '2023-08-17 12:55:00', 't'),
 (1, 'The Carrots', 'ang pangit ng carrots', '2023-08-17 12:55:00', 't');
 
-insert into post_advertisement(supplier_id, crop_specialization_id, crop_name, description, crop_image, quantity, price, date_posted, active_deactive) 
+insert into post_advertisement(supplier_id, crop_specialization_id, crop_name, description, crop_image, quantity, measurement, price, date_posted, active_deactive) 
 values 
-(1, 1, 'Princess Jasmin (Rice)', 'Must be brand new harvest and no tiny bugs that will be found', 'http://localhost:8080/api/file/display/image/WIN_20230220_16_25_22_Pro.jpg', '100 kg', 100000.00, '2023-08-23 15:47:00', 't'),
-(1, 1, 'NFA (Rice)', 'Must be brand new harvest and no tiny bugs that will be found', 'http://localhost:8080/api/file/display/image/WIN_20230220_16_25_22_Pro.jpg', '100 kg', 100000.00, '2023-08-23 15:47:00', 't');
+(1, 1, 'Princess Jasmin (Rice)', 'Must be brand new harvest and no tiny bugs that will be found', 'http://localhost:8080/api/file/display/image/WIN_20230220_16_25_22_Pro.jpg', '100', 'kg', 100000.00, '2023-08-23 15:47:00', 't'),
+(1, 1, 'NFA (Rice)', 'Must be brand new harvest and no tiny bugs that will be found', 'http://localhost:8080/api/file/display/image/WIN_20230220_16_25_22_Pro.jpg', '100', 'kg', 100000.00, '2023-08-23 15:47:00', 't');
 
 insert into post_advertisement_responses(post_id, farmer_id, message, price, quantity, is_accepted, preferred_payment_mode, date_created) 
 values 
