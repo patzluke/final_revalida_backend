@@ -128,6 +128,7 @@ public class SupplierRepository {
 		advertisement.setCropImage(payload.get("cropImage").toString());
 		advertisement.setQuantity(payload.get("quantity").toString());
 		advertisement.setPrice(Double.valueOf(payload.get("price").toString()));
+		advertisement.setMeasurement(payload.get("measurement").toString());
 		advertisement.setDatePosted(LocalDateTime.now());
 		advertisement.setActiveDeactive(true);
 		Transaction tx = null;
@@ -156,6 +157,7 @@ public class SupplierRepository {
 			advertisement.setQuantity(payload.get("quantity").toString());
 			advertisement.setPrice(Double.valueOf(payload.get("price").toString()));
 			advertisement.setDateModified(LocalDateTime.now());
+			advertisement.setMeasurement(payload.get("measurement").toString());
 			sess.merge(advertisement);
 			tx.commit();
 			return advertisement;
