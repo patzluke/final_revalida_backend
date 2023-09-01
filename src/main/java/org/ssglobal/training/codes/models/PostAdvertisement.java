@@ -54,6 +54,8 @@ public class PostAdvertisement implements Serializable {
 	
 	private Double price;
 	
+	private String measurement;
+	
 	@Column(name="date_posted")
 	private LocalDateTime datePosted;
 	
