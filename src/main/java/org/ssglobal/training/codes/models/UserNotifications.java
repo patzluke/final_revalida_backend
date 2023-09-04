@@ -1,6 +1,10 @@
 package org.ssglobal.training.codes.models;
 
 import java.io.Serializable;
+import java.math.BigInteger;
+import java.time.LocalDateTime;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -17,10 +21,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.time.LocalDateTime;
-
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -28,27 +28,26 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 @ToString
 @Builder
 @Entity
-@Table(name="crop_payment")
-public class CropPayment implements Serializable {
+@Table(name="user_notifications")
+public class UserNotifications implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="payment_id")
-	private String paymentId;
+	@Column(name="notification_id")
+	private BigInteger notificationId;
 
-	@Column(name="paid_by")
-	private String paidBy;
-
-	@Column(name="pay_date")
-	private LocalDateTime payDate;
+	@Column(name="notification_message")
+	private String notificationMessage;
 	
-	@Column(name = "proof_of_payment_image")
-	private String proofOfPaymentImage;
-
-	//bi-directional many-to-one association to CropOrder
+	@Column(name="is_read")
+	private Boolean isRead;
+	
+	@Column(name="date_created")
+	private LocalDateTime dateCreated;
+	
 	@ManyToOne
-	@JoinColumn(name="order_id_ref")
+	@JoinColumn(name="user_id")
 	@JsonManagedReference
-	private CropOrder cropOrder;
+	private Users user;
 }

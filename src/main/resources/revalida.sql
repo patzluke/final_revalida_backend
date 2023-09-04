@@ -8,29 +8,6 @@ create database last_majorrevalida;
 
 \c last_majorrevalida
 
-drop table if exists user_applicants cascade;
-create table user_applicants (
-	applicant_id serial primary key,
-    username varchar(100) unique,
-    password varchar(150),
- 	email varchar(50) unique,
-    contact_no varchar(50) unique,
-    socials varchar(100)[],
-    first_name varchar(70),
-    middle_name varchar(70),
-    last_name varchar(70),
-    user_type varchar(30),
-    birth_date date,
-    address text,
-    civil_status varchar(20),
-    gender varchar(15),
-    nationality varchar(30),
-    valid_id_picture varchar(255),
-    is_validated boolean,
-    is_activated boolean,
-    date_registered timestamp
-);
-
 drop table if exists users cascade;
 create table users (
 	user_id serial primary key,
@@ -146,9 +123,27 @@ create table sell_crop_details (
     foreign key(farmer_id) references farmer(farmer_id) on delete cascade
 );
 
+-----------------------------------------
+drop sequence if exists crop_order_sequence;
+CREATE SEQUENCE crop_order_sequence
+	as bigint
+	increment by 1
+	start with 1
+;
+
+CREATE OR REPLACE FUNCTION crop_order_sequence_function()
+RETURNS text AS $$
+DECLARE
+    today_date text;
+BEGIN
+    today_date := concat('ORD', to_char(now()::date, 'YYYYMMDD'));
+    RETURN today_date || nextval('crop_order_sequence')::text;
+END;
+$$ LANGUAGE plpgsql;
+
 drop table if exists crop_orders cascade;
 create table crop_orders (
-	order_id_ref serial primary key,
+	order_id_ref text default crop_order_sequence_function() primary key,
     sell_id int,
     supplier_id int,
     address text,
@@ -157,16 +152,36 @@ create table crop_orders (
     foreign key(sell_id) references sell_crop_details(sell_id) on delete cascade,
     foreign key(supplier_id) references supplier(supplier_id) on delete cascade
 );
+-----------------------------------------
+
+-----------------------------------------
+drop sequence if exists crop_payment_sequence;
+CREATE SEQUENCE crop_payment_sequence
+	as bigint
+	increment by 1
+	start with 1
+;
+
+CREATE OR REPLACE FUNCTION crop_payment_sequence_function()
+RETURNS text AS $$
+DECLARE
+    today_date text;
+BEGIN
+    today_date := concat('TX', to_char(now()::date, 'YYYYMMDD'));
+    RETURN today_date || nextval('crop_payment_sequence')::text;
+END;
+$$ LANGUAGE plpgsql;
 
 drop table if exists crop_payment cascade;
 create table crop_payment (
-	payment_id serial primary key,
+	payment_id text default crop_payment_sequence_function() primary key,
     pay_date timestamp,
     paid_by varchar(100),
-    order_id_ref int,
+    order_id_ref text,
     proof_of_payment_image text,
     foreign key(order_id_ref) references crop_orders(order_id_ref) on delete cascade
 );
+-----------------------------------------
 
 drop table if exists course cascade;
 create table course (
@@ -210,6 +225,16 @@ drop table if exists user_tokens;
 create table user_tokens (
 	user_id int primary key,
 	token varchar(250),
+	foreign key(user_id) references users(user_id) on delete cascade
+);
+
+drop table if exists user_notifications cascade;
+create table user_notifications (
+	notification_id bigserial primary key,
+	user_id int,
+	notification_message varchar(255),
+   	is_read boolean,
+   	date_created timestamp,
 	foreign key(user_id) references users(user_id) on delete cascade
 );
 

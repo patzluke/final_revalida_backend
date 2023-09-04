@@ -19,7 +19,6 @@ import org.ssglobal.training.codes.models.Farmer;
 import org.ssglobal.training.codes.models.FarmerComplaint;
 import org.ssglobal.training.codes.models.FarmingTip;
 import org.ssglobal.training.codes.models.Supplier;
-import org.ssglobal.training.codes.models.UserApplicants;
 import org.ssglobal.training.codes.models.Users;
 
 @Repository
@@ -118,23 +117,6 @@ public class AdministratorRepository {
 			System.out.println(e.getMessage());
 		}
 		return null;
-	}
-	
-	//User Applicants
-	public List<UserApplicants> selectAllUserApplicants() {
-		List<UserApplicants> records = new ArrayList<>();
-		// this is HQL so make supervisor to Supervisor and with ref var
-		// if you make Supervisor lower case, it will throw an error
-		String sql = "SELECT * FROM user_applicants order by applicant_id";
-
-		try (Session sess = sf.openSession()) {
-			Query<UserApplicants> query = sess.createNativeQuery(sql, UserApplicants.class);
-			records = query.getResultList();
-			return Collections.unmodifiableList(records);
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-		}
-		return Collections.unmodifiableList(records);
 	}
 	
 	public Object validateUserAccount(Map<String, Object> payload) {
