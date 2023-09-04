@@ -38,7 +38,7 @@ public class CropOrder implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="order_id_ref")
-	private Integer orderIdRef;
+	private String orderIdRef;
 
 	private String address;
 	

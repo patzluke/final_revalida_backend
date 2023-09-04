@@ -64,6 +64,7 @@ public class SupplierServiceImpl implements SupplierService {
 	
 	@Override
 	public PostAdvertisementResponse updatePostAdvertisementResponsesIsAcceptedStatus(Map<String, Object> payload) {
+		repository.insertIntoUserNotifications(payload);
 		return repository.updatePostAdvertisementResponsesIsAcceptedStatus(payload);
 	}
 }

@@ -13,7 +13,6 @@ import org.ssglobal.training.codes.models.Farmer;
 import org.ssglobal.training.codes.models.FarmerComplaint;
 import org.ssglobal.training.codes.models.FarmingTip;
 import org.ssglobal.training.codes.models.Supplier;
-import org.ssglobal.training.codes.models.UserApplicants;
 import org.ssglobal.training.codes.repository.AdministratorRepository;
 import org.ssglobal.training.codes.service.AdministratorService;
 
@@ -39,12 +38,6 @@ public class AdministratorServiceImpl implements AdministratorService {
 	@Override
 	public Administrator updateAdminInfo(Map<String, Object> payload) {
 		return repository.updateAdminInfo(payload);
-	}
-	
-	//User Applicants
-	@Override
-	public List<UserApplicants> selectAllUserApplicants() {
-		return repository.selectAllUserApplicants();
 	}	
 	
 	//Farmers

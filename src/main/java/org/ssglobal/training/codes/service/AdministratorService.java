@@ -10,16 +10,12 @@ import org.ssglobal.training.codes.models.Farmer;
 import org.ssglobal.training.codes.models.FarmerComplaint;
 import org.ssglobal.training.codes.models.FarmingTip;
 import org.ssglobal.training.codes.models.Supplier;
-import org.ssglobal.training.codes.models.UserApplicants;
 
 public interface AdministratorService {
 	
 	List<Administrator> selectAllAdministrators();
 	Optional<Administrator> findOneByUserId(Integer userId);
 	Administrator updateAdminInfo(Map<String, Object> payload);
-	
-	//User Applicants
-	List<UserApplicants> selectAllUserApplicants();
 		
 	//Farmers
 	List<Farmer> selectAllFarmers();
