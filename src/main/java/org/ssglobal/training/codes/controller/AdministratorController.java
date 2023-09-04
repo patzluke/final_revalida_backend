@@ -12,7 +12,6 @@ import org.ssglobal.training.codes.models.Farmer;
 import org.ssglobal.training.codes.models.FarmerComplaint;
 import org.ssglobal.training.codes.models.FarmingTip;
 import org.ssglobal.training.codes.models.Supplier;
-import org.ssglobal.training.codes.models.UserApplicants;
 import org.ssglobal.training.codes.service.AdministratorService;
 
 import jakarta.ws.rs.Consumes;
@@ -67,25 +66,6 @@ public class AdministratorController {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
-		}
-		return Response.status(Status.BAD_REQUEST).build();
-	}
-	
-	//User Applicants
-	@GET
-	@Path("/get/userapplicants")
-	@Produces({ MediaType.APPLICATION_JSON })
-	public Response selectAllUserApplicants() {
-		List<UserApplicants> userApplicants = service.selectAllUserApplicants();
-		GenericEntity<List<UserApplicants>> userApplicantsEntity = null;
-		try {
-			if (!userApplicants.isEmpty()) {
-				userApplicantsEntity = new GenericEntity<>(userApplicants) {
-				};
-				return Response.ok(userApplicantsEntity).build();
-			}
-		} catch (Exception e) {
 			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
 		}
 		return Response.status(Status.BAD_REQUEST).build();

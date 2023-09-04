@@ -26,4 +26,4 @@ public interface SupplierService {
 	// Post Advertisement Respones
 	List<PostAdvertisementResponse> selectAllPostAdvertisementResponsesByPostId(Integer postId);
 	PostAdvertisementResponse updatePostAdvertisementResponsesIsAcceptedStatus(Map<String, Object> payload);
-}
+	}

@@ -18,6 +18,7 @@ import org.ssglobal.training.codes.models.CropSpecialization;
 import org.ssglobal.training.codes.models.PostAdvertisement;
 import org.ssglobal.training.codes.models.PostAdvertisementResponse;
 import org.ssglobal.training.codes.models.Supplier;
+import org.ssglobal.training.codes.models.UserNotifications;
 import org.ssglobal.training.codes.models.Users;
 
 @Repository
@@ -36,6 +37,21 @@ public class SupplierRepository {
 			Query<Supplier> query = sess.createNativeQuery(sql, Supplier.class);
 			query.setParameter("user_id", userId);
 			Supplier record = query.getSingleResultOrNull();
+
+			return Optional.of(record);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return null;
+	}
+	
+	public Optional<Users> findUserByUserId(Integer userId) {
+		// Named Parameter
+		String sql = "SELECT * FROM users WHERE user_id = :user_id";
+		try (Session sess = sf.openSession()) {
+			Query<Users> query = sess.createNativeQuery(sql, Users.class);
+			query.setParameter("user_id", userId);
+			Users record = query.getSingleResultOrNull();
 
 			return Optional.of(record);
 		} catch (Exception e) {
@@ -225,6 +241,30 @@ public class SupplierRepository {
 			sess.merge(advertisementResponse);
 			tx.commit();
 			return advertisementResponse;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	// Post Advertisement Responses
+	@SuppressWarnings("unchecked")
+	public UserNotifications insertIntoUserNotifications(Map<String, Object> payload) {
+		Transaction tx = null;
+		try (Session sess = sf.openSession()) {
+			UserNotifications notification = new UserNotifications();
+			String userId = ((Map<String, Object>) ((Map<String, Object>) payload.get("farmer")).get("user")).get("userId").toString();
+			notification.setUser(findUserByUserId(Integer.valueOf(userId)).orElse(null));
+			notification.setNotificationMessage(payload.get("notificationMessage").toString());
+			notification.setIsRead(false);
+			notification.setDateCreated(LocalDateTime.now());
+			tx = sess.beginTransaction();
+		
+			sess.persist(notification);
+			tx.commit();
+			return notification;
+		} catch (NullPointerException e) {
+			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

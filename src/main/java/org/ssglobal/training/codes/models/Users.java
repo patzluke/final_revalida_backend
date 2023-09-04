@@ -111,4 +111,9 @@ public class Users implements Serializable {
 	@OneToOne(mappedBy = "user")
 	@JsonBackReference
 	private UserToken userToken;
+	
+	// bi-directional many-to-one association to Farmer
+	@OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+	@JsonBackReference
+	private List<UserNotifications> userNotifications;
 }
