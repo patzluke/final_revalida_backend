@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.ssglobal.training.codes.models.Course;
 import org.ssglobal.training.codes.models.CourseEnrolled;
 import org.ssglobal.training.codes.models.CropPayment;
@@ -12,6 +13,7 @@ import org.ssglobal.training.codes.models.Farmer;
 import org.ssglobal.training.codes.models.FarmerComplaint;
 import org.ssglobal.training.codes.models.PostAdvertisement;
 import org.ssglobal.training.codes.models.PostAdvertisementResponse;
+import org.ssglobal.training.codes.models.SellCropDetail;
 import org.ssglobal.training.codes.service.FarmerService;
 
 import jakarta.ws.rs.Consumes;
@@ -90,6 +92,14 @@ public class FarmerController {
 		}
 		return Response.status(Status.BAD_REQUEST).build();
 	}
+	
+	@GET
+	@Path(value = "/get/farmer-total-sales-by-id/{farmerId}")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public double getTotalSalesForFarmer(@PathParam(value = "farmerId") Integer farmerId) {
+        return service.calculateTotalSales(farmerId);
+    }
+
 	
 	@POST
 	@Path("/insert/farmercomplaints")
