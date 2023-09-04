@@ -151,9 +151,12 @@ public class FarmerRepository {
 		FarmerComplaint complaint = new FarmerComplaint();
 		complaint.setActiveDeactive(true);
 		complaint.setComplaintTitle(payload.get("complaintTitle").toString());
+		complaint.setComplaintType(payload.get("complaintType").toString());
 		complaint.setComplaintMessage(payload.get("complaintMessage").toString());
 		complaint.setFarmer(findOneByFarmerId(Integer.valueOf(payload.get("farmerId").toString())).orElse(null));
 		complaint.setDateSubmitted(LocalDateTime.now());
+		complaint.setImage(payload.get("complaintImage").toString());
+		
 		
 		Transaction tx = null;
 		try (Session sess = sf.openSession()) {
