@@ -99,6 +99,7 @@ create table farmer_complaint (
 	farmer_complaint_id serial primary key,
     farmer_id int,
     complaint_title varchar(255),
+    complaint_type varchar(255),
     complaint_message text,
     admin_reply_message text,
     is_read boolean default 'f',
@@ -277,12 +278,12 @@ values('norbz', '123456', 'norbz@gmail.com', '9055261291', array['https://www.fa
 insert into supplier(user_id) values (7);
 
 --insert into farmer complaints
-insert into farmer_complaint(farmer_id, complaint_title, complaint_message, date_submitted, active_deactive) 
+insert into farmer_complaint(farmer_id, complaint_title, complaint_type, complaint_message, date_submitted, active_deactive) 
 values 
-(1, 'The Bigas', 'ang pangit ng bigas', '2023-08-17 12:55:00', 't'),
-(1, 'The Mais', 'ang pangit ng mais', '2023-08-17 12:55:00', 't'),
-(1, 'The Siomai', 'ang pangit ng siomai', '2023-08-17 12:55:00', 't'),
-(1, 'The Carrots', 'ang pangit ng carrots', '2023-08-17 12:55:00', 't');
+(1, 'The Bigas',  'Others', 'ang pangit ng bigas', '2023-08-17 12:55:00', 't'),
+(1, 'The Mais',  'Others', 'ang pangit ng mais', '2023-08-17 12:55:00', 't'),
+(1, 'The Siomai',  'Others', 'ang pangit ng siomai', '2023-08-17 12:55:00', 't'),
+(1, 'The Carrots',  'Others', 'ang pangit ng carrots', '2023-08-17 12:55:00', 't');
 
 insert into post_advertisement(supplier_id, crop_specialization_id, crop_name, description, crop_image, quantity, measurement, price, date_posted, active_deactive) 
 values 
