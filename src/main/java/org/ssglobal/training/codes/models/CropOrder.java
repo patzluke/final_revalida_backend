@@ -47,6 +47,9 @@ public class CropOrder implements Serializable {
 	
 	@Column(name="order_status")
 	private String orderStatus;
+	
+	@Column(name = "cancel_reason")
+	private String cancelReason;
 
 	//bi-directional many-to-one association to CropDetail
 	@ManyToOne

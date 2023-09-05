@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.ssglobal.training.codes.models.CropPayment;
 import org.ssglobal.training.codes.models.CropSpecialization;
 import org.ssglobal.training.codes.models.PostAdvertisement;
 import org.ssglobal.training.codes.models.PostAdvertisementResponse;
@@ -26,4 +27,8 @@ public interface SupplierService {
 	// Post Advertisement Respones
 	List<PostAdvertisementResponse> selectAllPostAdvertisementResponsesByPostId(Integer postId);
 	PostAdvertisementResponse updatePostAdvertisementResponsesIsAcceptedStatus(Map<String, Object> payload);
-	}
+	
+	//Crop Payment
+	List<CropPayment> selectAllCropPaymentBySupplier(Integer supplierId);
+	CropPayment updateCropPaymentStatus(Map<String, Object> payload);
+}

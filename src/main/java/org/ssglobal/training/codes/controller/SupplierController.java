@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.ssglobal.training.codes.models.CropPayment;
 import org.ssglobal.training.codes.models.CropSpecialization;
 import org.ssglobal.training.codes.models.PostAdvertisement;
 import org.ssglobal.training.codes.models.PostAdvertisementResponse;
@@ -197,6 +198,44 @@ public class SupplierController {
 				advertisementResponsetEntity = new GenericEntity<>(advertisementResponse) {
 				};
 				return Response.ok(advertisementResponsetEntity).build();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+		}
+		return Response.status(Status.BAD_REQUEST).build();
+	}
+	
+	@GET
+	@Path("/get/croppayment/{supplierId}")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public Response selectAllCropPaymentBySupplier(@PathParam(value = "supplierId") Integer supplierId) {
+		List<CropPayment> cropPayments = service.selectAllCropPaymentBySupplier(supplierId);
+		GenericEntity<List<CropPayment>> cropPaymentsEntity = null;
+		try {
+			if (!cropPayments.isEmpty()) {
+				cropPaymentsEntity = new GenericEntity<>(cropPayments) {
+				};
+				return Response.ok(cropPaymentsEntity).build();
+			}
+		} catch (Exception e) {
+			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+		}
+		return Response.status(Status.BAD_REQUEST).build();
+	}
+	
+	@PUT
+	@Path("/update/croppayment")
+	@Produces({ MediaType.APPLICATION_JSON })
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public Response updateCropPaymentStatus(Map<String, Object> payload) {
+		CropPayment cropPayment = service.updateCropPaymentStatus(payload);
+		GenericEntity<CropPayment> cropPaymentEntity = null;
+		try {
+			if (cropPayment != null) {
+				cropPaymentEntity = new GenericEntity<>(cropPayment) {
+				};
+				return Response.ok(cropPaymentEntity).build();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
