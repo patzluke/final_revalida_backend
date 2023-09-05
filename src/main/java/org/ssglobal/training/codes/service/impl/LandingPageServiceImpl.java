@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.ssglobal.training.codes.models.CropSpecialization;
+import org.ssglobal.training.codes.models.FarmingTip;
 import org.ssglobal.training.codes.models.PostAdvertisement;
 import org.ssglobal.training.codes.repository.LandingPageRepository;
 import org.ssglobal.training.codes.service.LandingPageService;
@@ -23,6 +24,11 @@ public class LandingPageServiceImpl implements LandingPageService {
 	@Override
 	public List<CropSpecialization> selectAllCropSpecialization() {
 		return repository.selectAllCropSpecialization();
+	}
+
+	@Override
+	public List<FarmingTip> selectAllFarmingTips() {
+		return repository.selectAllFarmingTips();
 	}
 
 }

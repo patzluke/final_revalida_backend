@@ -3,6 +3,7 @@ package org.ssglobal.training.codes.service;
 import java.util.List;
 
 import org.ssglobal.training.codes.models.CropSpecialization;
+import org.ssglobal.training.codes.models.FarmingTip;
 import org.ssglobal.training.codes.models.PostAdvertisement;
 
 public interface LandingPageService {
@@ -12,4 +13,7 @@ public interface LandingPageService {
 	
 	//Crop Specialization
 	List<CropSpecialization> selectAllCropSpecialization();
+	
+	//Farming tip
+	List<FarmingTip> selectAllFarmingTips();
 }
