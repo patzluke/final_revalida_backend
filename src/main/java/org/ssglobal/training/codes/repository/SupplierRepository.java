@@ -298,6 +298,10 @@ public class SupplierRepository {
 		try (Session sess = sf.openSession()) {
 			tx = sess.beginTransaction();
 			
+			PostAdvertisementResponse response = sess.get(PostAdvertisementResponse.class, Integer.valueOf(payload.get("postResponseId").toString()));
+			response.setIsFinalOfferAccepted(true);
+			sess.merge(response);
+			
 			String orderIdRef = ((Map<String, Object>) ((Map<String, Object>) payload.get("cropOrder"))).get("orderIdRef").toString();
 			String address = ((Map<String, Object>) ((Map<String, Object>) payload.get("cropOrder"))).get("address").toString();
 			CropOrder order = sess.get(CropOrder.class, orderIdRef);
