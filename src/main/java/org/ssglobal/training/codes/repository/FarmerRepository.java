@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -146,6 +147,35 @@ public class FarmerRepository {
 		}
 		return Collections.unmodifiableList(records);
 	}
+	
+	public double calculateTotalSales(Integer farmerId) {
+	    double totalSales = 0.0; // Initialize totalSales
+	    
+	    String sql = "select sum(price) as total_price from sell_crop_details where farmer_id = :farmer_id";
+	    try (Session session = sf.openSession()) {
+	        Query<Double> query = session.createNativeQuery(sql);
+	        query.setParameter("farmer_id", farmerId);
+	        List<Double> prices = query.getResultList();
+
+	        if (prices != null && !prices.isEmpty()) {
+	            for (Double price : prices) {
+	                totalSales += price;
+	            }
+	        }
+
+	    } catch (HibernateException e) {
+	        // Handle Hibernate-specific exceptions
+	        // Log the exception or perform error handling
+	        e.printStackTrace();
+	    } catch (Exception e) {
+	        // Handle other exceptions
+	        // Log the exception or perform error handling
+	        e.printStackTrace();
+	    }
+	    
+	    return totalSales;
+	}
+
 	
 	public FarmerComplaint insertIntoFarmerComplaint(Map<String, Object> payload) {		
 		FarmerComplaint complaint = new FarmerComplaint();

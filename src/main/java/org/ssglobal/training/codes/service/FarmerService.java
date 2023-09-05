@@ -40,4 +40,6 @@ public interface FarmerService {
 	//Sell Crop Payment
 	List<CropPayment> selectAllCropPaymentByFarmer(Integer farmerId);
 	CropPayment insertIntoSellCropDetailsAndCropOrdersAndPayment(Map<String, Object> payload);
+	
+	double calculateTotalSales(Integer farmerId);
 }

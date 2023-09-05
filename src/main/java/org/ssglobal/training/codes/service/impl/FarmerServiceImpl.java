@@ -91,4 +91,17 @@ public class FarmerServiceImpl implements FarmerService {
 	public CropPayment insertIntoSellCropDetailsAndCropOrdersAndPayment(Map<String, Object> payload) {
 		return repository.insertIntoSellCropDetailsAndCropOrdersAndPayment(payload);
 	}
+
+	@Override
+	public double calculateTotalSales(Integer farmerId) {
+	    try {
+	        return repository.calculateTotalSales(farmerId);
+	    } catch (Exception e) {
+	        // Handle the exception or rethrow it as a custom exception
+	        // Log the error, perform error handling, or return a default value, depending on your requirements
+	        e.printStackTrace(); // or use a logging framework
+	        return 0.0; // Default value or error indicator
+	    }
+	}
+
 }

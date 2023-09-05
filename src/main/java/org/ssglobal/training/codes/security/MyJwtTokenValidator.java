@@ -54,6 +54,7 @@ public class MyJwtTokenValidator extends OncePerRequestFilter {
 		}
 	}
 
+	
 	@Override
 	protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
 		return request.getRequestURI().matches("/api/auth/login") ||
@@ -61,7 +62,8 @@ public class MyJwtTokenValidator extends OncePerRequestFilter {
 			   request.getRequestURI().matches("/api/registration/user") ||
 			   request.getRequestURI().matches("/api/file/.*") || 
 			   request.getRequestURI().matches("/api/landing/get/postadvertisements") ||
-			   request.getRequestURI().matches("/api/landing/get/cropspecialization");
+			   request.getRequestURI().matches("/api/landing/get/cropspecialization") ||
+			   request.getRequestURI().matches("/api/farmer/get/farmer-total-sales-by-id/");
 	
 	}
 
