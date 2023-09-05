@@ -22,6 +22,7 @@ import lombok.ToString;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 
 @AllArgsConstructor
@@ -62,4 +63,10 @@ public class SellCropDetail implements Serializable {
 	@OneToMany(mappedBy="sellCropDetail", fetch=FetchType.EAGER)
 	@JsonBackReference
 	private List<CropOrder> cropOrders;
+	
+	//bi-directional many-to-one association to User
+	@ManyToOne
+	@JoinColumn(name="post_response_id")
+	@JsonManagedReference
+	private PostAdvertisementResponse postAdvertisementResponse;
 }

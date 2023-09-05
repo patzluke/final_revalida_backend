@@ -14,6 +14,8 @@ import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
+import org.ssglobal.training.codes.models.CropOrder;
+import org.ssglobal.training.codes.models.CropPayment;
 import org.ssglobal.training.codes.models.CropSpecialization;
 import org.ssglobal.training.codes.models.PostAdvertisement;
 import org.ssglobal.training.codes.models.PostAdvertisementResponse;
@@ -265,6 +267,56 @@ public class SupplierRepository {
 			return notification;
 		} catch (NullPointerException e) {
 			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	// Crop Payment
+	public List<CropPayment> selectAllCropPaymentBySupplier(Integer supplierId) {
+		List<CropPayment> records = new ArrayList<>();
+		String sql = "select cp.* from crop_payment cp \r\n"
+				+ "inner join crop_orders co on cp.order_id_ref = co.order_id_ref\r\n"
+				+ "inner join sell_crop_details scd on scd.sell_id = co.sell_id\r\n"
+				+ "where co.supplier_id = :supplier_id order by pay_date";
+		
+		try (Session sess = sf.openSession()) {
+			Query<CropPayment> query = sess.createNativeQuery(sql, CropPayment.class);
+			query.setParameter("supplier_id", supplierId);
+			records = query.getResultList();
+			return Collections.unmodifiableList(records);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return Collections.unmodifiableList(records);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public CropPayment updateCropPaymentStatus(Map<String, Object> payload) {
+		Transaction tx = null;
+		try (Session sess = sf.openSession()) {
+			tx = sess.beginTransaction();
+			
+			PostAdvertisementResponse response = sess.get(PostAdvertisementResponse.class, Integer.valueOf(payload.get("postResponseId").toString()));
+			response.setIsFinalOfferAccepted(true);
+			sess.merge(response);
+			
+			String orderIdRef = ((Map<String, Object>) ((Map<String, Object>) payload.get("cropOrder"))).get("orderIdRef").toString();
+			String address = ((Map<String, Object>) ((Map<String, Object>) payload.get("cropOrder"))).get("address").toString();
+			CropOrder order = sess.get(CropOrder.class, orderIdRef);
+			order.setAddress(address);
+			sess.merge(order);
+			
+			CropPayment cropPayment = sess.get(CropPayment.class, payload.get("paymentId").toString());
+			Users user = findOneByUserId(Integer.valueOf(payload.get("userId").toString())).orElse(null).getUser();
+			cropPayment.setPayDate(LocalDateTime.now());
+			cropPayment.setPaidBy("%s %s %s".formatted(user.getFirstName(), user.getMiddleName(), user.getLastName()));
+			cropPayment.setProofOfPaymentImage(payload.get("proofOfPaymentImage").toString());
+			sess.merge(cropPayment);
+			
+			tx.commit();
+			return cropPayment;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

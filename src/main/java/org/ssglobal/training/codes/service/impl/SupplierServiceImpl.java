@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.ssglobal.training.codes.models.CropPayment;
 import org.ssglobal.training.codes.models.CropSpecialization;
 import org.ssglobal.training.codes.models.PostAdvertisement;
 import org.ssglobal.training.codes.models.PostAdvertisementResponse;
@@ -66,5 +67,15 @@ public class SupplierServiceImpl implements SupplierService {
 	public PostAdvertisementResponse updatePostAdvertisementResponsesIsAcceptedStatus(Map<String, Object> payload) {
 		repository.insertIntoUserNotifications(payload);
 		return repository.updatePostAdvertisementResponsesIsAcceptedStatus(payload);
+	}
+	
+	@Override
+	public List<CropPayment> selectAllCropPaymentBySupplier(Integer supplierId) {
+		return repository.selectAllCropPaymentBySupplier(supplierId);
+	}
+	
+	@Override
+	public CropPayment updateCropPaymentStatus(Map<String, Object> payload) {
+		return repository.updateCropPaymentStatus(payload);
 	}
 }

@@ -4,11 +4,13 @@ import java.io.Serializable;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,7 +20,9 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 
@@ -50,6 +54,12 @@ public class PostAdvertisementResponse implements Serializable {
 
 	@Column(name="is_accepted")
 	private Boolean isAccepted;
+	
+	@Column(name="is_final_offer_submitted")
+	private Boolean isFinalOfferSubmitted;
+	
+	@Column(name="is_final_offer_accepted")
+	private Boolean isFinalOfferAccepted;
 
 	private String message;
 
@@ -67,4 +77,9 @@ public class PostAdvertisementResponse implements Serializable {
 	@JoinColumn(name="post_id")
 	@JsonManagedReference
 	private PostAdvertisement postAdvertisement;
+
+	// bi-directional many-to-one association to Administrator
+	@OneToMany(mappedBy = "postAdvertisementResponse", fetch = FetchType.EAGER)
+	@JsonBackReference
+	private List<SellCropDetail> sellCropDetails;
 }

@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.ssglobal.training.codes.models.CropSpecialization;
+import org.ssglobal.training.codes.models.FarmingTip;
 import org.ssglobal.training.codes.models.PostAdvertisement;
 import org.ssglobal.training.codes.service.LandingPageService;
 
@@ -39,7 +40,7 @@ public class LandingPageController {
 		return Response.status(Status.BAD_REQUEST).build();
 	}
 
-	// Post Crop Specialization
+	// GET Crop Specialization
 	@GET
 	@Path("/get/cropspecialization")
 	@Produces({ MediaType.APPLICATION_JSON })
@@ -51,6 +52,25 @@ public class LandingPageController {
 				cropSpecializationsEntity = new GenericEntity<>(cropSpecializations) {
 				};
 				return Response.ok(cropSpecializationsEntity).build();
+			}
+		} catch (Exception e) {
+			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+		}
+		return Response.status(Status.BAD_REQUEST).build();
+	}
+	
+	//Get farming tip
+	@GET
+	@Path("/get/farmingtips")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public Response selectAllFarmingTips() {
+		List<FarmingTip> farmingTips = service.selectAllFarmingTips();
+		GenericEntity<List<FarmingTip>> farmingTipsEntity = null;
+		try {
+			if (!farmingTips.isEmpty()) {
+				farmingTipsEntity = new GenericEntity<>(farmingTips) {
+				};
+				return Response.ok(farmingTipsEntity).build();
 			}
 		} catch (Exception e) {
 			return Response.status(Status.INTERNAL_SERVER_ERROR).build();

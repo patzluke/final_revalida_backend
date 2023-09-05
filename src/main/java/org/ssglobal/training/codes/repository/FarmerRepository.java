@@ -129,6 +129,22 @@ public class FarmerRepository {
 		return null;
 	}
 	
+	public Optional<PostAdvertisementResponse> findOneByAdvertisementResponseById(Integer postResponseId) {
+		// Named Parameter
+		String sql = "SELECT * FROM post_advertisement_responses WHERE post_response_id = :post_response_id";
+
+		try (Session sess = sf.openSession()) {
+			Query<PostAdvertisementResponse> query = sess.createNativeQuery(sql, PostAdvertisementResponse.class);
+			query.setParameter("post_response_id", postResponseId);
+			PostAdvertisementResponse record = query.getSingleResultOrNull();
+
+			return Optional.of(record);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return null;
+	}
+	
 	//Farmer Complaint
 	public List<FarmerComplaint> selectFarmerComplaints(Integer farmerId) {
 		List<FarmerComplaint> records = new ArrayList<>();
@@ -153,7 +169,7 @@ public class FarmerRepository {
 	    
 	    String sql = "select sum(price) as total_price from sell_crop_details where farmer_id = :farmer_id";
 	    try (Session session = sf.openSession()) {
-	        Query<Double> query = session.createNativeQuery(sql);
+	        Query<Double> query = session.createNativeQuery(sql, Double.class);
 	        query.setParameter("farmer_id", farmerId);
 	        List<Double> prices = query.getResultList();
 
@@ -255,6 +271,7 @@ public class FarmerRepository {
 		try (Session sess = sf.openSession()) {
 			PostAdvertisementResponseBuilder response = PostAdvertisementResponse.builder();
 			response.isAccepted(false);
+			response.isFinalOfferSubmitted(false);
 			response.price(Double.valueOf(payload.get("price").toString()));
 			response.quantity(payload.get("quantity").toString());
 			response.dateCreated(LocalDateTime.now());
@@ -361,7 +378,7 @@ public class FarmerRepository {
 		return Collections.unmodifiableList(records);
 	}
 	
-	// Post Advertisement
+	// Crop Payment
 	public List<CropPayment> selectAllCropPaymentByFarmer(Integer farmerId) {
 		List<CropPayment> records = new ArrayList<>();
 		String sql = "select cp.* from crop_payment cp \r\n"
@@ -380,13 +397,18 @@ public class FarmerRepository {
 		return Collections.unmodifiableList(records);
 	}
 
-	// Post Advertisement Responses
 	public CropPayment insertIntoSellCropDetailsAndCropOrdersAndPayment(Map<String, Object> payload) {
 		Transaction tx = null;
 		try (Session sess = sf.openSession()) {
 			tx = sess.beginTransaction();
+			
+			PostAdvertisementResponse response = sess.get(PostAdvertisementResponse.class, Integer.valueOf(payload.get("postResponseId").toString()));
+			response.setIsFinalOfferSubmitted(true);
+			sess.merge(response);
+			
 			SellCropDetail sellCropDetail = new SellCropDetail();
 			sellCropDetail.setFarmer(findOneByFarmerId(Integer.valueOf(payload.get("farmerId").toString())).orElse(null));
+			sellCropDetail.setPostAdvertisementResponse(findOneByAdvertisementResponseById(Integer.valueOf(payload.get("postResponseId").toString())).orElse(null));
 			sellCropDetail.setCropName(payload.get("cropName").toString());
 			sellCropDetail.setPrice(Double.valueOf(payload.get("price").toString()));
 			sellCropDetail.setQuantity(payload.get("quantity").toString());
