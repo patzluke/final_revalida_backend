@@ -10,6 +10,7 @@ import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.ssglobal.training.codes.models.CropSpecialization;
+import org.ssglobal.training.codes.models.FarmingTip;
 import org.ssglobal.training.codes.models.PostAdvertisement;
 
 @Repository
@@ -48,5 +49,22 @@ public class LandingPageRepository {
 			System.out.println(e.getMessage());
 		}
 		return Collections.unmodifiableList(records);
+	}
+	
+	// Farming tips
+	public List<FarmingTip> selectAllFarmingTips() {
+		List<FarmingTip> records = new ArrayList<>();
+		String sql = "select * from farming_tip order by farming_tip_id";
+
+		try (Session sess = sf.openSession()) {
+			Query<FarmingTip> query = sess.createNativeQuery(sql, FarmingTip.class);
+			records = query.getResultList();
+
+			return Collections.unmodifiableList(records);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return Collections.unmodifiableList(records);
+		
 	}
 }
