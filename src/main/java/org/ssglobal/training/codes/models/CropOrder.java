@@ -47,6 +47,9 @@ public class CropOrder implements Serializable {
 	
 	@Column(name="order_status")
 	private String orderStatus;
+	
+	@Column(name = "is_payment_received_by_farmer")
+	private Boolean isPaymentReceivedByFarmer;
 
 	//bi-directional many-to-one association to CropDetail
 	@ManyToOne
