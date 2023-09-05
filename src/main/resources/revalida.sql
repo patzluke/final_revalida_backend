@@ -111,17 +111,57 @@ create table farmer_complaint (
     foreign key(farmer_id) references farmer(farmer_id) on delete cascade
 );
 
+drop table if exists course cascade;
+create table course (
+	course_id serial primary key,
+    course_name varchar(100),
+    description text,
+    duration_in_days int,
+    active_deactive boolean
+);
+
+drop table if exists course_enrolled cascade;
+create table course_enrolled (
+	enrollment_id serial primary key,
+	farmer_id int,
+	course_id int,
+    enrollment_date date,
+    end_of_enrollment date,
+    foreign key(farmer_id) references farmer(farmer_id) on delete cascade,
+    foreign key(course_id) references course(course_id) on delete cascade
+
+);
+
+--FARMER MODULE
+drop table if exists post_advertisement_responses cascade;
+create table post_advertisement_responses (
+	post_response_id serial primary key,
+    post_id int,
+    farmer_id int,
+    message text,
+    price float,
+    quantity varchar(200),
+    is_accepted boolean default false,
+    is_final_offer_submitted boolean default false,
+    preferred_payment_mode varchar(50),
+    date_created timestamp,
+    date_modified timestamp,
+    foreign key(post_id) references post_advertisement(post_id) on delete cascade,
+    foreign key(farmer_id) references farmer(farmer_id) on delete cascade    
+);
 
 drop table if exists sell_crop_details cascade;
 create table sell_crop_details (
 	sell_id serial primary key,
     farmer_id int,
+    post_response_id int,
     crop_name varchar(100),
     price float,
     quantity varchar(200),
     mobilenum_banknumber varchar(50),
     payment_mode varchar(100),
-    foreign key(farmer_id) references farmer(farmer_id) on delete cascade
+    foreign key(farmer_id) references farmer(farmer_id) on delete cascade,
+    foreign key(post_response_id) references post_advertisement_responses(post_response_id) on delete cascade
 );
 
 -----------------------------------------
@@ -150,6 +190,7 @@ create table crop_orders (
     address text,
     is_received_by_supplier boolean,
     order_status varchar(50),
+    cancel_reason text,
     foreign key(sell_id) references sell_crop_details(sell_id) on delete cascade,
     foreign key(supplier_id) references supplier(supplier_id) on delete cascade
 );
@@ -183,44 +224,6 @@ create table crop_payment (
     foreign key(order_id_ref) references crop_orders(order_id_ref) on delete cascade
 );
 -----------------------------------------
-
-drop table if exists course cascade;
-create table course (
-	course_id serial primary key,
-    course_name varchar(100),
-    description text,
-    duration_in_days int,
-    active_deactive boolean
-);
-
-drop table if exists course_enrolled cascade;
-create table course_enrolled (
-	enrollment_id serial primary key,
-	farmer_id int,
-	course_id int,
-    enrollment_date date,
-    end_of_enrollment date,
-    foreign key(farmer_id) references farmer(farmer_id) on delete cascade,
-    foreign key(course_id) references course(course_id) on delete cascade
-
-);
-
---FARMER MODULE
-drop table if exists post_advertisement_responses cascade;
-create table post_advertisement_responses (
-	post_response_id serial primary key,
-    post_id int,
-    farmer_id int,
-    message text,
-    price float,
-    quantity varchar(200),
-    is_accepted boolean default false,
-    preferred_payment_mode varchar(50),
-    date_created timestamp,
-    date_modified timestamp,
-    foreign key(post_id) references post_advertisement(post_id) on delete cascade,
-    foreign key(farmer_id) references farmer(farmer_id) on delete cascade    
-);
 
 drop table if exists user_tokens;
 create table user_tokens (
