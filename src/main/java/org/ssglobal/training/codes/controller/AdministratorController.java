@@ -215,6 +215,7 @@ public class AdministratorController {
 		updatedComplaint.setAdminReplyMessage(payload.get("adminReplyMessage").toString());
 		updatedComplaint.setReadDate(LocalDateTime.now());
 		updatedComplaint.setIsRead(Boolean.valueOf(payload.get("isRead").toString()));
+		updatedComplaint.setIsResolved(Boolean.valueOf(payload.get("isResolved").toString()));
 		FarmerComplaint farmingComplaint = service.updateIntoFarmerComplaint(updatedComplaint);
 		GenericEntity<FarmerComplaint> farmingTipEntity = null;
 		try {

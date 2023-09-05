@@ -269,6 +269,7 @@ public class AdministratorRepository {
 			}
 			
 			updatedComplaint.setIsRead(farmerComplaint.getIsRead());
+			updatedComplaint.setIsResolved(farmerComplaint.getIsResolved());
 			sess.merge(updatedComplaint);
 			tx.commit();
 			return updatedComplaint;
