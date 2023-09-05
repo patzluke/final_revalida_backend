@@ -143,6 +143,7 @@ create table post_advertisement_responses (
     quantity varchar(200),
     is_accepted boolean default false,
     is_final_offer_submitted boolean default false,
+    is_final_offer_accepted boolean default false,
     preferred_payment_mode varchar(50),
     date_created timestamp,
     date_modified timestamp,

@@ -57,6 +57,9 @@ public class PostAdvertisementResponse implements Serializable {
 	
 	@Column(name="is_final_offer_submitted")
 	private Boolean isFinalOfferSubmitted;
+	
+	@Column(name="is_final_offer_accepted")
+	private Boolean isFinalOfferAccepted;
 
 	private String message;
 
