@@ -45,6 +45,9 @@ public class CropPayment implements Serializable {
 	
 	@Column(name = "proof_of_payment_image")
 	private String proofOfPaymentImage;
+	
+	@Column(name = "transaction_reference_number")
+	private String transcationReferenceNumber;
 
 	//bi-directional many-to-one association to CropOrder
 	@ManyToOne

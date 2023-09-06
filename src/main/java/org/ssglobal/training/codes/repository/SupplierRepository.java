@@ -80,6 +80,8 @@ public class SupplierRepository {
 			} catch (NullPointerException e) {	}
 			try {
 				user.setValidIdPicture(payload.get("validIdPicture").toString());
+				user.setValidIdNumber(payload.get("validIdNumber").toString());
+				user.setValidIdType(payload.get("validIdType").toString());
 			} catch (NullPointerException e) {	}
 			sess.merge(user);
 			tx.commit();
@@ -254,13 +256,15 @@ public class SupplierRepository {
 	public UserNotifications insertIntoUserNotifications(Map<String, Object> payload) {
 		Transaction tx = null;
 		try (Session sess = sf.openSession()) {
+			tx = sess.beginTransaction();
+
 			UserNotifications notification = new UserNotifications();
 			String userId = ((Map<String, Object>) ((Map<String, Object>) payload.get("farmer")).get("user")).get("userId").toString();
 			notification.setUser(findUserByUserId(Integer.valueOf(userId)).orElse(null));
+			notification.setNotificationTitle(payload.get("notificationTitle").toString());
 			notification.setNotificationMessage(payload.get("notificationMessage").toString());
 			notification.setIsRead(false);
 			notification.setDateCreated(LocalDateTime.now());
-			tx = sess.beginTransaction();
 		
 			sess.persist(notification);
 			tx.commit();
@@ -310,6 +314,7 @@ public class SupplierRepository {
 			
 			CropPayment cropPayment = sess.get(CropPayment.class, payload.get("paymentId").toString());
 			Users user = findOneByUserId(Integer.valueOf(payload.get("userId").toString())).orElse(null).getUser();
+			cropPayment.setTranscationReferenceNumber(payload.get("transactionNumber").toString());
 			cropPayment.setPayDate(LocalDateTime.now());
 			cropPayment.setPaidBy("%s %s %s".formatted(user.getFirstName(), user.getMiddleName(), user.getLastName()));
 			cropPayment.setProofOfPaymentImage(payload.get("proofOfPaymentImage").toString());

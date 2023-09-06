@@ -74,6 +74,12 @@ public class Users implements Serializable {
 	
 	@Column(name = "valid_id_picture")
 	private String validIdPicture;
+	
+	@Column(name = "valid_id_number")
+	private String validIdNumber;
+	
+	@Column(name = "valid_id_type")
+	private String validIdType;
 
 	@Column(name="last_name")
 	private String lastName;

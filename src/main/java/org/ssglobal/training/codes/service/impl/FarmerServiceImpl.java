@@ -59,6 +59,7 @@ public class FarmerServiceImpl implements FarmerService {
 	
 	@Override
 	public PostAdvertisementResponse insertIntoPostAdvertisementResponse(Map<String, Object> payload) {
+		repository.insertIntoUserNotificationsForSendOffer(payload);
 		return repository.insertIntoPostAdvertisementResponse(payload);
 	}
 	
@@ -89,6 +90,7 @@ public class FarmerServiceImpl implements FarmerService {
 	
 	@Override
 	public CropPayment insertIntoSellCropDetailsAndCropOrdersAndPayment(Map<String, Object> payload) {
+		repository.insertIntoUserNotificationsForSendFinalOffer(payload);
 		return repository.insertIntoSellCropDetailsAndCropOrdersAndPayment(payload);
 	}
 
