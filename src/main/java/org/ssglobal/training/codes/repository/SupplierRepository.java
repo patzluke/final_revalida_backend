@@ -19,6 +19,7 @@ import org.ssglobal.training.codes.models.CropPayment;
 import org.ssglobal.training.codes.models.CropSpecialization;
 import org.ssglobal.training.codes.models.PostAdvertisement;
 import org.ssglobal.training.codes.models.PostAdvertisementResponse;
+import org.ssglobal.training.codes.models.SellCropDetail;
 import org.ssglobal.training.codes.models.Supplier;
 import org.ssglobal.training.codes.models.UserNotifications;
 import org.ssglobal.training.codes.models.Users;
@@ -288,6 +289,21 @@ public class SupplierRepository {
 		try (Session sess = sf.openSession()) {
 			Query<CropPayment> query = sess.createNativeQuery(sql, CropPayment.class);
 			query.setParameter("supplier_id", supplierId);
+			records = query.getResultList();
+			return Collections.unmodifiableList(records);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return Collections.unmodifiableList(records);
+	}
+	
+	// Sell Crop Details
+	public List<SellCropDetail> selectAllSellCropDetails() {
+		List<SellCropDetail> records = new ArrayList<>();
+		String sql = "select scd.* from sell_crop_details scd";
+
+		try (Session sess = sf.openSession()) {
+			Query<SellCropDetail> query = sess.createNativeQuery(sql, SellCropDetail.class);
 			records = query.getResultList();
 			return Collections.unmodifiableList(records);
 		} catch (Exception e) {

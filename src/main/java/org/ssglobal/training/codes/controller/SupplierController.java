@@ -9,6 +9,7 @@ import org.ssglobal.training.codes.models.CropPayment;
 import org.ssglobal.training.codes.models.CropSpecialization;
 import org.ssglobal.training.codes.models.PostAdvertisement;
 import org.ssglobal.training.codes.models.PostAdvertisementResponse;
+import org.ssglobal.training.codes.models.SellCropDetail;
 import org.ssglobal.training.codes.models.Supplier;
 import org.ssglobal.training.codes.service.SupplierService;
 
@@ -239,6 +240,24 @@ public class SupplierController {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+		}
+		return Response.status(Status.BAD_REQUEST).build();
+	}
+	
+	@GET
+	@Path("/get/sellcropdetails")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public Response selectAllSellCropDetails() {
+		List<SellCropDetail> cropPayments = service.selectAllSellCropDetails();
+		GenericEntity<List<SellCropDetail>> cropPaymentsEntity = null;
+		try {
+			if (!cropPayments.isEmpty()) {
+				cropPaymentsEntity = new GenericEntity<>(cropPayments) {
+				};
+				return Response.ok(cropPaymentsEntity).build();
+			}
+		} catch (Exception e) {
 			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
 		}
 		return Response.status(Status.BAD_REQUEST).build();
