@@ -190,6 +190,7 @@ create table crop_orders (
     supplier_id int,
     address text,
     is_received_by_supplier boolean,
+    is_payment_received_by_farmer boolean,
     order_status varchar(50),
     cancel_reason text,
     foreign key(sell_id) references sell_crop_details(sell_id) on delete cascade,

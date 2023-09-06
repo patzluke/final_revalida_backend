@@ -421,6 +421,7 @@ public class FarmerRepository {
 			cropOrder.setSupplier(findSupplierBySupplierId(Integer.valueOf(payload.get("supplierId").toString())).orElse(null));
 			cropOrder.setAddress(payload.get("address").toString());
 			cropOrder.setIsReceivedBySupplier(false);
+			cropOrder.setIsPaymentReceivedByFarmer(false);
 			cropOrder.setOrderStatus("To Deliver");
 			sess.persist(cropOrder);
 			
