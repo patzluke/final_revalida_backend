@@ -36,6 +36,9 @@ public class UserNotifications implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="notification_id")
 	private BigInteger notificationId;
+	
+	@Column(name="notification_title")
+	private String notificationTitle;
 
 	@Column(name="notification_message")
 	private String notificationMessage;
