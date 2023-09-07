@@ -352,6 +352,7 @@ public class SupplierRepository {
 			sess.merge(order);
 			
 			CropPayment cropPayment = sess.get(CropPayment.class, payload.get("paymentId").toString());
+			cropPayment.setCropOrder(order);
 			cropPayment.setTranscationReferenceNumber(payload.get("transcationReferenceNumber").toString());
 			cropPayment.setPayDate(LocalDateTime.now());
 			cropPayment.setPaidBy("%s %s %s".formatted(user.getFirstName(), user.getMiddleName(), user.getLastName()));
