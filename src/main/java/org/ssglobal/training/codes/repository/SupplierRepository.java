@@ -19,19 +19,20 @@ import org.ssglobal.training.codes.models.CropPayment;
 import org.ssglobal.training.codes.models.CropSpecialization;
 import org.ssglobal.training.codes.models.PostAdvertisement;
 import org.ssglobal.training.codes.models.PostAdvertisementResponse;
+import org.ssglobal.training.codes.models.SellCropDetail;
 import org.ssglobal.training.codes.models.Supplier;
 import org.ssglobal.training.codes.models.UserNotifications;
 import org.ssglobal.training.codes.models.Users;
 
 @Repository
 public class SupplierRepository {
-	
+
 	@Autowired
-    private SessionFactory sf;
-	
+	private SessionFactory sf;
+
 	@Autowired
 	private PasswordEncoder encoder;
-	
+
 	public Optional<Supplier> findOneByUserId(Integer userId) {
 		// Named Parameter
 		String sql = "SELECT * FROM supplier WHERE user_id = :user_id";
@@ -46,7 +47,7 @@ public class SupplierRepository {
 		}
 		return null;
 	}
-	
+
 	public Optional<Users> findUserByUserId(Integer userId) {
 		// Named Parameter
 		String sql = "SELECT * FROM users WHERE user_id = :user_id";
@@ -61,7 +62,7 @@ public class SupplierRepository {
 		}
 		return null;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public Supplier updateSupplierInfo(Map<String, Object> payload) {
 		Transaction tx = null;
@@ -89,7 +90,7 @@ public class SupplierRepository {
 		}
 		return null;
 	}	
-	
+
 	public Optional<Supplier> findOneBySupplierId(Integer supplierId) {
 		// Named Parameter
 		String sql = "SELECT * FROM supplier WHERE supplier_id = :supplier_id";
@@ -104,7 +105,7 @@ public class SupplierRepository {
 		}
 		return null;
 	}
-	
+
 	public Optional<CropSpecialization> findOneCropSpecializationById(Integer cropSpecializationId) {
 		// Named Parameter
 		String sql = "SELECT * FROM crop_specialization WHERE crop_specialization_id = :crop_specialization_id";
@@ -119,7 +120,7 @@ public class SupplierRepository {
 		}
 		return null;
 	}
-	
+
 	// Post Advertisement
 	public List<PostAdvertisement> selectPostAdvertisementBySupplierId(Integer supplierId) {
 		List<PostAdvertisement> records = new ArrayList<>();
@@ -136,7 +137,7 @@ public class SupplierRepository {
 		}
 		return Collections.unmodifiableList(records);
 	}
-	
+
 	public PostAdvertisement insertIntoPostAdvertisement(Map<String, Object> payload) {		
 		PostAdvertisement advertisement = new PostAdvertisement();
 		advertisement.setSupplier(findOneBySupplierId(Integer.valueOf(payload.get("supplierId").toString())).orElse(null));
@@ -152,7 +153,7 @@ public class SupplierRepository {
 		Transaction tx = null;
 		try (Session sess = sf.openSession()) {
 			tx = sess.beginTransaction();
-			
+
 			sess.persist(advertisement);
 			tx.commit();
 			return advertisement;
@@ -161,12 +162,12 @@ public class SupplierRepository {
 		}
 		return null;
 	}
-	
+
 	public PostAdvertisement updateIntoPostAdvertisement(Map<String, Object> payload) {
 		Transaction tx = null;
 		try (Session sess = sf.openSession()) {
 			tx = sess.beginTransaction();
-		
+
 			PostAdvertisement advertisement = sess.get(PostAdvertisement.class, Integer.valueOf(payload.get("postId").toString()));
 			advertisement.setCropSpecialization(findOneCropSpecializationById(Integer.valueOf(payload.get("cropSpecializationId").toString())).orElse(null));
 			advertisement.setCropName(payload.get("cropName").toString());
@@ -184,7 +185,7 @@ public class SupplierRepository {
 		}
 		return null;
 	}
-	
+
 	public PostAdvertisement softDeletePostAdvertisement(Integer postId) {
 		Transaction tx = null;
 		try (Session sess = sf.openSession()) {
@@ -199,7 +200,7 @@ public class SupplierRepository {
 		}
 		return null;
 	}
-	
+
 	//Crop Specialization
 	public List<CropSpecialization> selectAllCropSpecialization() {
 		List<CropSpecialization> records = new ArrayList<>();
@@ -215,7 +216,7 @@ public class SupplierRepository {
 		}
 		return Collections.unmodifiableList(records);
 	}
-	
+
 	// Post Advertisement Respones
 	public List<PostAdvertisementResponse> selectAllPostAdvertisementResponsesByPostId(Integer postId) {
 		List<PostAdvertisementResponse> records = new ArrayList<>();
@@ -232,12 +233,12 @@ public class SupplierRepository {
 		}
 		return Collections.unmodifiableList(records);
 	}
-	
+
 	public PostAdvertisementResponse updatePostAdvertisementResponsesIsAcceptedStatus(Map<String, Object> payload) {
 		Transaction tx = null;
 		try (Session sess = sf.openSession()) {
 			tx = sess.beginTransaction();
-		
+
 			PostAdvertisementResponse advertisementResponse = sess.get(PostAdvertisementResponse.class, Integer.valueOf(payload.get("postResponseId").toString()));
 			advertisementResponse.setIsAccepted(Boolean.valueOf(payload.get("isAccepted").toString()));
 			sess.merge(advertisementResponse);
@@ -248,7 +249,7 @@ public class SupplierRepository {
 		}
 		return null;
 	}
-	
+
 	// Post Advertisement Responses
 	@SuppressWarnings("unchecked")
 	public UserNotifications insertIntoUserNotifications(Map<String, Object> payload) {
@@ -261,7 +262,7 @@ public class SupplierRepository {
 			notification.setIsRead(false);
 			notification.setDateCreated(LocalDateTime.now());
 			tx = sess.beginTransaction();
-		
+
 			sess.persist(notification);
 			tx.commit();
 			return notification;
@@ -272,7 +273,7 @@ public class SupplierRepository {
 		}
 		return null;
 	}
-	
+
 	// Crop Payment
 	public List<CropPayment> selectAllCropPaymentBySupplier(Integer supplierId) {
 		List<CropPayment> records = new ArrayList<>();
@@ -280,7 +281,7 @@ public class SupplierRepository {
 				+ "inner join crop_orders co on cp.order_id_ref = co.order_id_ref\r\n"
 				+ "inner join sell_crop_details scd on scd.sell_id = co.sell_id\r\n"
 				+ "where co.supplier_id = :supplier_id order by pay_date";
-		
+
 		try (Session sess = sf.openSession()) {
 			Query<CropPayment> query = sess.createNativeQuery(sql, CropPayment.class);
 			query.setParameter("supplier_id", supplierId);
@@ -291,30 +292,31 @@ public class SupplierRepository {
 		}
 		return Collections.unmodifiableList(records);
 	}
-	
+
+
 	@SuppressWarnings("unchecked")
 	public CropPayment updateCropPaymentStatus(Map<String, Object> payload) {
 		Transaction tx = null;
 		try (Session sess = sf.openSession()) {
 			tx = sess.beginTransaction();
-			
+
 			PostAdvertisementResponse response = sess.get(PostAdvertisementResponse.class, Integer.valueOf(payload.get("postResponseId").toString()));
 			response.setIsFinalOfferAccepted(true);
 			sess.merge(response);
-			
+
 			String orderIdRef = ((Map<String, Object>) ((Map<String, Object>) payload.get("cropOrder"))).get("orderIdRef").toString();
 			String address = ((Map<String, Object>) ((Map<String, Object>) payload.get("cropOrder"))).get("address").toString();
 			CropOrder order = sess.get(CropOrder.class, orderIdRef);
 			order.setAddress(address);
 			sess.merge(order);
-			
+
 			CropPayment cropPayment = sess.get(CropPayment.class, payload.get("paymentId").toString());
 			Users user = findOneByUserId(Integer.valueOf(payload.get("userId").toString())).orElse(null).getUser();
 			cropPayment.setPayDate(LocalDateTime.now());
 			cropPayment.setPaidBy("%s %s %s".formatted(user.getFirstName(), user.getMiddleName(), user.getLastName()));
 			cropPayment.setProofOfPaymentImage(payload.get("proofOfPaymentImage").toString());
 			sess.merge(cropPayment);
-			
+
 			tx.commit();
 			return cropPayment;
 		} catch (Exception e) {
@@ -322,4 +324,22 @@ public class SupplierRepository {
 		}
 		return null;
 	}
+
+	public List<SellCropDetail> getSellCropDetailByFarmerId(){
+		List<SellCropDetail> records = new ArrayList<>();
+		String sql = "select sell_crop_details.* from sell_crop_details "
+				+ "inner join farmer on sell_crop_details.farmer_id = farmer.farmer_id "
+				+ "inner join crop_orders on sell_crop_details.sell_id = crop_orders.sell_id "
+				+ "inner join crop_payment on crop_orders.order_id_ref = crop_payment.order_id_ref";
+
+		try (Session sess = sf.openSession()) {
+			Query<SellCropDetail> query = sess.createNativeQuery(sql, SellCropDetail.class);
+			records = query.getResultList();
+			return Collections.unmodifiableList(records);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return Collections.unmodifiableList(records);
+	}
+
 }

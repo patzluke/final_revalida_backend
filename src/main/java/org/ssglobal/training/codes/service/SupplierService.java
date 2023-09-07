@@ -8,6 +8,7 @@ import org.ssglobal.training.codes.models.CropPayment;
 import org.ssglobal.training.codes.models.CropSpecialization;
 import org.ssglobal.training.codes.models.PostAdvertisement;
 import org.ssglobal.training.codes.models.PostAdvertisementResponse;
+import org.ssglobal.training.codes.models.SellCropDetail;
 import org.ssglobal.training.codes.models.Supplier;
 
 public interface SupplierService {
@@ -31,4 +32,7 @@ public interface SupplierService {
 	//Crop Payment
 	List<CropPayment> selectAllCropPaymentBySupplier(Integer supplierId);
 	CropPayment updateCropPaymentStatus(Map<String, Object> payload);
+
+//	List<SellCropDetail> getSellCropDetailByFarmerId(Integer farmerId);
+	List<SellCropDetail> getSellCropDetailByFarmerId();
 }

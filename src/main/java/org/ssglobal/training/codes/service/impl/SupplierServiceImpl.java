@@ -10,6 +10,7 @@ import org.ssglobal.training.codes.models.CropPayment;
 import org.ssglobal.training.codes.models.CropSpecialization;
 import org.ssglobal.training.codes.models.PostAdvertisement;
 import org.ssglobal.training.codes.models.PostAdvertisementResponse;
+import org.ssglobal.training.codes.models.SellCropDetail;
 import org.ssglobal.training.codes.models.Supplier;
 import org.ssglobal.training.codes.repository.SupplierRepository;
 import org.ssglobal.training.codes.service.SupplierService;
@@ -78,4 +79,10 @@ public class SupplierServiceImpl implements SupplierService {
 	public CropPayment updateCropPaymentStatus(Map<String, Object> payload) {
 		return repository.updateCropPaymentStatus(payload);
 	}
+
+	@Override
+	public List<SellCropDetail> getSellCropDetailByFarmerId() {
+		return repository.getSellCropDetailByFarmerId();
+	}
+
 }
