@@ -182,35 +182,6 @@ public class FarmerRepository {
 		return Collections.unmodifiableList(records);
 	}
 	
-	public double calculateTotalSales(Integer farmerId) {
-	    double totalSales = 0.0; // Initialize totalSales
-	    
-	    String sql = "select sum(price) as total_price from sell_crop_details where farmer_id = :farmer_id";
-	    try (Session session = sf.openSession()) {
-	        Query<Double> query = session.createNativeQuery(sql, Double.class);
-	        query.setParameter("farmer_id", farmerId);
-	        List<Double> prices = query.getResultList();
-
-	        if (prices != null && !prices.isEmpty()) {
-	            for (Double price : prices) {
-	                totalSales += price;
-	            }
-	        }
-
-	    } catch (HibernateException e) {
-	        // Handle Hibernate-specific exceptions
-	        // Log the exception or perform error handling
-	        e.printStackTrace();
-	    } catch (Exception e) {
-	        // Handle other exceptions
-	        // Log the exception or perform error handling
-	        e.printStackTrace();
-	    }
-	    
-	    return totalSales;
-	}
-
-	
 	public FarmerComplaint insertIntoFarmerComplaint(Map<String, Object> payload) {		
 		FarmerComplaint complaint = new FarmerComplaint();
 		complaint.setActiveDeactive(true);
@@ -265,6 +236,34 @@ public class FarmerRepository {
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	public double calculateTotalSales(Integer farmerId) {
+	    double totalSales = 0.0; // Initialize totalSales
+	    
+	    String sql = "select sum(price) as total_price from sell_crop_details where farmer_id = :farmer_id";
+	    try (Session session = sf.openSession()) {
+	        Query<Double> query = session.createNativeQuery(sql, Double.class);
+	        query.setParameter("farmer_id", farmerId);
+	        List<Double> prices = query.getResultList();
+
+	        if (prices != null && !prices.isEmpty()) {
+	            for (Double price : prices) {
+	                totalSales += price;
+	            }
+	        }
+
+	    } catch (HibernateException e) {
+	        // Handle Hibernate-specific exceptions
+	        // Log the exception or perform error handling
+	        e.printStackTrace();
+	    } catch (Exception e) {
+	        // Handle other exceptions
+	        // Log the exception or perform error handling
+	        e.printStackTrace();
+	    }
+	    
+	    return totalSales;
 	}
 	
 	// Post Advertisement
@@ -440,9 +439,8 @@ public class FarmerRepository {
 			cropOrder.setSellCropDetail(sellCropDetail);
 			cropOrder.setSupplier(findSupplierBySupplierId(Integer.valueOf(payload.get("supplierId").toString())).orElse(null));
 			cropOrder.setAddress(payload.get("address").toString());
-			cropOrder.setIsReceivedBySupplier(false);
 			cropOrder.setIsPaymentReceivedByFarmer(false);
-			cropOrder.setOrderStatus("To Deliver");
+			cropOrder.setOrderStatus("Not Yet Paid");
 			sess.persist(cropOrder);
 			
 			CropPayment cropPayment = new CropPayment();
@@ -458,6 +456,31 @@ public class FarmerRepository {
 		return null;
 	}
 	
+	public CropPayment updateCropOrderStatus(Map<String, Object> payload) {
+		Transaction tx = null;
+		try (Session sess = sf.openSession()) {
+			tx = sess.beginTransaction();			
+			
+			CropOrder order = sess.get(CropOrder.class, payload.get("orderIdRef").toString());
+			order.setOrderStatus(payload.get("orderStatus").toString());
+			if (order.getOrderStatus().equals("Completed")) {
+				order.setOrderReceivedDate(LocalDateTime.now());
+			}
+			order.setPaymentReceivedDate(LocalDateTime.now());
+			sess.merge(order);
+						
+			CropPayment cropPayment = sess.get(CropPayment.class, payload.get("paymentId").toString());
+			cropPayment.setCropOrder(order);
+			sess.merge(cropPayment);
+			
+			tx.commit();
+			return cropPayment;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
 	public UserNotifications insertIntoUserNotificationsForSendOffer(Map<String, Object> payload) {
 		Transaction tx = null;
 		try (Session sess = sf.openSession()) {
@@ -466,7 +489,7 @@ public class FarmerRepository {
 			Users user = findUserByUserId(Integer.valueOf(payload.get("userId").toString())).orElse(null);
 			Farmer farmer = findOneByFarmerId(Integer.valueOf(payload.get("farmerId").toString())).orElse(null);
 			notification.setUser(user);
-			notification.setNotificationTitle("Offer is made");
+			notification.setNotificationTitle("Initial offer made");
 			notification.setNotificationMessage("%s %s %s, made an offer to your %s advertisement."
 					.formatted(farmer.getUser().getFirstName(), farmer.getUser().getMiddleName(), farmer.getUser().getLastName(), payload.get("cropName")));
 			notification.setIsRead(false);
