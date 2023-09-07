@@ -13,6 +13,7 @@ import org.ssglobal.training.codes.models.Farmer;
 import org.ssglobal.training.codes.models.FarmerComplaint;
 import org.ssglobal.training.codes.models.FarmingTip;
 import org.ssglobal.training.codes.models.Supplier;
+import org.ssglobal.training.codes.models.SupplierComplaint;
 import org.ssglobal.training.codes.repository.AdministratorRepository;
 import org.ssglobal.training.codes.service.AdministratorService;
 
@@ -110,6 +111,16 @@ public class AdministratorServiceImpl implements AdministratorService {
 	@Override
 	public Course deleteCourse(Integer courseId) {
 		return repository.deleteCourse(courseId);
+	}
+
+	@Override
+	public List<SupplierComplaint> selectSupplierComplaints() {
+		return repository.selectSupplierComplaints();
+	}
+
+	@Override
+	public SupplierComplaint updateIntoSupplierComplaint(SupplierComplaint supplierComplaint) {
+		return repository.updateIntoSupplierComplaint(supplierComplaint);
 	}
 	
 	

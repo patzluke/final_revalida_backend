@@ -19,6 +19,7 @@ import org.ssglobal.training.codes.models.Farmer;
 import org.ssglobal.training.codes.models.FarmerComplaint;
 import org.ssglobal.training.codes.models.FarmingTip;
 import org.ssglobal.training.codes.models.Supplier;
+import org.ssglobal.training.codes.models.SupplierComplaint;
 import org.ssglobal.training.codes.models.Users;
 
 @Repository
@@ -272,6 +273,46 @@ public class AdministratorRepository {
 			
 			updatedComplaint.setIsRead(farmerComplaint.getIsRead());
 			updatedComplaint.setIsResolved(farmerComplaint.getIsResolved());
+			sess.merge(updatedComplaint);
+			tx.commit();
+			return updatedComplaint;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	// Supplier Complaints
+	public List<SupplierComplaint> selectSupplierComplaints() {
+		List<SupplierComplaint> records = new ArrayList<>();
+		// this is HQL so make supervisor to Supervisor and with ref var
+		// if you make Supervisor lower case, it will throw an error
+		String sql = "select * from supplier_complaint where active_deactive = 't' order by supplier_complaint_id";
+
+		try (Session sess = sf.openSession()) {
+			Query<SupplierComplaint> query = sess.createNativeQuery(sql, SupplierComplaint.class);
+			records = query.getResultList();
+
+			return Collections.unmodifiableList(records);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return Collections.unmodifiableList(records);
+	}
+
+	public SupplierComplaint updateIntoSupplierComplaint(SupplierComplaint supplierComplaint) {
+		Transaction tx = null;
+		try (Session sess = sf.openSession()) {
+			tx = sess.beginTransaction();
+		
+			SupplierComplaint updatedComplaint = sess.get(SupplierComplaint.class, supplierComplaint.getSupplierComplaintId());
+			updatedComplaint.setAdminReplyMessage(supplierComplaint.getAdminReplyMessage());
+			if (updatedComplaint.getReadDate() == null) {
+				updatedComplaint.setReadDate(supplierComplaint.getReadDate());				
+			}
+			
+			updatedComplaint.setIsRead(supplierComplaint.getIsRead());
+			updatedComplaint.setIsResolved(supplierComplaint.getIsResolved());
 			sess.merge(updatedComplaint);
 			tx.commit();
 			return updatedComplaint;

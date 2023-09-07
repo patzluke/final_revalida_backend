@@ -17,10 +17,12 @@ import org.springframework.stereotype.Repository;
 import org.ssglobal.training.codes.models.CropOrder;
 import org.ssglobal.training.codes.models.CropPayment;
 import org.ssglobal.training.codes.models.CropSpecialization;
+import org.ssglobal.training.codes.models.FarmerComplaint;
 import org.ssglobal.training.codes.models.PostAdvertisement;
 import org.ssglobal.training.codes.models.PostAdvertisementResponse;
 import org.ssglobal.training.codes.models.SellCropDetail;
 import org.ssglobal.training.codes.models.Supplier;
+import org.ssglobal.training.codes.models.SupplierComplaint;
 import org.ssglobal.training.codes.models.UserNotifications;
 import org.ssglobal.training.codes.models.Users;
 
@@ -410,5 +412,80 @@ public class SupplierRepository {
 			System.out.println(e.getMessage());
 		}
 		return Collections.unmodifiableList(records);
+	}
+  
+  	//Supplier Complaint
+	public List<SupplierComplaint> selectSupplierComplaints(Integer supplierId) {
+		List<SupplierComplaint> records = new ArrayList<>();
+		// this is HQL so make supervisor to Supervisor and with ref var
+		// if you make Supervisor lower case, it will throw an error
+		String sql = "select * from supplier_complaint where supplier_id = :supplier_id order by supplier_complaint_id desc";
+
+		try (Session sess = sf.openSession()) {
+			Query<SupplierComplaint> query = sess.createNativeQuery(sql, SupplierComplaint.class);
+			query.setParameter("supplier_id", supplierId);
+			records = query.getResultList();
+
+			return Collections.unmodifiableList(records);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return Collections.unmodifiableList(records);
+	}
+	
+	public SupplierComplaint insertIntoSupplierComplaint(Map<String, Object> payload) {		
+		SupplierComplaint complaint = new SupplierComplaint();
+		complaint.setActiveDeactive(true);
+		complaint.setComplaintTitle(payload.get("complaintTitle").toString());
+		complaint.setComplaintType(payload.get("complaintType").toString());
+		complaint.setComplaintMessage(payload.get("complaintMessage").toString());
+		complaint.setSupplier(findOneBySupplierId(Integer.valueOf(payload.get("supplierId").toString())).orElse(null));
+		complaint.setDateSubmitted(LocalDateTime.now());
+		complaint.setImage(payload.get("complaintImage").toString());
+		
+		
+		Transaction tx = null;
+		try (Session sess = sf.openSession()) {
+			tx = sess.beginTransaction();
+			
+			sess.persist(complaint);
+			tx.commit();
+			return complaint;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public SupplierComplaint updateIntoSupplierComplaint(SupplierComplaint supplierComplaint) {
+		Transaction tx = null;
+		try (Session sess = sf.openSession()) {
+			tx = sess.beginTransaction();
+		
+			SupplierComplaint updatedComplaint = sess.get(SupplierComplaint.class, supplierComplaint.getSupplierComplaintId());
+			updatedComplaint.setComplaintTitle(supplierComplaint.getComplaintTitle());
+			updatedComplaint.setComplaintMessage(supplierComplaint.getComplaintMessage());
+			sess.merge(updatedComplaint);
+			tx.commit();
+			return updatedComplaint;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public SupplierComplaint softDeleteSupplierComplaint(Integer supplierComplaintId) {
+		Transaction tx = null;
+		try (Session sess = sf.openSession()) {
+			tx = sess.beginTransaction();
+			SupplierComplaint updatedComplaint = sess.get(SupplierComplaint.class, supplierComplaintId);
+			updatedComplaint.setActiveDeactive(false);
+			sess.merge(updatedComplaint);
+			tx.commit();
+			return updatedComplaint;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 }

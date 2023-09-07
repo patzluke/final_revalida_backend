@@ -12,6 +12,7 @@ import org.ssglobal.training.codes.models.PostAdvertisement;
 import org.ssglobal.training.codes.models.PostAdvertisementResponse;
 import org.ssglobal.training.codes.models.SellCropDetail;
 import org.ssglobal.training.codes.models.Supplier;
+import org.ssglobal.training.codes.models.SupplierComplaint;
 import org.ssglobal.training.codes.repository.SupplierRepository;
 import org.ssglobal.training.codes.service.SupplierService;
 
@@ -95,5 +96,26 @@ public class SupplierServiceImpl implements SupplierService {
 	@Override
 	public CropPayment updateCropOrderStatus(Map<String, Object> payload) {
 		return repository.updateCropOrderStatus(payload);
+	}
+
+	// Supplier complaint
+	@Override
+	public List<SupplierComplaint> selectSupplierComplaints(Integer supplierId) {
+		return repository.selectSupplierComplaints(supplierId);
+	}
+
+	@Override
+	public SupplierComplaint insertIntoSupplierComplaint(Map<String, Object> payload) {
+		return repository.insertIntoSupplierComplaint(payload);
+	}
+
+	@Override
+	public SupplierComplaint updateIntoSupplierComplaint(SupplierComplaint supplierComplaint) {
+		return repository.updateIntoSupplierComplaint(supplierComplaint);
+	}
+
+	@Override
+	public SupplierComplaint softDeleteSupplierComplaint(Integer supplierComplaintId) {
+		return repository.softDeleteSupplierComplaint(supplierComplaintId);
 	}
 }

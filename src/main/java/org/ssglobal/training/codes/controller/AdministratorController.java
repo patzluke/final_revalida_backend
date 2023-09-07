@@ -12,6 +12,7 @@ import org.ssglobal.training.codes.models.Farmer;
 import org.ssglobal.training.codes.models.FarmerComplaint;
 import org.ssglobal.training.codes.models.FarmingTip;
 import org.ssglobal.training.codes.models.Supplier;
+import org.ssglobal.training.codes.models.SupplierComplaint;
 import org.ssglobal.training.codes.service.AdministratorService;
 
 import jakarta.ws.rs.Consumes;
@@ -205,6 +206,7 @@ public class AdministratorController {
 		return Response.status(Status.BAD_REQUEST).build();
 	}
 	
+	// Farmer Complaints
 	@PUT
 	@Path("/update/farmercomplaints")
     @Produces({ MediaType.APPLICATION_JSON })
@@ -222,6 +224,49 @@ public class AdministratorController {
 			if (farmingComplaint != null) {
 				farmingTipEntity = new GenericEntity<>(farmingComplaint) {};
 				return Response.ok(farmingTipEntity).build();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+		}
+		return Response.status(Status.BAD_REQUEST).build();
+	}
+	
+	// Supplier Complaint
+	@GET
+	@Path("/get/suppliercomplaints")
+    @Produces({ MediaType.APPLICATION_JSON })
+	public Response selectSupplierComplaints() {
+		List<SupplierComplaint> supplierComplaints = service.selectSupplierComplaints();
+		GenericEntity<List<SupplierComplaint>> supplierComplaintsEntity = null;
+		try {
+			if (!supplierComplaints.isEmpty()) {
+				supplierComplaintsEntity = new GenericEntity<>(supplierComplaints) {};
+				return Response.ok(supplierComplaintsEntity).build();
+			}
+		} catch (Exception e) {
+			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+		}
+		return Response.status(Status.BAD_REQUEST).build();
+	}
+	
+	@PUT
+	@Path("/update/suppliercomplaints")
+    @Produces({ MediaType.APPLICATION_JSON })
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public Response updateIntoSupplierComplaint(Map<String, Object> payload) {
+		SupplierComplaint updatedComplaint = new SupplierComplaint();
+		updatedComplaint.setSupplierComplaintId(Integer.valueOf(payload.get("supplierComplaintId").toString()));
+		updatedComplaint.setAdminReplyMessage(payload.get("adminReplyMessage").toString());
+		updatedComplaint.setReadDate(LocalDateTime.now());
+		updatedComplaint.setIsRead(Boolean.valueOf(payload.get("isRead").toString()));
+		updatedComplaint.setIsResolved(Boolean.valueOf(payload.get("isResolved").toString()));
+		SupplierComplaint supplierComplaint = service.updateIntoSupplierComplaint(updatedComplaint);
+		GenericEntity<SupplierComplaint> supplierComplaintEntity = null;
+		try {
+			if (supplierComplaint != null) {
+				supplierComplaintEntity = new GenericEntity<>(supplierComplaint) {};
+				return Response.ok(supplierComplaintEntity).build();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
