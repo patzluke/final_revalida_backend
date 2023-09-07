@@ -266,7 +266,7 @@ public class SupplierController {
 	
 	@GET
 	@Path("/select/crop-detail")
-	@Produces({MediaType.APPLICATION_JSON})			
+	@Produces(MediaType.APPLICATION_JSON)			
 	public Response selectCropDetailByUserId() {
 		List<SellCropDetail> result = service.getSellCropDetailByFarmerId();
 		GenericEntity<List<SellCropDetail>> sellCropDetailEntity = null;
@@ -275,9 +275,15 @@ public class SupplierController {
 				sellCropDetailEntity = new GenericEntity<>(result) {	
 				};
 				return Response.ok(sellCropDetailEntity).build();
+			} 
+		}catch (Exception e) {
+			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+		}
+		return Response.status(Status.BAD_REQUEST).build();
+	}
 	@GET
 	@Path("/get/sellcropdetails")
-	@Produces({ MediaType.APPLICATION_JSON })
+	@Produces( MediaType.APPLICATION_JSON )
 	public Response selectAllSellCropDetails() {
 		List<SellCropDetail> cropPayments = service.selectAllSellCropDetails();
 		GenericEntity<List<SellCropDetail>> cropPaymentsEntity = null;
