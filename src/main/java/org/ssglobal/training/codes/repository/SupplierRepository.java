@@ -356,6 +356,7 @@ public class SupplierRepository {
 			sess.merge(order);
 			
 			CropPayment cropPayment = sess.get(CropPayment.class, payload.get("paymentId").toString());
+			cropPayment.setCropOrder(order);
 			cropPayment.setTranscationReferenceNumber(payload.get("transcationReferenceNumber").toString());
 			cropPayment.setPayDate(LocalDateTime.now());
 			cropPayment.setPaidBy("%s %s %s".formatted(user.getFirstName(), user.getMiddleName(), user.getLastName()));
@@ -370,31 +371,22 @@ public class SupplierRepository {
 		return null;
 	}
 
-@SuppressWarnings("unchecked")
-	public CropPayment updateCropPaymentStatus(Map<String, Object> payload) {
+	public CropPayment updateCropOrderStatus(Map<String, Object> payload) {
 		Transaction tx = null;
 		try (Session sess = sf.openSession()) {
-			tx = sess.beginTransaction();
-			
-			PostAdvertisementResponse response = sess.get(PostAdvertisementResponse.class, Integer.valueOf(payload.get("postResponseId").toString()));
-			response.setIsFinalOfferAccepted(true);
-			sess.merge(response);
-			Users user = findOneByUserId(Integer.valueOf(payload.get("userId").toString())).orElse(null).getUser();
-			String orderIdRef = ((Map<String, Object>) ((Map<String, Object>) payload.get("cropOrder"))).get("orderIdRef").toString();
-			String address = ((Map<String, Object>) ((Map<String, Object>) payload.get("cropOrder"))).get("address").toString();
-			CropOrder order = sess.get(CropOrder.class, orderIdRef);
-			order.setOrderStatus("proof of payment submitted");
-			order.setAddress(address);
+			tx = sess.beginTransaction();			
+
+			CropOrder order = sess.get(CropOrder.class, payload.get("orderIdRef").toString());
+			order.setOrderStatus(payload.get("orderStatus").toString());
+			if (order.getOrderStatus().equals("Completed")) {
+				order.setOrderReceivedDate(LocalDateTime.now());
+			}
 			sess.merge(order);
-			
+			System.out.println(order.getOrderReceivedDate());
 			CropPayment cropPayment = sess.get(CropPayment.class, payload.get("paymentId").toString());
 			cropPayment.setCropOrder(order);
-			cropPayment.setTranscationReferenceNumber(payload.get("transcationReferenceNumber").toString());
-			cropPayment.setPayDate(LocalDateTime.now());
-			cropPayment.setPaidBy("%s %s %s".formatted(user.getFirstName(), user.getMiddleName(), user.getLastName()));
-			cropPayment.setProofOfPaymentImage(payload.get("proofOfPaymentImage").toString());
 			sess.merge(cropPayment);
-			
+
 			tx.commit();
 			return cropPayment;
 		} catch (Exception e) {

@@ -464,7 +464,7 @@ public class FarmerRepository {
 			CropOrder order = sess.get(CropOrder.class, payload.get("orderIdRef").toString());
 			order.setOrderStatus(payload.get("orderStatus").toString());
 			if (order.getOrderStatus().equals("Completed")) {
-				order.setOrderReceivedDate(LocalDateTime.now());
+				order.setPaymentReceivedDate(LocalDateTime.now());
 			}
 			order.setPaymentReceivedDate(LocalDateTime.now());
 			sess.merge(order);
