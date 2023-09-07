@@ -35,4 +35,6 @@ public interface SupplierService {
 	
 	//Sell Crop Details
 	List<SellCropDetail> selectAllSellCropDetails();
+	
+	CropPayment updateCropOrderStatus(Map<String, Object> payload);
 }

@@ -1,6 +1,7 @@
 package org.ssglobal.training.codes.models;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -42,14 +43,17 @@ public class CropOrder implements Serializable {
 
 	private String address;
 	
-	@Column(name="is_received_by_supplier")
-	private Boolean isReceivedBySupplier;
-	
 	@Column(name="order_status")
 	private String orderStatus;
 	
 	@Column(name = "is_payment_received_by_farmer")
 	private Boolean isPaymentReceivedByFarmer;
+	
+	@Column(name = "payment_received_date")
+	private LocalDateTime paymentReceivedDate;
+	
+	@Column(name = "order_received_date")
+	private LocalDateTime orderReceivedDate;
 
 	@Column(name = "cancel_reason")
 	private String cancelReason;

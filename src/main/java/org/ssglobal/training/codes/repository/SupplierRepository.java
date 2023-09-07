@@ -252,15 +252,37 @@ public class SupplierRepository {
 		return null;
 	}
 	
-	// Post Advertisement Responses
-	@SuppressWarnings("unchecked")
 	public UserNotifications insertIntoUserNotifications(Map<String, Object> payload) {
 		Transaction tx = null;
 		try (Session sess = sf.openSession()) {
 			tx = sess.beginTransaction();
 
 			UserNotifications notification = new UserNotifications();
-			String userId = ((Map<String, Object>) ((Map<String, Object>) payload.get("farmer")).get("user")).get("userId").toString();
+			String userId = payload.get("userId").toString();
+			notification.setUser(findUserByUserId(Integer.valueOf(userId)).orElse(null));
+			notification.setNotificationTitle(payload.get("notificationTitle").toString());
+			notification.setNotificationMessage(payload.get("notificationMessage").toString());
+			notification.setIsRead(false);
+			notification.setDateCreated(LocalDateTime.now());
+		
+			sess.persist(notification);
+			tx.commit();
+			return notification;
+		} catch (NullPointerException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public UserNotifications insertIntoUserNotificationsSubmitProofOfPayment(Map<String, Object> payload) {
+		Transaction tx = null;
+		try (Session sess = sf.openSession()) {
+			tx = sess.beginTransaction();
+
+			UserNotifications notification = new UserNotifications();
+			String userId = payload.get("farmerUserId").toString();
 			notification.setUser(findUserByUserId(Integer.valueOf(userId)).orElse(null));
 			notification.setNotificationTitle(payload.get("notificationTitle").toString());
 			notification.setNotificationMessage(payload.get("notificationMessage").toString());
@@ -284,7 +306,7 @@ public class SupplierRepository {
 		String sql = "select cp.* from crop_payment cp \r\n"
 				+ "inner join crop_orders co on cp.order_id_ref = co.order_id_ref\r\n"
 				+ "inner join sell_crop_details scd on scd.sell_id = co.sell_id\r\n"
-				+ "where co.supplier_id = :supplier_id order by pay_date";
+				+ "where co.supplier_id = :supplier_id order by pay_date desc";
 		
 		try (Session sess = sf.openSession()) {
 			Query<CropPayment> query = sess.createNativeQuery(sql, CropPayment.class);
@@ -321,19 +343,43 @@ public class SupplierRepository {
 			PostAdvertisementResponse response = sess.get(PostAdvertisementResponse.class, Integer.valueOf(payload.get("postResponseId").toString()));
 			response.setIsFinalOfferAccepted(true);
 			sess.merge(response);
-			
+			Users user = findOneByUserId(Integer.valueOf(payload.get("userId").toString())).orElse(null).getUser();
 			String orderIdRef = ((Map<String, Object>) ((Map<String, Object>) payload.get("cropOrder"))).get("orderIdRef").toString();
 			String address = ((Map<String, Object>) ((Map<String, Object>) payload.get("cropOrder"))).get("address").toString();
 			CropOrder order = sess.get(CropOrder.class, orderIdRef);
+			order.setOrderStatus("proof of payment submitted");
 			order.setAddress(address);
 			sess.merge(order);
 			
 			CropPayment cropPayment = sess.get(CropPayment.class, payload.get("paymentId").toString());
-			Users user = findOneByUserId(Integer.valueOf(payload.get("userId").toString())).orElse(null).getUser();
-			cropPayment.setTranscationReferenceNumber(payload.get("transactionNumber").toString());
+			cropPayment.setTranscationReferenceNumber(payload.get("transcationReferenceNumber").toString());
 			cropPayment.setPayDate(LocalDateTime.now());
 			cropPayment.setPaidBy("%s %s %s".formatted(user.getFirstName(), user.getMiddleName(), user.getLastName()));
 			cropPayment.setProofOfPaymentImage(payload.get("proofOfPaymentImage").toString());
+			sess.merge(cropPayment);
+			
+			tx.commit();
+			return cropPayment;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public CropPayment updateCropOrderStatus(Map<String, Object> payload) {
+		Transaction tx = null;
+		try (Session sess = sf.openSession()) {
+			tx = sess.beginTransaction();			
+			
+			CropOrder order = sess.get(CropOrder.class, payload.get("orderIdRef").toString());
+			order.setOrderStatus(payload.get("orderStatus").toString());
+			if (order.getOrderStatus().equals("Completed")) {
+				order.setOrderReceivedDate(LocalDateTime.now());
+			}
+			sess.merge(order);
+			System.out.println(order.getOrderReceivedDate());
+			CropPayment cropPayment = sess.get(CropPayment.class, payload.get("paymentId").toString());
+			cropPayment.setCropOrder(order);
 			sess.merge(cropPayment);
 			
 			tx.commit();
