@@ -26,6 +26,7 @@ import org.ssglobal.training.codes.models.PostAdvertisement;
 import org.ssglobal.training.codes.models.PostAdvertisementResponse;
 import org.ssglobal.training.codes.models.SellCropDetail;
 import org.ssglobal.training.codes.models.Supplier;
+import org.ssglobal.training.codes.models.UserNotifications;
 import org.ssglobal.training.codes.models.Users;
 import org.ssglobal.training.codes.models.PostAdvertisementResponse.PostAdvertisementResponseBuilder;
 
@@ -37,6 +38,21 @@ public class FarmerRepository {
 	
 	@Autowired
 	private PasswordEncoder encoder;
+	
+	public Optional<Users> findUserByUserId(Integer userId) {
+		// Named Parameter
+		String sql = "SELECT * FROM users WHERE user_id = :user_id";
+		try (Session sess = sf.openSession()) {
+			Query<Users> query = sess.createNativeQuery(sql, Users.class);
+			query.setParameter("user_id", userId);
+			Users record = query.getSingleResultOrNull();
+
+			return Optional.of(record);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return null;
+	}
 	
 	public Optional<Farmer> findOneByUserId(Integer userId) {
 		// Named Parameter
@@ -87,6 +103,8 @@ public class FarmerRepository {
 			} catch (NullPointerException e) {	}
 			try {
 				user.setValidIdPicture(payload.get("validIdPicture").toString());
+				user.setValidIdNumber(payload.get("validIdNumber").toString());
+				user.setValidIdType(payload.get("validIdType").toString());
 			} catch (NullPointerException e) {	}
 			sess.merge(user);
 			tx.commit();
@@ -269,6 +287,7 @@ public class FarmerRepository {
 	public PostAdvertisementResponse insertIntoPostAdvertisementResponse(Map<String, Object> payload) {
 		Transaction tx = null;
 		try (Session sess = sf.openSession()) {
+			tx = sess.beginTransaction();		
 			PostAdvertisementResponseBuilder response = PostAdvertisementResponse.builder();
 			response.isAccepted(false);
 			response.isFinalOfferSubmitted(false);
@@ -279,8 +298,7 @@ public class FarmerRepository {
 			response.preferredPaymentMode(payload.get("preferredPaymentMode").toString());
 			response.farmer(findOneByFarmerId(Integer.valueOf(payload.get("farmerId").toString())).orElse(null));
 			response.postAdvertisement(findOneByAdvertisementById(Integer.valueOf(payload.get("postId").toString())).orElse(null));
-			tx = sess.beginTransaction();
-		
+			System.out.println("gumana naman");
 			sess.persist(response.build());
 			tx.commit();
 			return response.build();
@@ -432,6 +450,56 @@ public class FarmerRepository {
 			sess.persist(cropPayment);
 			tx.commit();
 			return cropPayment;
+		} catch (NullPointerException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public UserNotifications insertIntoUserNotificationsForSendOffer(Map<String, Object> payload) {
+		Transaction tx = null;
+		try (Session sess = sf.openSession()) {
+			tx = sess.beginTransaction();
+			UserNotifications notification = new UserNotifications();
+			Users user = findUserByUserId(Integer.valueOf(payload.get("userId").toString())).orElse(null);
+			Farmer farmer = findOneByFarmerId(Integer.valueOf(payload.get("farmerId").toString())).orElse(null);
+			notification.setUser(user);
+			notification.setNotificationTitle("Offer is made");
+			notification.setNotificationMessage("%s %s %s, made an offer to your %s advertisement."
+					.formatted(farmer.getUser().getFirstName(), farmer.getUser().getMiddleName(), farmer.getUser().getLastName(), payload.get("cropName")));
+			notification.setIsRead(false);
+			notification.setDateCreated(LocalDateTime.now());
+		
+			sess.persist(notification);
+			tx.commit();
+			return notification;
+		} catch (NullPointerException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public UserNotifications insertIntoUserNotificationsForSendFinalOffer(Map<String, Object> payload) {
+		Transaction tx = null;
+		try (Session sess = sf.openSession()) {
+			tx = sess.beginTransaction();
+			UserNotifications notification = new UserNotifications();
+			Supplier supplier = findSupplierBySupplierId(Integer.valueOf(payload.get("supplierId").toString())).orElse(null);
+			Farmer farmer = findOneByFarmerId(Integer.valueOf(payload.get("farmerId").toString())).orElse(null);
+			notification.setUser(supplier.getUser());
+			notification.setNotificationTitle("Final offer made");
+			notification.setNotificationMessage("%s %s %s, has already send their final offer to your %s advertisement."
+					.formatted(farmer.getUser().getFirstName(), farmer.getUser().getMiddleName(), farmer.getUser().getLastName(), payload.get("cropName")));
+			notification.setIsRead(false);
+			notification.setDateCreated(LocalDateTime.now());
+		
+			sess.persist(notification);
+			tx.commit();
+			return notification;
 		} catch (NullPointerException e) {
 			e.printStackTrace();
 		} catch (Exception e) {

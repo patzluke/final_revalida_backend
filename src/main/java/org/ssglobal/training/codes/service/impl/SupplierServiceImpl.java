@@ -85,4 +85,9 @@ public class SupplierServiceImpl implements SupplierService {
 		return repository.getSellCropDetailByFarmerId();
 	}
 
+	
+	@Override
+	public List<SellCropDetail> selectAllSellCropDetails() {
+		return repository.selectAllSellCropDetails();
+	}
 }

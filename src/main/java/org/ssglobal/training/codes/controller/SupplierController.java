@@ -275,6 +275,17 @@ public class SupplierController {
 				sellCropDetailEntity = new GenericEntity<>(result) {	
 				};
 				return Response.ok(sellCropDetailEntity).build();
+	@GET
+	@Path("/get/sellcropdetails")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public Response selectAllSellCropDetails() {
+		List<SellCropDetail> cropPayments = service.selectAllSellCropDetails();
+		GenericEntity<List<SellCropDetail>> cropPaymentsEntity = null;
+		try {
+			if (!cropPayments.isEmpty()) {
+				cropPaymentsEntity = new GenericEntity<>(cropPayments) {
+				};
+				return Response.ok(cropPaymentsEntity).build();
 			}
 		} catch (Exception e) {
 			return Response.status(Status.INTERNAL_SERVER_ERROR).build();

@@ -30,6 +30,8 @@ create table users (
     is_validated boolean,    
     image text,
     valid_id_picture text,
+    valid_id_type varchar(200),
+    valid_id_number varchar(100),
     date_created timestamp
 );
 
@@ -223,6 +225,7 @@ create table crop_payment (
     paid_by varchar(100),
     order_id_ref text,
     proof_of_payment_image text,
+    transaction_reference_number varchar(100),
     foreign key(order_id_ref) references crop_orders(order_id_ref) on delete cascade
 );
 -----------------------------------------
@@ -238,6 +241,7 @@ drop table if exists user_notifications cascade;
 create table user_notifications (
 	notification_id bigserial primary key,
 	user_id int,
+	notification_title varchar(255),
 	notification_message varchar(255),
    	is_read boolean,
    	date_created timestamp,

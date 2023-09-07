@@ -35,4 +35,7 @@ public interface SupplierService {
 
 //	List<SellCropDetail> getSellCropDetailByFarmerId(Integer farmerId);
 	List<SellCropDetail> getSellCropDetailByFarmerId();
+	
+	//Sell Crop Details
+	List<SellCropDetail> selectAllSellCropDetails();
 }
