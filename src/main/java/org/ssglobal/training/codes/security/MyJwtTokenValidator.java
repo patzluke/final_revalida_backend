@@ -63,7 +63,6 @@ public class MyJwtTokenValidator extends OncePerRequestFilter {
 			   request.getRequestURI().matches("/api/file/.*") || 
 			   request.getRequestURI().matches("/api/landing/get/postadvertisements") ||
 			   request.getRequestURI().matches("/api/landing/get/cropspecialization") ||
-			   request.getRequestURI().matches("/api/farmer/get/farmer-total-sales-by-id/") || 
 			   request.getRequestURI().matches("/api/landing/get/farmingtips");
 	
 	}

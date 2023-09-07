@@ -12,6 +12,7 @@ import org.ssglobal.training.codes.models.Farmer;
 import org.ssglobal.training.codes.models.FarmerComplaint;
 import org.ssglobal.training.codes.models.PostAdvertisement;
 import org.ssglobal.training.codes.models.PostAdvertisementResponse;
+import org.ssglobal.training.codes.models.SellCropDetail;
 import org.ssglobal.training.codes.service.FarmerService;
 
 import jakarta.ws.rs.Consumes;
@@ -91,13 +92,6 @@ public class FarmerController {
 		return Response.status(Status.BAD_REQUEST).build();
 	}
 	
-	@GET
-	@Path(value = "/get/farmer-total-sales-by-id/{farmerId}")
-	@Produces({ MediaType.APPLICATION_JSON })
-	public double getTotalSalesForFarmer(@PathParam(value = "farmerId") Integer farmerId) {
-        return service.calculateTotalSales(farmerId);
-    }
-
 	
 	@POST
 	@Path("/insert/farmercomplaints")
@@ -160,6 +154,47 @@ public class FarmerController {
 		}
 		return Response.status(Status.BAD_REQUEST).build();
 	}
+	
+	// Sales Report
+	@GET
+	@Path(value = "/get/farmer-total-sales-by-id/{farmerId}")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public double getTotalSalesForFarmer(@PathParam(value = "farmerId") Integer farmerId) {
+        return service.calculateTotalSales(farmerId);
+    }
+
+	@GET
+	@Path(value = "/get/sales-per-month/{farmerId}")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public List<Integer> getSalesDataPerMonth(@PathParam(value = "farmerId") Integer farmerId) {
+        return service.getSalesDataPerMonth(farmerId);
+    }
+
+	@GET
+	@Path(value = "/get/customer-count/{farmerId}")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public Integer countCropOrdersPerYear(@PathParam(value = "farmerId") Integer farmerId) {
+        return service.countCropOrdersPerYear(farmerId);
+    }
+	
+	@GET
+	@Path(value = "/get/three-recent-sales/{farmerId}")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public Response getTopThreeRecentSellCropDetails(@PathParam(value = "farmerId") Integer farmerId) {
+		List<CropPayment> topThree = service.getTopThreeRecentSellCropDetails(farmerId);
+		GenericEntity<List<CropPayment>> topThreeEntity = null;
+		try {
+			if (!topThree.isEmpty()) {
+				topThreeEntity = new GenericEntity<>(topThree) {
+				};
+				return Response.ok(topThreeEntity).build();
+			}
+		} catch (Exception e) {
+			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+		}
+		return Response.status(Status.BAD_REQUEST).build();
+    }
+
 	
 	@GET
 	@Path("/get/postadvertisements")

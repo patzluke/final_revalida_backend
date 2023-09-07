@@ -13,6 +13,7 @@ import org.ssglobal.training.codes.models.Farmer;
 import org.ssglobal.training.codes.models.FarmerComplaint;
 import org.ssglobal.training.codes.models.PostAdvertisement;
 import org.ssglobal.training.codes.models.PostAdvertisementResponse;
+import org.ssglobal.training.codes.models.SellCropDetail;
 import org.ssglobal.training.codes.repository.FarmerRepository;
 import org.ssglobal.training.codes.service.FarmerService;
 
@@ -104,6 +105,21 @@ public class FarmerServiceImpl implements FarmerService {
 	        e.printStackTrace(); // or use a logging framework
 	        return 0.0; // Default value or error indicator
 	    }
+	}
+
+	@Override
+	public List<Integer> getSalesDataPerMonth(Integer farmerId) {
+		return repository.getSalesDataPerMonth(farmerId);
+	}
+
+	@Override
+	public int countCropOrdersPerYear(Integer farmerId) {
+		return repository.countCropOrdersPerYear(farmerId);
+	}
+
+	@Override
+	public List<CropPayment> getTopThreeRecentSellCropDetails(Integer farmerId) {
+		return repository.getTopThreeRecentSellCropDetails(farmerId);
 	}
 
 }

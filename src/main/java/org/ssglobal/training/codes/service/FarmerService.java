@@ -11,6 +11,7 @@ import org.ssglobal.training.codes.models.Farmer;
 import org.ssglobal.training.codes.models.FarmerComplaint;
 import org.ssglobal.training.codes.models.PostAdvertisement;
 import org.ssglobal.training.codes.models.PostAdvertisementResponse;
+import org.ssglobal.training.codes.models.SellCropDetail;
 
 public interface FarmerService {
 	
@@ -41,5 +42,9 @@ public interface FarmerService {
 	List<CropPayment> selectAllCropPaymentByFarmer(Integer farmerId);
 	CropPayment insertIntoSellCropDetailsAndCropOrdersAndPayment(Map<String, Object> payload);
 	
+	// Sales Repost
 	double calculateTotalSales(Integer farmerId);
+	List<Integer> getSalesDataPerMonth(Integer farmerId);
+	int countCropOrdersPerYear(Integer farmerId);
+	List<CropPayment> getTopThreeRecentSellCropDetails(Integer farmerId);
 }
