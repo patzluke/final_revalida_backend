@@ -80,6 +80,12 @@ public class SupplierServiceImpl implements SupplierService {
 		repository.insertIntoUserNotificationsSubmitProofOfPayment(payload);
 		return repository.updateCropPaymentStatus(payload);
 	}
+
+	@Override
+	public List<SellCropDetail> getSellCropDetailByFarmerId() {
+		return repository.getSellCropDetailByFarmerId();
+	}
+
 	
 	@Override
 	public List<SellCropDetail> selectAllSellCropDetails() {
