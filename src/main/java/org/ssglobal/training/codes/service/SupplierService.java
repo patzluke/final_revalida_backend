@@ -10,6 +10,7 @@ import org.ssglobal.training.codes.models.PostAdvertisement;
 import org.ssglobal.training.codes.models.PostAdvertisementResponse;
 import org.ssglobal.training.codes.models.SellCropDetail;
 import org.ssglobal.training.codes.models.Supplier;
+import org.ssglobal.training.codes.models.SupplierComplaint;
 
 public interface SupplierService {
 
@@ -40,4 +41,10 @@ public interface SupplierService {
 	List<SellCropDetail> selectAllSellCropDetails();
 	
 	CropPayment updateCropOrderStatus(Map<String, Object> payload);
+	
+	//Supplier Complaint
+	List<SupplierComplaint> selectSupplierComplaints(Integer supplierId);
+	SupplierComplaint insertIntoSupplierComplaint(Map<String, Object> payload);
+	SupplierComplaint updateIntoSupplierComplaint(SupplierComplaint supplierComplaint);
+	SupplierComplaint softDeleteSupplierComplaint(Integer supplierComplaintId);
 }

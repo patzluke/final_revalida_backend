@@ -10,6 +10,7 @@ import org.ssglobal.training.codes.models.Farmer;
 import org.ssglobal.training.codes.models.FarmerComplaint;
 import org.ssglobal.training.codes.models.FarmingTip;
 import org.ssglobal.training.codes.models.Supplier;
+import org.ssglobal.training.codes.models.SupplierComplaint;
 
 public interface AdministratorService {
 	
@@ -39,4 +40,9 @@ public interface AdministratorService {
 	Course insertIntoCourses(Map<String, Object> payload);
 	Course updateIntoCourses(Map<String, Object> payload);
 	Course deleteCourse(Integer courseId);
+	
+	//Supplier Complaints
+	List<SupplierComplaint> selectSupplierComplaints();
+	SupplierComplaint updateIntoSupplierComplaint(SupplierComplaint supplierComplaint);
+		
 }
