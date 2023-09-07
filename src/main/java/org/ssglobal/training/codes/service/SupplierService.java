@@ -32,7 +32,12 @@ public interface SupplierService {
 	//Crop Payment
 	List<CropPayment> selectAllCropPaymentBySupplier(Integer supplierId);
 	CropPayment updateCropPaymentStatus(Map<String, Object> payload);
+
+//	List<SellCropDetail> getSellCropDetailByFarmerId(Integer farmerId);
+	List<SellCropDetail> getSellCropDetailByFarmerId();
 	
 	//Sell Crop Details
 	List<SellCropDetail> selectAllSellCropDetails();
+	
+	CropPayment updateCropOrderStatus(Map<String, Object> payload);
 }

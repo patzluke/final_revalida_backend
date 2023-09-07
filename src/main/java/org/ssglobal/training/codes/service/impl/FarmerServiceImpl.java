@@ -106,6 +106,11 @@ public class FarmerServiceImpl implements FarmerService {
 	        return 0.0; // Default value or error indicator
 	    }
 	}
+	
+	@Override
+	public CropPayment updateCropOrderStatus(Map<String, Object> payload) {
+		return repository.updateCropOrderStatus(payload);
+	}
 
 	@Override
 	public List<Integer> getSalesDataPerMonth(Integer farmerId) {

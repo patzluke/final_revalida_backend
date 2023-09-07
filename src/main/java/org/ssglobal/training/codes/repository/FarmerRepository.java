@@ -527,6 +527,8 @@ public class FarmerRepository {
 		}
 		return Collections.unmodifiableList(records);
 	}
+	
+	
 
 	public CropPayment insertIntoSellCropDetailsAndCropOrdersAndPayment(Map<String, Object> payload) {
 		Transaction tx = null;
@@ -551,9 +553,8 @@ public class FarmerRepository {
 			cropOrder.setSellCropDetail(sellCropDetail);
 			cropOrder.setSupplier(findSupplierBySupplierId(Integer.valueOf(payload.get("supplierId").toString())).orElse(null));
 			cropOrder.setAddress(payload.get("address").toString());
-			cropOrder.setIsReceivedBySupplier(false);
 			cropOrder.setIsPaymentReceivedByFarmer(false);
-			cropOrder.setOrderStatus("To Deliver");
+			cropOrder.setOrderStatus("Not Yet Paid");
 			sess.persist(cropOrder);
 			
 			CropPayment cropPayment = new CropPayment();
@@ -569,6 +570,31 @@ public class FarmerRepository {
 		return null;
 	}
 	
+	public CropPayment updateCropOrderStatus(Map<String, Object> payload) {
+		Transaction tx = null;
+		try (Session sess = sf.openSession()) {
+			tx = sess.beginTransaction();			
+			
+			CropOrder order = sess.get(CropOrder.class, payload.get("orderIdRef").toString());
+			order.setOrderStatus(payload.get("orderStatus").toString());
+			if (order.getOrderStatus().equals("Completed")) {
+				order.setPaymentReceivedDate(LocalDateTime.now());
+			}
+			order.setPaymentReceivedDate(LocalDateTime.now());
+			sess.merge(order);
+						
+			CropPayment cropPayment = sess.get(CropPayment.class, payload.get("paymentId").toString());
+			cropPayment.setCropOrder(order);
+			sess.merge(cropPayment);
+			
+			tx.commit();
+			return cropPayment;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
 	public UserNotifications insertIntoUserNotificationsForSendOffer(Map<String, Object> payload) {
 		Transaction tx = null;
 		try (Session sess = sf.openSession()) {
@@ -577,7 +603,7 @@ public class FarmerRepository {
 			Users user = findUserByUserId(Integer.valueOf(payload.get("userId").toString())).orElse(null);
 			Farmer farmer = findOneByFarmerId(Integer.valueOf(payload.get("farmerId").toString())).orElse(null);
 			notification.setUser(user);
-			notification.setNotificationTitle("Offer is made");
+			notification.setNotificationTitle("Initial offer made");
 			notification.setNotificationMessage("%s %s %s, made an offer to your %s advertisement."
 					.formatted(farmer.getUser().getFirstName(), farmer.getUser().getMiddleName(), farmer.getUser().getLastName(), payload.get("cropName")));
 			notification.setIsRead(false);

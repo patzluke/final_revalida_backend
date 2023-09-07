@@ -47,4 +47,6 @@ public interface FarmerService {
 	List<Integer> getSalesDataPerMonth(Integer farmerId);
 	int countCropOrdersPerYear(Integer farmerId);
 	List<CropPayment> getTopThreeRecentSellCropDetails(Integer farmerId);
+	
+	CropPayment updateCropOrderStatus(Map<String, Object> payload);
 }
