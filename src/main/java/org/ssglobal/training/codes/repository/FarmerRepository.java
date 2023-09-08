@@ -401,7 +401,8 @@ public class FarmerRepository {
 		String sql = "select cp.* from crop_payment cp \r\n"
 				+ "inner join crop_orders co on cp.order_id_ref = co.order_id_ref\r\n"
 				+ "inner join sell_crop_details scd on scd.sell_id = co.sell_id\r\n"
-				+ "where scd.farmer_id = :farmer_id order by pay_date";
+				+ "where scd.farmer_id = :farmer_id order by pay_date desc";
+		
 		
 		try (Session sess = sf.openSession()) {
 			Query<CropPayment> query = sess.createNativeQuery(sql, CropPayment.class);
@@ -463,7 +464,8 @@ public class FarmerRepository {
 			
 			CropOrder order = sess.get(CropOrder.class, payload.get("orderIdRef").toString());
 			order.setOrderStatus(payload.get("orderStatus").toString());
-			if (order.getOrderStatus().equals("Completed")) {
+			order.setIsPaymentReceivedByFarmer(!order.getIsPaymentReceivedByFarmer());
+			if (order.getOrderStatus().equals("To deliver")) {
 				order.setPaymentReceivedDate(LocalDateTime.now());
 			}
 			order.setPaymentReceivedDate(LocalDateTime.now());

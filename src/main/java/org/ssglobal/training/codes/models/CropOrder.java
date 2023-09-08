@@ -46,9 +46,18 @@ public class CropOrder implements Serializable {
 	@Column(name="order_status")
 	private String orderStatus;
 	
-	@Column(name = "is_payment_received_by_farmer")
-	private Boolean isPaymentReceivedByFarmer;
+	@Column(name = "is_proof_of_payment_submitted")
+	@Builder.Default
+	private Boolean isProofOfPaymentSubmitted = false;
 	
+	@Column(name = "is_crop_received_by_supplier")
+	@Builder.Default
+	private Boolean isCropReceivedBySupplier = false;
+	
+	@Column(name = "is_payment_received_by_farmer")
+	@Builder.Default
+	private Boolean isPaymentReceivedByFarmer = false;
+
 	@Column(name = "payment_received_date")
 	private LocalDateTime paymentReceivedDate;
 	

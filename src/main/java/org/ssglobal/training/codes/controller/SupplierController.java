@@ -245,25 +245,6 @@ public class SupplierController {
 		return Response.status(Status.BAD_REQUEST).build();
 	}
 	
-	// method addition
-//	@GET
-//	@Path("/get/croppayment/{farmerId}")
-//	@Produces({ MediaType.APPLICATION_JSON })
-//	public Response selectAllCropPaymentByFarmer(@PathParam(value = "farmerId") Integer farmerId) {
-//		List<CropPayment> cropPayments = service.selectAllCropPaymentByFarmer(farmerId);
-//		GenericEntity<List<CropPayment>> cropPaymentsEntity = null;
-//		try {
-//			if (!cropPayments.isEmpty()) {
-//				cropPaymentsEntity = new GenericEntity<>(cropPayments) {
-//				};
-//				return Response.ok(cropPaymentsEntity).build();
-//			}
-//		} catch (Exception e) {
-//			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
-//		}
-//		return Response.status(Status.BAD_REQUEST).build();
-//	}
-	
 	@GET
 	@Path("/select/crop-detail")
 	@Produces(MediaType.APPLICATION_JSON)			
