@@ -87,6 +87,23 @@ create table post_advertisement (
     foreign key(crop_specialization_id) references crop_specialization(crop_specialization_id) on delete cascade
 );
 
+drop table if exists supplier_complaint cascade;
+create table supplier_complaint (
+	supplier_complaint_id serial primary key,
+    supplier_id int,
+    complaint_title varchar(255),
+    complaint_type varchar(255),
+    complaint_message text,
+    admin_reply_message text,
+    is_read boolean default 'f',
+   	is_resolved boolean default 'f',
+   	read_date timestamp,
+   	date_submitted timestamp,
+   	active_deactive boolean,
+   	image text,
+    foreign key(supplier_id) references supplier(supplier_id) on delete cascade
+);
+
 --FARMERS MODULE
 drop table if exists farmer cascade;
 create table farmer (
@@ -297,6 +314,14 @@ values
 (1, 'The Mais',  'Others', 'ang pangit ng mais', '2023-08-17 12:55:00', 't'),
 (1, 'The Siomai',  'Others', 'ang pangit ng siomai', '2023-08-17 12:55:00', 't'),
 (1, 'The Carrots',  'Others', 'ang pangit ng carrots', '2023-08-17 12:55:00', 't');
+
+--insert into supplier complaints
+insert into supplier_complaint(supplier_id, complaint_title, complaint_type, complaint_message, date_submitted, active_deactive) 
+values 
+(1, 'Product quality',  'Others', 'di ko gusto pinadala ni farmer', '2023-08-17 12:55:00', 't'),
+(1, 'Website problem',  'Others', 'ang bagl mag load kuya wil', '2023-08-17 12:55:00', 't'),
+(1, 'Di ma-contact si farmer',  'Others', 'no reply the  from farmer since last week', '2023-08-17 12:55:00', 't');
+
 
 insert into post_advertisement(supplier_id, crop_specialization_id, crop_name, description, crop_image, quantity, measurement, price, date_posted, active_deactive) 
 values 

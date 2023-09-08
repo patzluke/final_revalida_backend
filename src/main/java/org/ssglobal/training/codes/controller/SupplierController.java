@@ -7,10 +7,12 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.ssglobal.training.codes.models.CropPayment;
 import org.ssglobal.training.codes.models.CropSpecialization;
+import org.ssglobal.training.codes.models.FarmerComplaint;
 import org.ssglobal.training.codes.models.PostAdvertisement;
 import org.ssglobal.training.codes.models.PostAdvertisementResponse;
 import org.ssglobal.training.codes.models.SellCropDetail;
 import org.ssglobal.training.codes.models.Supplier;
+import org.ssglobal.training.codes.models.SupplierComplaint;
 import org.ssglobal.training.codes.service.SupplierService;
 
 import jakarta.ws.rs.Consumes;
@@ -295,6 +297,88 @@ public class SupplierController {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+		}
+		return Response.status(Status.BAD_REQUEST).build();
+	}
+	
+	//Supplier Complaint
+	@GET
+	@Path("/get/suppliercomplaints/{supplierId}")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public Response selectSupplierComplaints(@PathParam(value = "supplierId") Integer  supplierId) {
+		List<SupplierComplaint> supplierComplaints = service.selectSupplierComplaints(supplierId);
+		GenericEntity<List<SupplierComplaint>> supplierComplaintEntity = null;
+		try {
+			if (!supplierComplaints.isEmpty()) {
+				supplierComplaintEntity = new GenericEntity<>(supplierComplaints) {
+				};
+				return Response.ok(supplierComplaintEntity).build();
+			}
+		} catch (Exception e) {
+			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+		}
+		return Response.status(Status.BAD_REQUEST).build();
+	}
+	
+	
+	@POST
+	@Path("/insert/suppliercomplaints")
+	@Produces({ MediaType.APPLICATION_JSON })
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public Response insertIntoSupplierComplaint(Map<String, Object> payload) {
+		SupplierComplaint supplierComplaint = service.insertIntoSupplierComplaint(payload);
+		GenericEntity<SupplierComplaint> supplierComplaintEntity = null;
+		
+		try {
+			if (supplierComplaint != null) {
+				supplierComplaintEntity = new GenericEntity<>(supplierComplaint) {};
+				return Response.ok(supplierComplaintEntity).build();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+		}
+		return Response.status(Status.BAD_REQUEST).build();
+	}
+	
+	@PUT
+	@Path("/update/suppliercomplaints")
+	@Produces({ MediaType.APPLICATION_JSON })
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public Response updateIntoSupplierComplaint(Map<String, Object> payload) {
+		SupplierComplaint updatedComplaint = new SupplierComplaint();
+		updatedComplaint.setSupplierComplaintId(Integer.valueOf(payload.get("supplierComplaintId").toString()));
+		updatedComplaint.setComplaintTitle(payload.get("complaintTitle").toString());
+		updatedComplaint.setComplaintMessage(payload.get("complaintMessage").toString());
+		SupplierComplaint supplierComplaint = service.updateIntoSupplierComplaint(updatedComplaint);
+		GenericEntity<SupplierComplaint> supplierComplaintEntity = null;
+		
+		try {
+			if (supplierComplaint != null) {
+				supplierComplaintEntity = new GenericEntity<>(supplierComplaint) {};
+				return Response.ok(supplierComplaintEntity).build();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+		}
+		return Response.status(Status.BAD_REQUEST).build();
+	}
+	
+	@DELETE
+	@Path("/delete/suppliercomplaints/{supplierComplaintId}")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public Response softDeleteSupplierComplaint(@PathParam(value = "supplierComplaintId") Integer  supplierComplaintId) {
+		SupplierComplaint supplierComplaint = service.softDeleteSupplierComplaint(supplierComplaintId);
+		GenericEntity<SupplierComplaint> supplierComplaintEntity = null;
+		try {
+			if (supplierComplaint != null) {
+				supplierComplaintEntity = new GenericEntity<>(supplierComplaint) {
+				};
+				return Response.ok(supplierComplaintEntity).build();
+			}
+		} catch (Exception e) {
 			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
 		}
 		return Response.status(Status.BAD_REQUEST).build();

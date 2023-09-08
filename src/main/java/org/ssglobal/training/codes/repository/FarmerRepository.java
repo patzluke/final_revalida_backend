@@ -3,6 +3,7 @@ package org.ssglobal.training.codes.repository;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -238,10 +239,16 @@ public class FarmerRepository {
 		return null;
 	}
 	
+	// Sales Report
 	public double calculateTotalSales(Integer farmerId) {
 	    double totalSales = 0.0; // Initialize totalSales
 	    
-	    String sql = "select sum(price) as total_price from sell_crop_details where farmer_id = :farmer_id";
+	    String sql = "SELECT SUM(scd.price) AS total_price " +
+                "FROM sell_crop_details scd " +
+                "INNER JOIN crop_orders co ON scd.sell_id = co.sell_id " +
+                "WHERE scd.farmer_id = :farmer_id " +
+                "AND co.is_payment_received_by_farmer = true";
+	    
 	    try (Session session = sf.openSession()) {
 	        Query<Double> query = session.createNativeQuery(sql, Double.class);
 	        query.setParameter("farmer_id", farmerId);
@@ -266,6 +273,113 @@ public class FarmerRepository {
 	    return totalSales;
 	}
 	
+	public List<Integer> getSalesDataPerMonth(Integer farmerId) {
+		 List<Integer> monthlySalesData = new ArrayList<>();
+
+	        int currentYear = Calendar.getInstance().get(Calendar.YEAR);
+
+	   
+	        String sql = "SELECT EXTRACT(MONTH FROM cp.pay_date) AS month, SUM(scd.price) AS total_price " +
+	                     "FROM crop_payment cp " +
+	                     "INNER JOIN crop_orders co ON cp.order_id_ref = co.order_id_ref " +
+	                     "INNER JOIN sell_crop_details scd ON co.sell_id = scd.sell_id " +
+	                     "WHERE scd.farmer_id = :farmer_id " +
+	                     "AND EXTRACT(YEAR FROM cp.pay_date) = :current_year " +
+	                     "GROUP BY month " +
+	                     "ORDER BY month";
+
+	        try (Session session = sf.openSession()) {
+	            Query<Object[]> query = session.createNativeQuery(sql);
+	            query.setParameter("farmer_id", farmerId);
+	            query.setParameter("current_year", currentYear);
+	            List<Object[]> results = query.getResultList();
+
+	            int[] monthlyData = new int[12];
+	       
+	            for (int i = 0; i < 12; i++) {
+	                monthlyData[i] = 0;
+	            }
+
+	            for (Object[] result : results) {
+	                int month = ((Number) result[0]).intValue();
+	                double totalSales = ((Number) result[1]).doubleValue();
+	                monthlyData[month - 1] = (int) totalSales;
+	            }
+
+	            for (int sales : monthlyData) {
+	                monthlySalesData.add(sales);
+	            }
+
+	        } catch (HibernateException e) {
+	            e.printStackTrace();
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+
+	        return monthlySalesData;
+	    }
+	
+	public int countCropOrdersPerYear(Integer farmerId) {
+		int currentYear = Calendar.getInstance().get(Calendar.YEAR);
+		int orderCount = 0;
+	    String sql = "SELECT COUNT(co.order_id_ref) " +
+                "FROM crop_orders co " +
+                "INNER JOIN sell_crop_details scd ON co.sell_id = scd.sell_id " +
+                "INNER JOIN crop_payment cp ON cp.order_id_ref = co.order_id_ref " +
+                "WHERE scd.farmer_id = :farmer_id " +
+                "AND co.is_payment_received_by_farmer = true " +
+                "AND EXTRACT(YEAR FROM cp.pay_date) = :year";
+		  
+        try (Session session = sf.openSession()) {
+            Query<Long> query = session.createNativeQuery(sql, Long.class);
+            query.setParameter("farmer_id", farmerId);
+            query.setParameter("year", currentYear);
+            List<Long> counts = query.getResultList();
+
+            if (!counts.isEmpty()) {
+                orderCount = counts.get(0).intValue();
+            }
+        } catch (HibernateException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return orderCount;
+    }
+	
+	public List<CropPayment> getTopThreeRecentSellCropDetails(Integer farmerId) {
+		  int currentYear = Calendar.getInstance().get(Calendar.YEAR);
+		    String sql = "SELECT cp.* " +
+		                 "FROM crop_payment cp " +
+		                 "INNER JOIN crop_orders co ON cp.order_id_ref = co.order_id_ref " +
+		                 "INNER JOIN sell_crop_details scd ON co.sell_id = scd.sell_id " +
+		                 "WHERE EXTRACT(YEAR FROM cp.pay_date) = :currentYear " +
+		                 "AND scd.farmer_id = :farmerId " +
+		                 "AND co.is_payment_received_by_farmer = true " +
+		                 "ORDER BY cp.pay_date DESC " +
+		                 "LIMIT 3";
+
+		    try (Session session = sf.openSession()) {
+		        Query<CropPayment> query = session.createNativeQuery(sql, CropPayment.class);
+		        query.setParameter("currentYear", currentYear);
+		        query.setParameter("farmerId", farmerId);
+		        List<CropPayment> topThreePayments = query.getResultList();
+
+		        return topThreePayments;
+		    } catch (HibernateException e) {
+		       
+		        e.printStackTrace();
+		        return Collections.emptyList(); 
+		    } catch (Exception e) {
+		      
+		        e.printStackTrace();
+		        return Collections.emptyList(); 
+		    }
+	}
+
+
+	 
 	// Post Advertisement
 	public List<PostAdvertisement> selectAllPostAdvertisements() {
 		List<PostAdvertisement> records = new ArrayList<>();
