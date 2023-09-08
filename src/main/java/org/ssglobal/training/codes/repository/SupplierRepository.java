@@ -307,7 +307,7 @@ public class SupplierRepository {
 		String sql = "select cp.* from crop_payment cp \r\n"
 				+ "inner join crop_orders co on cp.order_id_ref = co.order_id_ref\r\n"
 				+ "inner join sell_crop_details scd on scd.sell_id = co.sell_id\r\n"
-				+ "where co.supplier_id = :supplier_id order by pay_date desc";
+				+ "where co.supplier_id = :supplier_id order by payment_id desc";
 
 		try (Session sess = sf.openSession()) {
 			Query<CropPayment> query = sess.createNativeQuery(sql, CropPayment.class);
@@ -349,7 +349,7 @@ public class SupplierRepository {
 			
 			Users user = findOneByUserId(Integer.valueOf(payload.get("userId").toString())).orElse(null).getUser();
 			String orderIdRef = ((Map<String, Object>) ((Map<String, Object>) payload.get("cropOrder"))).get("orderIdRef").toString();
-			String address = ((Map<String, Object>) ((Map<String, Object>) payload.get("cropOrder"))).get("address").toString();
+			String address = payload.get("address").toString();
 			CropOrder order = sess.get(CropOrder.class, orderIdRef);
 			order.setOrderStatus("proof of payment submitted");
 			order.setIsProofOfPaymentSubmitted(true);
