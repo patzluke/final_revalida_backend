@@ -273,6 +273,7 @@ public class FarmerRepository {
 	    return totalSales;
 	}
 	
+	@SuppressWarnings({ "unchecked", "deprecation" })
 	public List<Integer> getSalesDataPerMonth(Integer farmerId) {
 		 List<Integer> monthlySalesData = new ArrayList<>();
 
@@ -578,11 +579,11 @@ public class FarmerRepository {
 			
 			CropOrder order = sess.get(CropOrder.class, payload.get("orderIdRef").toString());
 			order.setOrderStatus(payload.get("orderStatus").toString());
-			order.setIsPaymentReceivedByFarmer(!order.getIsPaymentReceivedByFarmer());
 			if (order.getOrderStatus().equals("To deliver")) {
+				order.setIsPaymentReceivedByFarmer(!order.getIsPaymentReceivedByFarmer());
 				order.setPaymentReceivedDate(LocalDateTime.now());
 			}
-			order.setPaymentReceivedDate(LocalDateTime.now());
+			
 			sess.merge(order);
 						
 			CropPayment cropPayment = sess.get(CropPayment.class, payload.get("paymentId").toString());
