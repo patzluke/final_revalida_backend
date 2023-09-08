@@ -56,7 +56,7 @@ public class AdministratorController {
 	@Path("/update/admin")
     @Produces({ MediaType.APPLICATION_JSON })
 	@Consumes({ MediaType.APPLICATION_JSON })
-	public Response updateIntoFarmingTip(Map<String, Object> payload) {
+	public Response updateAdminInfo(Map<String, Object> payload) {
 		Administrator administrator = service.updateAdminInfo(payload);
 		GenericEntity<Administrator> administratorEntity = null;
 		
@@ -64,6 +64,27 @@ public class AdministratorController {
 			if (administrator != null) {
 				administratorEntity = new GenericEntity<>(administrator) {};
 				return Response.ok(administratorEntity).build();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+		}
+		return Response.status(Status.BAD_REQUEST).build();
+	}
+	
+	@SuppressWarnings("unchecked")
+	@PUT
+	@Path("/update/user")
+    @Produces({ MediaType.APPLICATION_JSON })
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public Response changeUserActiveStatus(Map<String, Object> payload) {
+		Object user = service.changeUserActiveStatus((Map<String, Object>) payload.get("user"));
+		GenericEntity<Object> userEntity = null;
+		
+		try {
+			if (user != null) {
+				userEntity = new GenericEntity<>(user) {};
+				return Response.ok(userEntity).build();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

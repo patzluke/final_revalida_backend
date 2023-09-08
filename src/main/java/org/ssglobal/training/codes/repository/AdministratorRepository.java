@@ -120,6 +120,28 @@ public class AdministratorRepository {
 		return null;
 	}
 	
+	public Object changeUserActiveStatus(Map<String, Object> payload) {
+		Transaction tx = null;
+		try (Session sess = sf.openSession()) {
+			tx = sess.beginTransaction();
+			Integer userId = Integer.valueOf(payload.get("userId").toString());
+			Users updatedUser = sess.get(Users.class, userId);
+			updatedUser.setActiveStatus(!updatedUser.getActiveStatus());
+			sess.merge(updatedUser);
+			tx.commit();
+			if (updatedUser.getUserType().equalsIgnoreCase("Farmer")) {
+				return findFarmerByUserId(updatedUser.getUserId()).get();
+			}
+			if (updatedUser.getUserType().equalsIgnoreCase("Supplier")) {
+				return findSupplierByUserId(updatedUser.getUserId()).get();
+			}
+			return updatedUser;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
 	public Object validateUserAccount(Map<String, Object> payload) {
 		
 		Transaction tx = null;

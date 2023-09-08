@@ -41,6 +41,11 @@ public class AdministratorServiceImpl implements AdministratorService {
 		return repository.updateAdminInfo(payload);
 	}	
 	
+	@Override
+	public Object changeUserActiveStatus(Map<String, Object> payload) {
+		return repository.changeUserActiveStatus(payload);
+	}
+	
 	//Farmers
 	@Override
 	public List<Farmer> selectAllFarmers() {
