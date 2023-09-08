@@ -17,6 +17,7 @@ public interface AdministratorService {
 	List<Administrator> selectAllAdministrators();
 	Optional<Administrator> findOneByUserId(Integer userId);
 	Administrator updateAdminInfo(Map<String, Object> payload);
+	Object changeUserActiveStatus(Map<String, Object> payload);
 		
 	//Farmers
 	List<Farmer> selectAllFarmers();
@@ -44,5 +45,7 @@ public interface AdministratorService {
 	//Supplier Complaints
 	List<SupplierComplaint> selectSupplierComplaints();
 	SupplierComplaint updateIntoSupplierComplaint(SupplierComplaint supplierComplaint);
+	
+	
 		
 }

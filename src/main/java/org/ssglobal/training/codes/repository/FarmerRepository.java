@@ -543,7 +543,7 @@ public class FarmerRepository {
 			
 			SellCropDetail sellCropDetail = new SellCropDetail();
 			sellCropDetail.setFarmer(findOneByFarmerId(Integer.valueOf(payload.get("farmerId").toString())).orElse(null));
-			sellCropDetail.setPostAdvertisementResponse(findOneByAdvertisementResponseById(Integer.valueOf(payload.get("postResponseId").toString())).orElse(null));
+			sellCropDetail.setPostAdvertisementResponse(response);
 			sellCropDetail.setCropName(payload.get("cropName").toString());
 			sellCropDetail.setPrice(Double.valueOf(payload.get("price").toString()));
 			sellCropDetail.setQuantity(payload.get("quantity").toString());
