@@ -290,8 +290,6 @@ public class SupplierRepository {
 			notification.setNotificationMessage(payload.get("notificationMessage").toString());
 			notification.setIsRead(false);
 			notification.setDateCreated(LocalDateTime.now());
-			tx = sess.beginTransaction();
-
 		
 			sess.persist(notification);
 			tx.commit();
@@ -346,17 +344,19 @@ public class SupplierRepository {
 		try (Session sess = sf.openSession()) {
 			tx = sess.beginTransaction();
 
-      PostAdvertisementResponse response = sess.get(PostAdvertisementResponse.class, Integer.valueOf(payload.get("postResponseId").toString()));
+			PostAdvertisementResponse response = sess.get(PostAdvertisementResponse.class, Integer.valueOf(payload.get("postResponseId").toString()));
 			response.setIsFinalOfferAccepted(true);
 			sess.merge(response);
+			
 			Users user = findOneByUserId(Integer.valueOf(payload.get("userId").toString())).orElse(null).getUser();
 			String orderIdRef = ((Map<String, Object>) ((Map<String, Object>) payload.get("cropOrder"))).get("orderIdRef").toString();
 			String address = ((Map<String, Object>) ((Map<String, Object>) payload.get("cropOrder"))).get("address").toString();
 			CropOrder order = sess.get(CropOrder.class, orderIdRef);
 			order.setOrderStatus("proof of payment submitted");
+			order.setIsProofOfPaymentSubmitted(true);
 			order.setAddress(address);
 			sess.merge(order);
-			
+
 			CropPayment cropPayment = sess.get(CropPayment.class, payload.get("paymentId").toString());
 			cropPayment.setCropOrder(order);
 			cropPayment.setTranscationReferenceNumber(payload.get("transcationReferenceNumber").toString());
@@ -380,11 +380,11 @@ public class SupplierRepository {
 
 			CropOrder order = sess.get(CropOrder.class, payload.get("orderIdRef").toString());
 			order.setOrderStatus(payload.get("orderStatus").toString());
+			order.setIsCropReceivedBySupplier(!order.getIsCropReceivedBySupplier());
 			if (order.getOrderStatus().equals("Completed")) {
 				order.setOrderReceivedDate(LocalDateTime.now());
 			}
 			sess.merge(order);
-			System.out.println(order.getOrderReceivedDate());
 			CropPayment cropPayment = sess.get(CropPayment.class, payload.get("paymentId").toString());
 			cropPayment.setCropOrder(order);
 			sess.merge(cropPayment);

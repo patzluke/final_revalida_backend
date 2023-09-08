@@ -53,13 +53,20 @@ public class PostAdvertisementResponse implements Serializable {
 	private LocalDateTime dateModified;
 
 	@Column(name="is_accepted")
-	private Boolean isAccepted;
+	@Builder.Default
+	private Boolean isAccepted = false;
 	
 	@Column(name="is_final_offer_submitted")
-	private Boolean isFinalOfferSubmitted;
+	@Builder.Default
+	private Boolean isFinalOfferSubmitted = false;
 	
 	@Column(name="is_final_offer_accepted")
-	private Boolean isFinalOfferAccepted;
+	@Builder.Default
+	private Boolean isFinalOfferAccepted = false;
+	
+	@Column(name = "is_transaction_completed")
+	@Builder.Default
+	private Boolean isTransactionCompleted = false;
 
 	private String message;
 

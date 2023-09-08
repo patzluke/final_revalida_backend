@@ -50,10 +50,12 @@ public class FarmerComplaint implements Serializable {
 	private String complaintMessage;
 
 	@Column(name="is_read")
-	private Boolean isRead;
+	@Builder.Default
+	private Boolean isRead = false;
 
 	@Column(name="is_resolved")
-	private Boolean isResolved;
+	@Builder.Default
+	private Boolean isResolved = false;
 
 	@Column(name="read_date")
 	private LocalDateTime readDate;
