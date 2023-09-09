@@ -668,7 +668,7 @@ public class FarmerRepository {
 			Farmer farmer = findOneByFarmerId(Integer.valueOf(payload.get("farmerId").toString())).orElse(null);
 			notification.setUser(supplier.getUser());
 			
-			notification.setNotificationTitle("Final offer made");
+			notification.setNotificationTitle("Official offer made");
 			notification.setNotificationMessage("%s %s %s, has already send their final offer to your %s advertisement."
 					.formatted(farmer.getUser().getFirstName(), farmer.getUser().getMiddleName(), farmer.getUser().getLastName(), payload.get("cropName")));
 			notification.setIsRead(false);

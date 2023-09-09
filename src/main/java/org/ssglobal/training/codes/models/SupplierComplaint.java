@@ -29,8 +29,6 @@ import lombok.ToString;
 @Table(name="supplier_complaint")
 public class SupplierComplaint {
 
-	private static final long serialVersionUID = 1L;
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="supplier_complaint_id")
