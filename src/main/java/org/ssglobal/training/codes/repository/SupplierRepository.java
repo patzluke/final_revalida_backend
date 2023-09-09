@@ -17,6 +17,7 @@ import org.springframework.stereotype.Repository;
 import org.ssglobal.training.codes.models.CropOrder;
 import org.ssglobal.training.codes.models.CropPayment;
 import org.ssglobal.training.codes.models.CropSpecialization;
+import org.ssglobal.training.codes.models.Farmer;
 import org.ssglobal.training.codes.models.PostAdvertisement;
 import org.ssglobal.training.codes.models.PostAdvertisementResponse;
 import org.ssglobal.training.codes.models.SellCropDetail;
@@ -33,6 +34,22 @@ public class SupplierRepository {
 
 	@Autowired
 	private PasswordEncoder encoder;
+	
+	public Optional<Farmer> findOneByFarmerId(Integer farmerId) {
+		// Named Parameter
+		String sql = "SELECT * FROM farmer WHERE farmer_id = :farmer_id";
+
+		try (Session sess = sf.openSession()) {
+			Query<Farmer> query = sess.createNativeQuery(sql, Farmer.class);
+			query.setParameter("farmer_id", farmerId);
+			Farmer record = query.getSingleResultOrNull();
+
+			return Optional.of(record);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return null;
+	}
 
 	public Optional<Supplier> findOneByUserId(Integer userId) {
 		// Named Parameter
@@ -287,6 +304,33 @@ public class SupplierRepository {
 			notification.setUser(findUserByUserId(Integer.valueOf(userId)).orElse(null));
 			notification.setNotificationTitle(payload.get("notificationTitle").toString());
 			notification.setNotificationMessage(payload.get("notificationMessage").toString());
+			notification.setIsRead(false);
+			notification.setDateCreated(LocalDateTime.now());
+		
+			sess.persist(notification);
+			tx.commit();
+			return notification;
+		} catch (NullPointerException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public UserNotifications insertIntoUserNotificationsForCropReceived(Map<String, Object> payload) {
+		Transaction tx = null;
+		try (Session sess = sf.openSession()) {
+			tx = sess.beginTransaction();
+			UserNotifications notification = new UserNotifications();
+			Supplier supplier = findOneBySupplierId(Integer.valueOf(payload.get("supplierId").toString())).orElse(null);
+			Farmer farmer = findOneByFarmerId(Integer.valueOf(payload.get("farmerId").toString())).orElse(null);
+			notification.setUser(farmer.getUser());
+			if (payload.get("orderStatus").toString().equals("Completed")) {
+				notification.setNotificationTitle("Order Received");
+				notification.setNotificationMessage("%s %s %s, has received your delivery on order %s. Transaction is now complete."
+						.formatted(supplier.getUser().getFirstName(), supplier.getUser().getMiddleName(), supplier.getUser().getLastName(), payload.get("orderIdRef")));
+			}
 			notification.setIsRead(false);
 			notification.setDateCreated(LocalDateTime.now());
 		

@@ -108,6 +108,7 @@ public class FarmerServiceImpl implements FarmerService {
 	
 	@Override
 	public CropPayment updateCropOrderStatus(Map<String, Object> payload) {
+		repository.insertIntoUserNotificationsForCancelOrderOrToDeliver(payload);
 		return repository.updateCropOrderStatus(payload);
 	}
 
