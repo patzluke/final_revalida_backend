@@ -95,6 +95,7 @@ public class SupplierServiceImpl implements SupplierService {
 	
 	@Override
 	public CropPayment updateCropOrderStatus(Map<String, Object> payload) {
+		repository.insertIntoUserNotificationsForCropReceived(payload);
 		return repository.updateCropOrderStatus(payload);
 	}
 

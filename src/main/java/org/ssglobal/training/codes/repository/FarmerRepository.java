@@ -516,7 +516,7 @@ public class FarmerRepository {
 		String sql = "select cp.* from crop_payment cp \r\n"
 				+ "inner join crop_orders co on cp.order_id_ref = co.order_id_ref\r\n"
 				+ "inner join sell_crop_details scd on scd.sell_id = co.sell_id\r\n"
-				+ "where scd.farmer_id = :farmer_id order by pay_date desc";
+				+ "where scd.farmer_id = :farmer_id order by payment_id desc";
 		
 		
 		try (Session sess = sf.openSession()) {
@@ -579,9 +579,12 @@ public class FarmerRepository {
 			
 			CropOrder order = sess.get(CropOrder.class, payload.get("orderIdRef").toString());
 			order.setOrderStatus(payload.get("orderStatus").toString());
+			System.out.println();
 			if (order.getOrderStatus().equals("To deliver")) {
 				order.setIsPaymentReceivedByFarmer(!order.getIsPaymentReceivedByFarmer());
 				order.setPaymentReceivedDate(LocalDateTime.now());
+			} else if (order.getOrderStatus().equals("Cancelled")) {
+				order.setCancelReason(payload.get("cancelReason").toString());
 			}
 			
 			sess.merge(order);
@@ -623,6 +626,39 @@ public class FarmerRepository {
 		return null;
 	}
 	
+	public UserNotifications insertIntoUserNotificationsForCancelOrderOrToDeliver(Map<String, Object> payload) {
+		Transaction tx = null;
+		try (Session sess = sf.openSession()) {
+			tx = sess.beginTransaction();
+			UserNotifications notification = new UserNotifications();
+			Supplier supplier = findSupplierBySupplierId(Integer.valueOf(payload.get("supplierId").toString())).orElse(null);
+			Farmer farmer = findOneByFarmerId(Integer.valueOf(payload.get("farmerId").toString())).orElse(null);
+			notification.setUser(supplier.getUser());
+			System.out.println(payload);
+			System.out.println(payload.get("orderStatus"));
+			if (payload.get("orderStatus").toString().equals("To deliver")) {
+				notification.setNotificationTitle("Payment Received");
+				notification.setNotificationMessage("%s %s %s, has now received your payment on order %s. farmer will now start delivering your order."
+						.formatted(farmer.getUser().getFirstName(), farmer.getUser().getMiddleName(), farmer.getUser().getLastName(), payload.get("orderIdRef")));
+			} else if (payload.get("orderStatus").toString().equals("Cancelled")) {
+				notification.setNotificationTitle("Order Cancelled");
+				notification.setNotificationMessage("%s %s %s, Cancelled your order on %s."
+						.formatted(farmer.getUser().getFirstName(), farmer.getUser().getMiddleName(), farmer.getUser().getLastName(), payload.get("orderIdRef")));
+			}
+			notification.setIsRead(false);
+			notification.setDateCreated(LocalDateTime.now());
+		
+			sess.persist(notification);
+			tx.commit();
+			return notification;
+		} catch (NullPointerException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
 	public UserNotifications insertIntoUserNotificationsForSendFinalOffer(Map<String, Object> payload) {
 		Transaction tx = null;
 		try (Session sess = sf.openSession()) {
@@ -631,6 +667,7 @@ public class FarmerRepository {
 			Supplier supplier = findSupplierBySupplierId(Integer.valueOf(payload.get("supplierId").toString())).orElse(null);
 			Farmer farmer = findOneByFarmerId(Integer.valueOf(payload.get("farmerId").toString())).orElse(null);
 			notification.setUser(supplier.getUser());
+			
 			notification.setNotificationTitle("Final offer made");
 			notification.setNotificationMessage("%s %s %s, has already send their final offer to your %s advertisement."
 					.formatted(farmer.getUser().getFirstName(), farmer.getUser().getMiddleName(), farmer.getUser().getLastName(), payload.get("cropName")));
