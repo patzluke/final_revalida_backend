@@ -16,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.ssglobal.training.codes.models.Administrator;
 import org.ssglobal.training.codes.models.Farmer;
+import org.ssglobal.training.codes.models.Otp;
 import org.ssglobal.training.codes.models.Supplier;
 import org.ssglobal.training.codes.models.UserToken;
 import org.ssglobal.training.codes.models.UserToken.UserTokenBuilder;
@@ -151,5 +152,20 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 		users.setPassword(encoder.encode(password));
 		users = authenticateRepository.updatePassword(users);
 		return users;
+	}
+	
+	@Override
+	public Otp insertIntoOtp(Map<String, Object> payload) {
+		return authenticateRepository.insertIntoOtp(payload);
+	}
+	
+	@Override
+	public Otp updateIntoOtp(Map<String, Object> payload) {
+		return authenticateRepository.updateIntoOtp(payload);
+	}
+	
+	@Override
+	public String validateOtp(Map<String, Object> payload) {
+		return authenticateRepository.validateOtp(payload);
 	}
 }

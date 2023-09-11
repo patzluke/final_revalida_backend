@@ -11,7 +11,6 @@ import org.ssglobal.training.codes.models.Farmer;
 import org.ssglobal.training.codes.models.FarmerComplaint;
 import org.ssglobal.training.codes.models.PostAdvertisement;
 import org.ssglobal.training.codes.models.PostAdvertisementResponse;
-import org.ssglobal.training.codes.models.SellCropDetail;
 
 public interface FarmerService {
 	
