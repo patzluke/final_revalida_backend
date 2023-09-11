@@ -1,10 +1,12 @@
 package org.ssglobal.training.codes.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.ssglobal.training.codes.models.Otp;
 import org.ssglobal.training.codes.models.Users;
 import org.ssglobal.training.codes.service.AuthenticateService;
 
@@ -71,5 +73,68 @@ public class AuthenticateController {
 		}
 		return Response.status(Status.BAD_REQUEST).build();
 
+	}
+	
+	@POST
+	@Path("/insert/otp")
+    @Produces({ MediaType.APPLICATION_JSON })
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public Response insertIntoOtp(Map<String, Object> payload) {
+		System.out.println(payload);
+		Otp otp = service.insertIntoOtp(payload);
+		GenericEntity<Otp> otpEntity = null;
+		
+		try {
+			if (otp != null) {
+				otpEntity = new GenericEntity<>(otp) {};
+				return Response.ok(otpEntity).build();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+		}
+		return Response.status(Status.BAD_REQUEST).build();
+	}
+	
+	@PUT
+	@Path("/update/otp")
+    @Produces({ MediaType.APPLICATION_JSON })
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public Response updateIntoOtp(Map<String, Object> payload) {
+		Otp otp = service.updateIntoOtp(payload);
+		GenericEntity<Otp> otpEntity = null;
+		
+		try {
+			if (otp != null) {
+				otpEntity = new GenericEntity<>(otp) {};
+				return Response.ok(otpEntity).build();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+		}
+		return Response.status(Status.BAD_REQUEST).build();
+	}
+	
+	@PUT
+	@Path("/validate/otp")
+    @Produces({ MediaType.APPLICATION_JSON })
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public Response validateOtp(Map<String, Object> payload) {
+		String otp = service.validateOtp(payload);
+		Map<String, Object> otpResponse = new HashMap<>();
+		otpResponse.put("response", otp);
+		GenericEntity<Map<String, Object>> otpEntity = null;
+		
+		try {
+			if (otp != null) {
+				otpEntity = new GenericEntity<>(otpResponse) {};
+				return Response.ok(otpEntity).build();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+		}
+		return Response.status(Status.BAD_REQUEST).build();
 	}
 }

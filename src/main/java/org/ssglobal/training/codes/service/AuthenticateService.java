@@ -2,6 +2,7 @@ package org.ssglobal.training.codes.service;
 
 import java.util.Map;
 
+import org.ssglobal.training.codes.models.Otp;
 import org.ssglobal.training.codes.models.Users;
 
 public interface AuthenticateService {
@@ -14,4 +15,8 @@ public interface AuthenticateService {
 	String generateToken(Integer userId, Integer userNo, String username, String userType, Boolean isActive);
 	
 	Users changePassword(String password, String username);
+	
+	Otp insertIntoOtp(Map<String, Object> payload);
+	Otp updateIntoOtp(Map<String, Object> payload);
+	String validateOtp(Map<String, Object> payload);
 }
