@@ -282,58 +282,18 @@ values('pastrero', '123456', 'patzluke12@gmail.com', '9055261297', array['https:
 insert into administrator(user_id) values (1);
 
 --Insert into users and farmer
-insert into users(username, password, email, contact_no, socials, first_name, middle_name, last_name, user_type, birth_date, address, gender, nationality, active_status, active_deactive, date_created, is_validated) 
-values('nika', '123456', 'nika@gmail.com', '9055261296', array['https://www.facebook.com/megalodon218'], 'Nika', 'Artuz', 'Astrero', 'Farmer', '1999-07-08', 'Vista Verde, Cainta', 'Male', 'Filipino', 'true', 'true', '2023-08-15 9:55:00', 't');
+insert into users(username, password, email, contact_no, socials, first_name, middle_name, last_name, user_type, birth_date, address, gender, nationality, active_status, active_deactive, date_created, is_validated, valid_id_picture, valid_id_type, valid_id_number) 
+values('nika', '123456', 'nika@gmail.com', '9055261296', array['https://www.facebook.com/megalodon218'], 'Nika', 'Artuz', 'Astrero', 'Farmer', '1999-07-08', 'Vista Verde, Cainta', 'Male', 'Filipino', 'true', 'true', '2023-08-15 9:55:00', 't', 'http://localhost:8080/api/file/display/image/2x2_pic.jpg', 'SSS Card', '2354647');
 insert into farmer(user_id) values (2);
 
 insert into users(username, password, email, contact_no, socials, first_name, middle_name, last_name, user_type, birth_date, address, gender, nationality, active_status, active_deactive, date_created, is_validated) 
-values('vanlester', '123456', 'van@gmail.com', '9055261295', array['https://www.facebook.com/megalodon218'], 'Van', 'Artuz', 'Astrero', 'Farmer', '1999-07-08', 'Vista Verde, Cainta', 'Male', 'Filipino', 'true', 'true', '2023-08-15 9:55:00', 't');
+values('vanlester', '123456', 'van@gmail.com', '9055261295', array['https://www.facebook.com/megalodon218'], 'Van', 'Artuz', 'Astrero', 'Farmer', '1999-07-08', 'Vista Verde, Cainta', 'Male', 'Filipino', 'true', 'true', '2023-08-15 9:55:00', 'f');
 insert into farmer(user_id) values (3);
 
-insert into users(username, password, email, contact_no, socials, first_name, middle_name, last_name, user_type, birth_date, address, gender, nationality, active_status, active_deactive, date_created, is_validated) 
-values('vanessa', '123456', 'vanessa@gmail.com', '9055261294', array['https://www.facebook.com/megalodon218'], 'Vanessa', 'Artuz', 'Astrero', 'Farmer', '1999-07-08', 'Vista Verde, Cainta', 'Male', 'Filipino', 'true', 'true', '2023-08-15 9:55:00', 't');
-insert into farmer(user_id) values (4);
-
-insert into users(username, password, email, contact_no, socials, first_name, middle_name, last_name, user_type, birth_date, address, gender, nationality, active_status, active_deactive, date_created, is_validated) 
-values('linda', '123456', 'linda@gmail.com', '9055261293', array['https://www.facebook.com/megalodon218'], 'Linda', 'Artuz', 'Astrero', 'Farmer', '1999-07-08', 'Vista Verde, Cainta', 'Male', 'Filipino', 'true', 'true', '2023-08-15 9:55:00', 't');
-insert into farmer(user_id) values (5);
-
-insert into users(username, password, email, contact_no, socials, first_name, middle_name, last_name, user_type, birth_date, address, gender, nationality, active_status, active_deactive, date_created, is_validated) 
-values('robgerson', '123456', 'robgerson@gmail.com', '9055261292', array['https://www.facebook.com/megalodon218'], 'Robgerson', 'Artuz', 'Astrero', 'Farmer', '1999-07-08', 'Vista Verde, Cainta', 'Male', 'Filipino', 'true', 'true', '2023-08-15 9:55:00', 't');
-insert into farmer(user_id) values (6);
-
 --Insert into users and Supplier
-insert into users(username, password, email, contact_no, socials, first_name, middle_name, last_name, user_type, birth_date, address, gender, nationality, active_status, active_deactive, date_created, is_validated) 
-values('norbz', '123456', 'norbz@gmail.com', '9055261291', array['https://www.facebook.com/norbz'], 'Norbz', 'Artuz', 'Astrero', 'Supplier', '1999-07-08', 'Vista Verde, Cainta', 'Male', 'Filipino', 'true', 'true', '2023-08-15 9:55:00', 't');
-insert into supplier(user_id) values (7);
+insert into users(username, password, email, contact_no, socials, first_name, middle_name, last_name, user_type, birth_date, address, gender, nationality, active_status, active_deactive, date_created, is_validated, valid_id_picture, valid_id_type, valid_id_number) 
+values('norbz', '123456', 'norbz@gmail.com', '9055261291', array['https://www.facebook.com/norbz'], 'Norbz', 'Artuz', 'Astrero', 'Supplier', '1999-07-08', 'Vista Verde, Cainta', 'Male', 'Filipino', 'true', 'true', '2023-08-15 9:55:00', 't', 'http://localhost:8080/api/file/display/image/2x2_pic.jpg', 'SSS Card', '2354647');
+insert into supplier(user_id) values (4);
 
---insert into farmer complaints
-insert into farmer_complaint(farmer_id, complaint_title, complaint_type, complaint_message, date_submitted, active_deactive) 
-values 
-(1, 'The Bigas',  'Others', 'ang pangit ng bigas', '2023-08-17 12:55:00', 't'),
-(1, 'The Mais',  'Others', 'ang pangit ng mais', '2023-08-17 12:55:00', 't'),
-(1, 'The Siomai',  'Others', 'ang pangit ng siomai', '2023-08-17 12:55:00', 't'),
-(1, 'The Carrots',  'Others', 'ang pangit ng carrots', '2023-08-17 12:55:00', 't');
-
---insert into supplier complaints
-insert into supplier_complaint(supplier_id, complaint_title, complaint_type, complaint_message, date_submitted, active_deactive) 
-values 
-(1, 'Product quality',  'Others', 'di ko gusto pinadala ni farmer', '2023-08-17 12:55:00', 't'),
-(1, 'Website problem',  'Others', 'ang bagl mag load kuya wil', '2023-08-17 12:55:00', 't'),
-(1, 'Di ma-contact si farmer',  'Others', 'no reply the  from farmer since last week', '2023-08-17 12:55:00', 't');
-
-
-insert into post_advertisement(supplier_id, crop_specialization_id, crop_name, description, crop_image, quantity, measurement, price, date_posted, active_deactive) 
-values 
-(1, 1, 'Princess Jasmin (Rice)', 'Must be brand new harvest and no tiny bugs that will be found', 'http://localhost:8080/api/file/display/image/WIN_20230220_16_25_22_Pro.jpg', '100', 'kg', 100000.00, '2023-08-23 15:47:00', 't'),
-(1, 1, 'NFA (Rice)', 'Must be brand new harvest and no tiny bugs that will be found', 'http://localhost:8080/api/file/display/image/WIN_20230220_16_25_22_Pro.jpg', '100', 'kg', 100000.00, '2023-08-23 15:47:00', 't');
-
-insert into post_advertisement_responses(post_id, farmer_id, message, price, quantity, is_accepted, preferred_payment_mode, date_created) 
-values 
-(1, 1, 'Hi there I have a message for you. Hope we can come to an agreement', 95000, '100 kg', 'f', 'Gcash', '2023-08-23 15:55:00'),
-(1, 2, 'Hi there I have a message for you. Hope we can come to an agreement', 96000, '100 kg', 'f', 'Gcash', '2023-08-23 16:55:00'),
-(1, 3, 'Hi there I have a message for you. Hope we can come to an agreement', 97000, '100 kg', 'f', 'Gcash', '2023-08-23 17:55:00'),
-(1, 4, 'Hi there I have a message for you. Hope we can come to an agreement', 98000, '95 kg', 'f', 'Gcash', '2023-08-23 18:55:00'),
-(1, 5, 'Hi there I have a message for you. Hope we can come to an agreement', 99000, '105 kg', 'f', 'Gcash', '2023-08-23 19:55:00');
 
 
