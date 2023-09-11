@@ -550,8 +550,9 @@ public class FarmerRepository {
 			sellCropDetail.setCropName(payload.get("cropName").toString());
 			sellCropDetail.setPrice(Double.valueOf(payload.get("price").toString()));
 			sellCropDetail.setQuantity(payload.get("quantity").toString());
-			sellCropDetail.setMobilenumBanknumber(payload.get("mobilenumBanknumber").toString());
+			
 			try {
+				sellCropDetail.setMobilenumBanknumber(payload.get("mobilenumBanknumber").toString());
 				sellCropDetail.setAccountName(payload.get("accountName").toString());
 			} catch (NullPointerException e) {			}
 			sellCropDetail.setPaymentMode(payload.get("paymentMode").toString());
