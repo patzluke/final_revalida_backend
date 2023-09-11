@@ -247,7 +247,8 @@ public class FarmerRepository {
                 "FROM sell_crop_details scd " +
                 "INNER JOIN crop_orders co ON scd.sell_id = co.sell_id " +
                 "WHERE scd.farmer_id = :farmer_id " +
-                "AND co.is_payment_received_by_farmer = true";
+                "AND co.is_payment_received_by_farmer = true " +
+                "AND co.order_status = 'Completed'";
 	    
 	    try (Session session = sf.openSession()) {
 	        Query<Double> query = session.createNativeQuery(sql, Double.class);
@@ -358,9 +359,10 @@ public class FarmerRepository {
 		                 "WHERE EXTRACT(YEAR FROM cp.pay_date) = :currentYear " +
 		                 "AND scd.farmer_id = :farmerId " +
 		                 "AND co.is_payment_received_by_farmer = true " +
+		                 "AND co.order_status = 'Completed' " +
 		                 "ORDER BY cp.pay_date DESC " +
 		                 "LIMIT 3";
-
+		    
 		    try (Session session = sf.openSession()) {
 		        Query<CropPayment> query = session.createNativeQuery(sql, CropPayment.class);
 		        query.setParameter("currentYear", currentYear);
@@ -415,6 +417,7 @@ public class FarmerRepository {
 			System.out.println("gumana naman");
 			sess.persist(response.build());
 			tx.commit();
+			
 			return response.build();
 		} catch (NullPointerException e) {
 			e.printStackTrace();
