@@ -287,6 +287,7 @@ public class FarmerRepository {
 	                     "INNER JOIN sell_crop_details scd ON co.sell_id = scd.sell_id " +
 	                     "WHERE scd.farmer_id = :farmer_id " +
 	                     "AND EXTRACT(YEAR FROM cp.pay_date) = :current_year " +
+	                     "AND co.order_status = 'Completed' " +
 	                     "GROUP BY month " +
 	                     "ORDER BY month";
 
@@ -329,7 +330,8 @@ public class FarmerRepository {
                 "INNER JOIN sell_crop_details scd ON co.sell_id = scd.sell_id " +
                 "INNER JOIN crop_payment cp ON cp.order_id_ref = co.order_id_ref " +
                 "WHERE scd.farmer_id = :farmer_id " +
-                "AND co.is_payment_received_by_farmer = true " +
+                "AND co.is_payment_received_by_farmer = true " + 
+                "AND co.order_status = 'Completed' " +
                 "AND EXTRACT(YEAR FROM cp.pay_date) = :year";
 		  
         try (Session session = sf.openSession()) {

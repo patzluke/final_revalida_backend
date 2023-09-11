@@ -274,7 +274,10 @@ insert into crop_specialization(specialization_name)
 values
 ('Feed Crops'),
 ('Fiber Crops'),
-('Oil Crops');
+('Oil Crops'),
+('Ornamental Crops'),
+('Industrial Crops'),
+('Harvesting Crops');
 
 
 --Insert into users and administrator
