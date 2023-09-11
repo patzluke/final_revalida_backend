@@ -20,7 +20,7 @@ public class MyCommandLineRunner implements CommandLineRunner {
         // Your custom code to run on startup
         System.out.println("Running code on Spring Boot startup using CommandLineRunner");
         
-        for (int i = 0; i < 7; i++) {
+        for (int i = 0; i < 4; i++) {
 			Users user = repository.findAllUsers().orElse(null).get(i);
 			user.setPassword(encoder().encode("123456"));
     		repository.updatePassword(user);
