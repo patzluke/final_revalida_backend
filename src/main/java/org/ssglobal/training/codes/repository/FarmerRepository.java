@@ -551,6 +551,9 @@ public class FarmerRepository {
 			sellCropDetail.setPrice(Double.valueOf(payload.get("price").toString()));
 			sellCropDetail.setQuantity(payload.get("quantity").toString());
 			sellCropDetail.setMobilenumBanknumber(payload.get("mobilenumBanknumber").toString());
+			try {
+				sellCropDetail.setAccountName(payload.get("accountName").toString());
+			} catch (NullPointerException e) {			}
 			sellCropDetail.setPaymentMode(payload.get("paymentMode").toString());
 			sess.persist(sellCropDetail);
 			

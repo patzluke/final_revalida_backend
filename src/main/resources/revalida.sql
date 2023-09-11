@@ -179,7 +179,8 @@ create table sell_crop_details (
     crop_name varchar(100),
     price float,
     quantity varchar(200),
-    mobilenum_banknumber varchar(50),
+    mobilenum_banknumber varchar(100),
+    account_name varchar(100),
     payment_mode varchar(100),
     foreign key(farmer_id) references farmer(farmer_id) on delete cascade,
     foreign key(post_response_id) references post_advertisement_responses(post_response_id) on delete cascade

@@ -148,9 +148,12 @@ public class AdministratorRepository {
 		try (Session sess = sf.openSession()) {
 			tx = sess.beginTransaction();
 			Users updatedUser = sess.get(Users.class, Integer.valueOf(payload.get("userId").toString()));
-			updatedUser.setValidIdPicture(payload.get("validIdPicture").toString());
-			updatedUser.setValidIdNumber(payload.get("validIdNumber").toString());
-			updatedUser.setValidIdType(payload.get("validIdType").toString());
+			try {
+				updatedUser.setValidIdPicture(payload.get("validIdPicture").toString());
+				updatedUser.setValidIdNumber(payload.get("validIdNumber").toString());
+				updatedUser.setValidIdType(payload.get("validIdType").toString());
+			} catch (NullPointerException e) {
+			}
 			updatedUser.setIsValidated(Boolean.valueOf(payload.get("isValidated").toString()));
 			sess.merge(updatedUser);
 			tx.commit();
