@@ -51,6 +51,9 @@ public class SellCropDetail implements Serializable {
 	@Column(name = "mobilenum_banknumber")
 	private String mobilenumBanknumber;
 	
+	@Column(name = "account_name")
+	private String accountName;
+	
 	@Column(name = "payment_mode")
 	private String paymentMode;
 
