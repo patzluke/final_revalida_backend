@@ -134,7 +134,7 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 							  .claim("username", username)
 							  .claim("isActive", isActive)
 							  .setIssuedAt(new Date())
-							  .setExpiration(Date.from(LocalDateTime.now().plusMinutes(30L).atZone(ZoneId.systemDefault()).toInstant()))
+							  .setExpiration(Date.from(LocalDateTime.now().plusMinutes(90L).atZone(ZoneId.systemDefault()).toInstant()))
 							  .signWith(key, SignatureAlgorithm.HS256)
 							  .compact();
 		if (isUserTokenIdExists(userId)) {
