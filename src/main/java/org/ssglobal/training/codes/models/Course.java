@@ -46,6 +46,9 @@ public class Course implements Serializable {
 	@Column(name="duration_in_days")
 	private Integer durationInDays;
 	
+	@Column(name="link")
+	private String link;
+	
 	@Column(name="active_deactive")
 	private boolean activeDeactive;
 

@@ -147,6 +147,7 @@ create table course (
     course_name varchar(100),
     description text,
     duration_in_days int,
+    link text,
     active_deactive boolean
 );
 
