@@ -373,6 +373,7 @@ public class AdministratorRepository {
 			course.setDescription(payload.get("description").toString());
 			course.setDurationInDays(Integer.valueOf(payload.get("durationInDays").toString()));
 			course.setActiveDeactive(true);
+			course.setLink(payload.get("link").toString());
 			sess.persist(course);
 			tx.commit();
 			return course;
@@ -390,6 +391,7 @@ public class AdministratorRepository {
 			updatedCourse.setCourseName(payload.get("courseName").toString());
 			updatedCourse.setDescription(payload.get("description").toString());
 			updatedCourse.setDurationInDays(Integer.valueOf(payload.get("durationInDays").toString()));
+			updatedCourse.setLink(payload.get("link").toString());
 			sess.merge(updatedCourse);
 			tx.commit();
 			return updatedCourse;
