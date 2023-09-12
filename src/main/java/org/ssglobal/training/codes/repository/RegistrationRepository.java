@@ -65,6 +65,9 @@ public class RegistrationRepository {
 			user.setCivilStatus(payload.get("civilStatus").toString());
 			user.setDateCreated(LocalDateTime.now());
 			user.setValidIdPicture(payload.get("validIdPicture").toString());
+			user.setValidIdNumber(payload.get("validIdNumber").toString());
+			user.setValidIdType(payload.get("validIdType").toString());
+			user.setRecentPicture(payload.get("recentPicture").toString());
 			user.setIsValidated(false);
 			user.setActiveStatus(true);
 			user.setActiveDeactive(true);

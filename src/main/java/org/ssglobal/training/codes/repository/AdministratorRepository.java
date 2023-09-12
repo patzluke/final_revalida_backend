@@ -152,6 +152,7 @@ public class AdministratorRepository {
 				updatedUser.setValidIdPicture(payload.get("validIdPicture").toString());
 				updatedUser.setValidIdNumber(payload.get("validIdNumber").toString());
 				updatedUser.setValidIdType(payload.get("validIdType").toString());
+				updatedUser.setRecentPicture(payload.get("recentPicture").toString());
 			} catch (NullPointerException e) {
 			}
 			updatedUser.setIsValidated(Boolean.valueOf(payload.get("isValidated").toString()));
