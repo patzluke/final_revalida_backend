@@ -129,4 +129,36 @@ public class AdministratorServiceImpl implements AdministratorService {
 	}
 	
 	
+// admin dashboard
+	@Override
+	public long countValidatedFarmers() {
+		return repository.countValidatedFarmers();
+	}
+
+	@Override
+	public long countNotValidatedFarmers() {
+		return repository.countNotValidatedFarmers();
+	}
+
+	@Override
+	public long countValidatedSuppliers() {
+		return repository.countValidatedSuppliers();
+	}
+
+	@Override
+	public long countNotValidatedSuppliers() {
+		return repository.countNotValidatedSuppliers();
+	}
+
+	@Override
+	public long countUnresolvedSupplierComplaints() {
+		return repository.countUnresolvedSupplierComplaints();
+	}
+
+	@Override
+	public long countUnresolvedFarmerComplaints() {
+		return repository.countUnresolvedFarmerComplaints();
+	}
+	
+	
 }

@@ -46,6 +46,11 @@ public interface AdministratorService {
 	List<SupplierComplaint> selectSupplierComplaints();
 	SupplierComplaint updateIntoSupplierComplaint(SupplierComplaint supplierComplaint);
 	
-	
-		
+	// admin dashboard
+	long countValidatedFarmers();
+	long countNotValidatedFarmers();
+	long countValidatedSuppliers();
+	long countNotValidatedSuppliers();
+	long countUnresolvedSupplierComplaints();
+	long countUnresolvedFarmerComplaints();
 }
