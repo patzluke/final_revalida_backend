@@ -398,4 +398,48 @@ public class AdministratorController {
 		}
 		return Response.status(Status.BAD_REQUEST).build();
 	}
+	
+	
+	// Admin dashboard
+	@GET
+	@Path(value = "/get/validated-farmer-count")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public Long countValidatedFarmers() {
+        return service.countValidatedFarmers();
+    }
+	
+	@GET
+	@Path(value = "/get/not-validated-farmer-count")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public Long countNotValidatedFarmers() {
+        return service.countNotValidatedFarmers();
+    }
+	
+	@GET
+	@Path(value = "/get/validated-supplier-count")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public Long countValidatedSuppliers() {
+        return service.countValidatedSuppliers();
+    }
+	
+	@GET
+	@Path(value = "/get/not-validated-supplier-count")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public Long countNotValidatedSuppliers() {
+        return service.countNotValidatedSuppliers();
+    }
+	
+	@GET
+	@Path(value = "/get/pending-supplier-complaint")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public Long countUnresolvedSupplierComplaints() {
+        return service.countUnresolvedSupplierComplaints();
+    }
+	
+	@GET
+	@Path(value = "/get/pending-farmer-complaint")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public Long countUnresolvedFarmerComplaints() {
+        return service.countUnresolvedFarmerComplaints();
+    }
 }
