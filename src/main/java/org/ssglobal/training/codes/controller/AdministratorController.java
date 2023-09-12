@@ -281,7 +281,9 @@ public class AdministratorController {
 		updatedComplaint.setAdminReplyMessage(payload.get("adminReplyMessage").toString());
 		updatedComplaint.setReadDate(LocalDateTime.now());
 		updatedComplaint.setIsRead(Boolean.valueOf(payload.get("isRead").toString()));
-		updatedComplaint.setIsResolved(Boolean.valueOf(payload.get("isResolved").toString()));
+		try {
+			updatedComplaint.setIsResolved(Boolean.valueOf(payload.get("isResolved").toString()));
+		} catch (NullPointerException e) {		}
 		SupplierComplaint supplierComplaint = service.updateIntoSupplierComplaint(updatedComplaint);
 		GenericEntity<SupplierComplaint> supplierComplaintEntity = null;
 		try {

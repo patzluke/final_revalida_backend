@@ -105,6 +105,7 @@ public class SupplierRepository {
 			} catch (NullPointerException e) {	}
 			sess.merge(user);
 			tx.commit();
+			
 			return findOneByUserId(Integer.valueOf(payload.get("userId").toString())).orElse(null);
 		} catch (Exception e) {
 			e.printStackTrace();
