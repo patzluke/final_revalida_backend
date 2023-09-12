@@ -11,6 +11,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 import org.ssglobal.training.codes.models.EmailDetails;
 import org.ssglobal.training.codes.models.Otp;
@@ -30,6 +31,9 @@ public class AuthenticateRepository {
 	
 	@Autowired 
 	private EmailService emailService;
+	
+	@Autowired
+	private PasswordEncoder encoder;
 	
 	public Optional<List<Users>> findAllUsers() {
 		// Named Parameter
@@ -85,6 +89,22 @@ public class AuthenticateRepository {
 		try (Session sess = sf.openSession()) {
 			Query<Users> query = sess.createNativeQuery(sql, Users.class);
 			query.setParameter("email", email);
+			Users record = query.getSingleResultOrNull();
+
+			return Optional.of(record);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return null;
+	}
+	
+	public Optional<Users> findUserByUseId(Integer userId) {
+		// Named Parameter
+		String sql = "SELECT * FROM users WHERE user_id = :user_id";
+
+		try (Session sess = sf.openSession()) {
+			Query<Users> query = sess.createNativeQuery(sql, Users.class);
+			query.setParameter("user_id", userId);
 			Users record = query.getSingleResultOrNull();
 
 			return Optional.of(record);
@@ -167,6 +187,27 @@ public class AuthenticateRepository {
 			tx = sess.beginTransaction();
 			Otp otp = sess.get(Otp.class, Integer.valueOf(payload.get("otpId").toString()));
 			if (otp.getOtpCode().equals(payload.get("otpCode"))) {
+				String sixRandomNumber = RandomStringUtils.randomNumeric(6);
+				Users user = sess.get(Users.class, otp.getUser().getUserId());
+				user.setPassword(encoder.encode(sixRandomNumber));
+				sess.persist(otp);
+				sess.remove(otp);
+				tx.commit();
+				
+				EmailDetails emailDetails = new EmailDetails();
+				emailDetails.setRecipient(otp.getUser().getEmail());
+				emailDetails.setSubject("Password Reset");
+				emailDetails.setMsgBody("""
+						Hi %s,
+						You've successfully reset your password. Here is your new generated password below!
+						Although we still recommend that you change your password after you've logged in.
+						
+						password: %s					
+						
+						Thank you!,
+						Agribridge Team
+						""".formatted(user.getFirstName(), sixRandomNumber));
+				emailService.sendSimpleMail(emailDetails);
 				return "matched";
 			}
 			
@@ -174,8 +215,10 @@ public class AuthenticateRepository {
 			sess.persist(otp);
 			if (otp.getTries() > 3) {
 				sess.remove(otp);
+				tx.commit();
 				return "exceeded number of tries";
 			}
+			
 			tx.commit();
 		} catch (Exception e) {
 			e.printStackTrace();
