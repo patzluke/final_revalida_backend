@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -416,4 +417,137 @@ public class AdministratorRepository {
 		}
 		return null;
 	}
+	
+	// Admin Dashboard
+	public long countValidatedFarmers() {
+	    long count = 0; 
+	    String sql = "SELECT COUNT(*) " +
+	                 "FROM farmer f " +
+	                 "INNER JOIN users u ON f.user_id = u.user_id " +
+	                 "WHERE u.is_validated = true " + 
+	                 "AND u.active_status = true";
+
+	    try (Session session = sf.openSession()) {
+	        Query<Long> query = session.createNativeQuery(sql, Long.class);
+	        Long result = query.uniqueResult();
+	        if (result != null) {
+	            count = result;
+	        }
+	    } catch (HibernateException e) {
+	        e.printStackTrace();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+
+	    return count;
+	}
+	
+	public long countNotValidatedFarmers() {
+	    long count = 0;
+	    String sql = "SELECT COUNT(*) " +
+	                 "FROM farmer f " +
+	                 "INNER JOIN users u ON f.user_id = u.user_id " +
+	                 "WHERE u.is_validated = false";
+
+	    try (Session session = sf.openSession()) {
+	        Query<Long> query = session.createNativeQuery(sql, Long.class);
+	        Long result = query.uniqueResult();
+	        if (result != null) {
+	            count = result;
+	        }
+	    } catch (HibernateException e) {
+	        e.printStackTrace();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+
+	    return count;
+	}
+	
+	public long countValidatedSuppliers() {
+	    long count = 0;
+	    String sql = "SELECT COUNT(*) " +
+	                 "FROM supplier s " +
+	                 "INNER JOIN users u ON s.user_id = u.user_id " +
+	                 "WHERE u.is_validated = true " + 
+	                 "AND u.active_status = true";
+	    try (Session session = sf.openSession()) {
+	        Query<Long> query = session.createNativeQuery(sql, Long.class);
+	        Long result = query.uniqueResult();
+	        if (result != null) {
+	            count = result;
+	        }
+	    } catch (HibernateException e) {
+	        e.printStackTrace();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+
+	    return count;
+	}
+	
+	public long countNotValidatedSuppliers() {
+	    long count = 0;
+	    String sql = "SELECT COUNT(*) " +
+	                 "FROM supplier s " +
+	                 "INNER JOIN users u ON s.user_id = u.user_id " +
+	                 "WHERE u.is_validated = false";
+
+	    try (Session session = sf.openSession()) {
+	        Query<Long> query = session.createNativeQuery(sql, Long.class);
+	        Long result = query.uniqueResult();
+	        if (result != null) {
+	            count = result;
+	        }
+	    } catch (HibernateException e) {
+	        e.printStackTrace();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+
+	    return count;
+	}
+	
+	public long countUnresolvedSupplierComplaints() {
+	    long count = 0; 
+	    String sql = "SELECT COUNT(*) " +
+	                 "FROM supplier_complaint " +
+	                 "WHERE is_resolved = false";
+
+	    try (Session session = sf.openSession()) {
+	        Query<Long> query = session.createNativeQuery(sql, Long.class);
+	        Long result = query.uniqueResult();
+	        if (result != null) {
+	            count = result;
+	        }
+	    } catch (HibernateException e) {
+	        e.printStackTrace();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+
+	    return count;
+	}
+
+	public long countUnresolvedFarmerComplaints() {
+	    long count = 0; 
+	    String sql = "SELECT COUNT(*) " +
+	                 "FROM farmer_complaint " +
+	                 "WHERE is_resolved = false";
+
+	    try (Session session = sf.openSession()) {
+	        Query<Long> query = session.createNativeQuery(sql, Long.class);
+	        Long result = query.uniqueResult();
+	        if (result != null) {
+	            count = result;
+	        }
+	    } catch (HibernateException e) {
+	        e.printStackTrace();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+
+	    return count;
+	}
+
 }
