@@ -72,6 +72,9 @@ public class Users implements Serializable {
 	@Column(name="image")
 	private String image;
 	
+	@Column(name = "recent_picture")
+	private String recentPicture;
+	
 	@Column(name = "valid_id_picture")
 	private String validIdPicture;
 	

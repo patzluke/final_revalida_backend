@@ -29,6 +29,7 @@ create table users (
     active_deactive boolean, --soft delete
     is_validated boolean,    
     image text,
+    recent_picture text,
     valid_id_picture text,
     valid_id_type varchar(200),
     valid_id_number varchar(100),

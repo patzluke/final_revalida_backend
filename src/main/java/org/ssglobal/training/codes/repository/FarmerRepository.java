@@ -106,6 +106,7 @@ public class FarmerRepository {
 				user.setValidIdPicture(payload.get("validIdPicture").toString());
 				user.setValidIdNumber(payload.get("validIdNumber").toString());
 				user.setValidIdType(payload.get("validIdType").toString());
+				user.setRecentPicture(payload.get("recentPicture").toString());
 			} catch (NullPointerException e) {	}
 			sess.merge(user);
 			tx.commit();
