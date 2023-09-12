@@ -35,6 +35,17 @@ create table users (
     date_created timestamp
 );
 
+drop table if exists otp;
+create table otp (
+	otp_id serial primary key,
+	user_id int,
+	issued_time time,
+	expiry_time time,
+	otp_code varchar(10),
+	tries int default 0,
+	foreign key(user_id) references users(user_id) on delete cascade
+);
+
 --ADMINISTRATOR MODULE
 drop table if exists administrator cascade;
 create table administrator (
@@ -282,7 +293,7 @@ values
 
 --Insert into users and administrator
 insert into users(username, password, email, contact_no, socials, first_name, middle_name, last_name, user_type, birth_date, address, gender, nationality, active_status, active_deactive, date_created, is_validated) 
-values('pastrero', '123456', 'patzluke12@gmail.com', '9055261297', array['https://www.facebook.com/megalodon218'], 'Patrick', 'Artuz', 'Astrero', 'Administrator', '1999-07-08', 'Vista Verde, Cainta', 'Male', 'Filipino', 'true', 'true', '2023-08-15 9:55:00', 't');
+values('pastrero', '123456', 'patzluke@gmail.com', '9055261297', array['https://www.facebook.com/megalodon218'], 'Patrick', 'Artuz', 'Astrero', 'Administrator', '1999-07-08', 'Vista Verde, Cainta', 'Male', 'Filipino', 'true', 'true', '2023-08-15 9:55:00', 't');
 insert into administrator(user_id) values (1);
 
 --Insert into users and farmer

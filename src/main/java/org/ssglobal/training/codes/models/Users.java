@@ -112,6 +112,11 @@ public class Users implements Serializable {
 	@OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
 	@JsonBackReference
 	private List<Supplier> suppliers;
+	
+	// bi-directional many-to-one association to Supplier
+	@OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+	@JsonBackReference
+	private List<Otp> otp;
 
 	// bi-directional one-to-one association to UserToken
 	@OneToOne(mappedBy = "user")
